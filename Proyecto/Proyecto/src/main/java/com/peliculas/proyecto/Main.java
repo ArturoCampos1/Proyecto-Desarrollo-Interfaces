@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("vistaMain.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("CineVerse");
         stage.setScene(scene);
@@ -26,6 +26,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }

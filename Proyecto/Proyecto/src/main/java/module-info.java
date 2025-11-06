@@ -6,6 +6,6 @@ module com.peliculas.proyecto {
     requires static lombok;
     requires java.sql;
 
-    opens com.peliculas.proyecto to javafx.fxml;
+    opens com.peliculas.proyecto.controllers to javafx.fxml;
     exports com.peliculas.proyecto;
 }
