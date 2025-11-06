@@ -1,4 +1,4 @@
-package com.peliculas.proyecto.entities;
+package com.peliculas.proyecto.dto;
 
 import lombok.Data;
 

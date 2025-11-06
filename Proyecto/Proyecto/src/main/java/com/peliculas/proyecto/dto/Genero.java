@@ -1,4 +1,4 @@
-package com.peliculas.proyecto.entities;
+package com.peliculas.proyecto.dto;
 
 public enum Genero {
     ACCION,
