@@ -65,7 +65,7 @@ CREATE TABLE lista_pelicula (
 CREATE TABLE alquiler (
    id_usuario INT NOT NULL,
    id_pelicula INT NOT NULL,
-   fecha_alquiler DATETIME DEFAULT CURRENT_TIMESTAMP,
+   fecha_alquiler DATE DEFAULT CURRENT_DATE,
    PRIMARY KEY (id_usuario, id_pelicula),
    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
    FOREIGN KEY (id_pelicula) REFERENCES pelicula(id_pelicula) ON DELETE CASCADE
