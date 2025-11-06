@@ -6,20 +6,19 @@ import java.sql.SQLException;
 
 public class Conexion {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/peliculas_db";
+    private static final String URL = "jdbc:mysql://localhost:3306/cineverse";
     private static final String USUARIO = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
 
     static Connection conexion = null;
 
-    public Connection abrirConexion(){
+    public static void abrirConexion(){
         try{
-            Connection conexion = DriverManager.getConnection(URL, USUARIO, PASSWORD);
+            conexion = DriverManager.getConnection(URL, USUARIO, PASSWORD);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return conexion;
     }
 
     public static void cerrarConexion() {
@@ -30,5 +29,9 @@ public class Conexion {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+
     }
 }
