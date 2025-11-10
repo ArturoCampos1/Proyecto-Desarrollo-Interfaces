@@ -5,6 +5,7 @@ module com.peliculas.proyecto {
     requires org.kordamp.bootstrapfx.core;
     requires static lombok;
     requires java.sql;
+    requires gson;
 
     opens com.peliculas.proyecto.controllers to javafx.fxml;
     exports com.peliculas.proyecto;

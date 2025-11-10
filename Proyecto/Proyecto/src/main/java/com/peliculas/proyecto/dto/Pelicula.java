@@ -11,7 +11,6 @@ public class Pelicula {
     private String director;
     private String resumen;
     private Genero genero;
-    private boolean disponible;
     private double valoracion;
 
 }
