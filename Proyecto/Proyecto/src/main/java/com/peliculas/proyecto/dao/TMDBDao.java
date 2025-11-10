@@ -19,7 +19,7 @@ public class TMDBDao {
     private static final String URL_BBDD = "https://api.themoviedb.org/3/movie/";
 
     public Pelicula findById(String id){
-
+        Pelicula p = null;
         try {
             URL urlAPI = new URL(URL_BBDD + id + "?api_key=" + API_KEY);
             HttpURLConnection con = (HttpURLConnection) urlAPI.openConnection();
@@ -30,8 +30,6 @@ public class TMDBDao {
 
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(br, JsonObject.class);
-
-            Pelicula p = null;
 
             String idP = jsonObject.get("id").getAsString();;
             String titulo = jsonObject.get("original_title").getAsString(); ;
@@ -44,7 +42,7 @@ public class TMDBDao {
         } catch (Exception e) {
             throw new RuntimeException(e + ": Película NO encontrada");
         }
-
+        return p;
     }
 
 

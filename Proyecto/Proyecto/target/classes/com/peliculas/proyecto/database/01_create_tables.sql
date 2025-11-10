@@ -29,7 +29,6 @@ CREATE TABLE pelicula (
        'TERROR', 'MUSICA', 'MISTERIO', 'ROMANCE', 'CIENCIA_FICCION',
        'PELICULA_DE_TV', 'SUSPENSO', 'BELICA', 'OESTE'
    ) NOT NULL,
-   disponible BOOLEAN DEFAULT TRUE,
    valoracion DECIMAL(3,1) DEFAULT 0.0 CHECK (valoracion BETWEEN 0.5 AND 5.0)
 ) ENGINE=InnoDB;
 
