@@ -20,7 +20,7 @@ public class vistaMain {
 
     private void abrirVentana() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaBusqueda.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaBuscadorPeliculas.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) paneBusqueda.getScene().getWindow();
