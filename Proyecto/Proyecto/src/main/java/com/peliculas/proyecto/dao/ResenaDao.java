@@ -1,4 +1,4 @@
 package com.peliculas.proyecto.dao;
 
-public class ReseñaDao {
+public class ResenaDao {
 }

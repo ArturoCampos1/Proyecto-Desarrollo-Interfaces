@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Reseña {
+public class Resena {
 
     private int idReseña;
     private double valoracion;
