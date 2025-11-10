@@ -13,5 +13,15 @@ public class Alquiler {
     private Date fechaDevolucion;
     private int precio;
 
+    public Alquiler(int idUsuario, int idPelicula, Date fechaAlquiler, Date fechaDevolucion, int precio) {
+        this.idUsuario = idUsuario;
+        this.idPelicula = idPelicula;
+        this.fechaAlquiler = fechaAlquiler;
+        this.fechaDevolucion = fechaDevolucion;
+        this.precio = precio;
+    }
+
+    public Alquiler() {
+    }
 }
 

@@ -9,4 +9,12 @@ public class Administrador {
     private String usuario;
     private String contrasena;
 
+    public Administrador(int idAdmin, String usuario, String contrasena) {
+        this.idAdmin = idAdmin;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+    }
+
+    public Administrador() {
+    }
 }

@@ -11,4 +11,12 @@ public class Lista {
     private ArrayList<Pelicula> peliculas;
     private Usuario usuario;
 
+    public Lista(int idLista, ArrayList<Pelicula> peliculas, Usuario usuario) {
+        this.idLista = idLista;
+        this.peliculas = peliculas;
+        this.usuario = usuario;
+    }
+
+    public Lista() {
+    }
 }
