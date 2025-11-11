@@ -3,7 +3,7 @@ module com.peliculas.proyecto {
     requires javafx.fxml;
 
     requires org.kordamp.bootstrapfx.core;
-    requires lombok;
+    requires static lombok;
     requires java.sql;
     requires gson;
 
