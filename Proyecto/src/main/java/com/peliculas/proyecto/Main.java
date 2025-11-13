@@ -1,5 +1,7 @@
 package com.peliculas.proyecto;
 
+import com.peliculas.proyecto.dao.TMDBDao;
+import com.peliculas.proyecto.dto.Pelicula;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,6 +26,8 @@ public class Main extends Application {
 
         stage.show();
     }
+
+    static TMDBDao tmdb = new TMDBDao();
 
     public static void main(String[] args) {
         launch(args);
