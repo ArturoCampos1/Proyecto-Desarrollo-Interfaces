@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class TMDBDao {
 
@@ -65,6 +66,8 @@ public class TMDBDao {
             }
             String resumen = jsonObject.get("overview").getAsString();
 
+            String pathBanner = jsonObject.get("backdrop_path").getAsString();
+
             String genero = "";
             JsonArray generos = jsonObject.getAsJsonArray("genres");
 
@@ -87,6 +90,7 @@ public class TMDBDao {
             p.setAnioSalida(anioSalida);
             p.setDirector(director);
             p.setResumen(resumen);
+            p.setPathBanner(pathBanner);
             p.setGenero(generoTipado);
             p.setValoracion(valoracionAdaptada);
 
@@ -128,4 +132,13 @@ public class TMDBDao {
         return p;
     }
 
+    public ArrayList<Pelicula> findByGenre(String genero) {
+
+        ArrayList<Pelicula> arrayPelis = new ArrayList<>();
+
+        // ENDPOINT PARA BUSCAR POR GENRESS
+        //https://api.themoviedb.org/3/discover/movie?with_genres=28&api_key=TU_API_KEY&language=es-ES
+
+        return arrayPelis;
+    }
 }

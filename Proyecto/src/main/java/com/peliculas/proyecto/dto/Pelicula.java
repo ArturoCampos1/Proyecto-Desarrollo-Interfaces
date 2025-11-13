@@ -11,6 +11,7 @@ public class Pelicula {
     private String director;
     private String resumen;
     private Genero genero;
+    private String pathBanner;
     private double valoracion;
 
     public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, double valoracion) {
