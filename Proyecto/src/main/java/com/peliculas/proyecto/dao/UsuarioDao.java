@@ -100,4 +100,32 @@ public class UsuarioDao {
             Conexion.cerrarConexion();
         }
     }
+
+
+    // Metodos
+    public Usuario login(String nombreUsuario, String contrasena) throws SQLException{
+        Usuario user = null;
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        try(CallableStatement cs = con.prepareCall("{CALL buscar_usuario_por_nombre(?)}")){
+            cs.setString(1, nombreUsuario);
+            ResultSet rs = cs.executeQuery();
+
+            if (rs.next()){
+                String passBD = rs.getString("contrasena");
+                if (passBD.equals(contrasena)){
+                    user = new Usuario();
+                    user.setIdUsuario(rs.getInt("id_usuario"));
+                    user.setNombreUsuario(rs.getString("nombre_usuario"));
+                    user.setCorreo(rs.getString("correo"));
+                    user.setNumTelef(rs.getString("numTelef"));
+                    user.setContrasena(passBD);
+                }
+            }
+        }finally {
+            Conexion.cerrarConexion();
+        }
+        return user;
+    }
 }
