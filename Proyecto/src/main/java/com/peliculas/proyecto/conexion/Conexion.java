@@ -10,7 +10,7 @@ public class Conexion {
     private static final String USUARIO = "root";
     private static final String PASSWORD = "root";
 
-    static Connection conexion = null;
+    public static Connection conexion = null;
 
     public static void abrirConexion(){
         try{

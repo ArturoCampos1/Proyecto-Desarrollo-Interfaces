@@ -14,8 +14,8 @@ public class Resena {
     private Usuario usuario;
     private Pelicula pelicula;
 
-    public Resena(int idReseña, double valoracion, String texto, LocalDateTime fecha, Usuario usuario, Pelicula pelicula) {
-        this.idReseña = idReseña;
+    public Resena(int idResena, double valoracion, String texto, LocalDateTime fecha, Usuario usuario, Pelicula pelicula) {
+        this.idReseña = idResena;
         this.valoracion = valoracion;
         this.texto = texto;
         this.fecha = fecha;

@@ -325,3 +325,35 @@ BEGIN
       AND id_pelicula = p_id_pelicula;
 END //
 DELIMITER ;
+
+
+/*
+----------------------------------
+PROCEDIMIENTOS CRUD PARA LISTA_PELICULA
+----------------------------------
+*/
+
+-- Agregar película a una lista
+DELIMITER //
+CREATE PROCEDURE agregar_pelicula_a_lista (
+    IN p_id_lista INT,
+    IN p_id_pelicula INT
+)
+BEGIN
+    INSERT IGNORE INTO lista_pelicula (id_lista, id_pelicula)
+    VALUES (p_id_lista, p_id_pelicula);
+END //
+DELIMITER ;
+
+-- Quitar película de una lista
+DELIMITER //
+CREATE PROCEDURE quitar_pelicula_de_lista (
+    IN p_id_lista INT,
+    IN p_id_pelicula INT
+)
+BEGIN
+    DELETE FROM lista_pelicula
+    WHERE id_lista = p_id_lista
+      AND id_pelicula = p_id_pelicula;
+END //
+DELIMITER ;
