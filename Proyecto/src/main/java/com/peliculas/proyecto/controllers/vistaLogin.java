@@ -28,8 +28,11 @@ public class vistaLogin {
     @FXML
     private PasswordField campoContraseña;
     @FXML
+    private Button botonLogin;
+
+    @FXML
     private void initialize(){
-        paneLogin.setOnMouseClicked(event -> procesarLogin());
+        botonLogin.setOnMouseClicked(event -> procesarLogin());
     }
 
     private void procesarLogin(){
@@ -39,17 +42,31 @@ public class vistaLogin {
         Usuario usuario = verificarCredenciales(nombreUsuario, contrasena);
 
         if (usuario != null){
-            //mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "Bienvenido" + usuario.);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "Bienvenido " + usuario.getNombreUsuario());
             abrirVistaMain();
         }else {
             mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario o contraseña incorrectos");
         }
     }
 
-    private void mostrarAlerta(Alert.AlertType alertType, String loginFallido, String uusarioOContraseñaIncorrectos) {
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje){
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     private void abrirVistaMain() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) paneLogin.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista principal");
+        }
     }
 
     private Usuario verificarCredenciales(String nombreUsuario, String contrasena){
@@ -82,13 +99,5 @@ public class vistaLogin {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private void mostrarAlerta(Alert.AlertType tipo, String mensaje){
-        Alert alert = new Alert(tipo);
-        String titulo = null;
-        alert.setTitle(titulo);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
     }
 }
