@@ -10,8 +10,11 @@ import com.peliculas.proyecto.dto.Pelicula;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class TMDBDao {
 
@@ -136,9 +139,34 @@ public class TMDBDao {
 
         ArrayList<Pelicula> arrayPelis = new ArrayList<>();
 
-        // ENDPOINT PARA BUSCAR POR GENRESS
-        //https://api.themoviedb.org/3/discover/movie?with_genres=28&api_key=TU_API_KEY&language=es-ES
+        try {
 
+            URL urlPeliculasConGen = new URL("https://api.themoviedb.org/3/discover/movie?with_genres=28&api_key=" + API_KEY + "&language=es-ES");
+            URL urlIdGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?api_key=490d5fcf9a1de19d8f7ba4c3bb2df832&language=es-ES");
+
+            HttpURLConnection con = (HttpURLConnection) urlIdGenres.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+            Gson gson = new Gson();
+            JsonObject jsonObject = gson.fromJson(br, JsonObject.class);
+
+            JsonArray generos = jsonObject.getAsJsonArray("genres");
+            HashMap<Integer, String> datosGeneros = new HashMap<>();
+            for (JsonElement genres : generos){
+                JsonObject aux = genres.getAsJsonObject();
+                int id = aux.get("id").getAsInt();
+                String name = aux.get("name").getAsString();
+                datosGeneros.put(id, name);
+            }
+
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e + ": Película NO encontrada");
+        }
         return arrayPelis;
     }
 }
