@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TMDBDao {
 
@@ -79,8 +80,18 @@ public class TMDBDao {
                 genero = generos.get(0).getAsJsonObject().get("name").getAsString();
             }
 
-            //Con nuestro enum (que es exactamente igual que el suyo) pasamos de String a nuestro tipo Genero
-            Genero generoTipado = Genero.valueOf(genero.toUpperCase());
+            //Normalizamos el genero en mayuscula y replazamos las tildes y las _
+            String normalizado = genero.toUpperCase()
+                    .replace(" ", "_")
+                    .replace("Á", "A")
+                    .replace("É", "E")
+                    .replace("Í", "I")
+                    .replace("Ó", "O")
+                    .replace("Ú", "U")
+                    .replace("Ñ", "N");
+
+            //Lo tipamos
+            Genero generoTipado = Genero.valueOf(normalizado);
 
             //Nosotros trabajamos sobrre valoración de 0 - 5 y ellos de 0 - 10 por lo que simplemente
             //dividimos / 2
@@ -136,12 +147,9 @@ public class TMDBDao {
     }
 
     public ArrayList<Pelicula> findByGenre(String genero) {
-
         ArrayList<Pelicula> arrayPelis = new ArrayList<>();
-
         try {
 
-            URL urlPeliculasConGen = new URL("https://api.themoviedb.org/3/discover/movie?with_genres=28&api_key=" + API_KEY + "&language=es-ES");
             URL urlIdGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?api_key=490d5fcf9a1de19d8f7ba4c3bb2df832&language=es-ES");
 
             HttpURLConnection con = (HttpURLConnection) urlIdGenres.openConnection();
@@ -162,8 +170,31 @@ public class TMDBDao {
                 datosGeneros.put(id, name);
             }
 
+            int idEquivalenteParametro = 0;
 
+            for (Map.Entry<Integer, String> dGenero : datosGeneros.entrySet()) {
+                if (dGenero.getValue().equalsIgnoreCase(genero)){
+                    idEquivalenteParametro = dGenero.getKey();
+                    break;
+                }
+            }
 
+            URL urlPeliculasConGen = new URL("https://api.themoviedb.org/3/discover/movie?with_genres=" + idEquivalenteParametro + "&api_key=" + API_KEY + "&language=es-ES&page=2");
+
+            HttpURLConnection conexFinal = (HttpURLConnection) urlPeliculasConGen.openConnection();
+            conexFinal.setRequestMethod("GET");
+            conexFinal.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader brLectura = new BufferedReader(new InputStreamReader(conexFinal.getInputStream()));
+            JsonObject jsonObjectArray = gson.fromJson(brLectura, JsonObject.class);
+
+            JsonArray results = jsonObjectArray.getAsJsonArray("results");
+            for (JsonElement resultado : results){
+                JsonObject result = resultado.getAsJsonObject();
+                int idBusqueda = result.get("id").getAsInt();
+                Pelicula p = findById(idBusqueda);
+                arrayPelis.add(p);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e + ": Película NO encontrada");
         }

@@ -8,7 +8,7 @@ public enum Genero {
     CRIMEN,
     DOCUMENTAL,
     DRAMA,
-    FAMILIAR,
+    FAMILIA,
     FANTASIA,
     HISTORIA,
     TERROR,
