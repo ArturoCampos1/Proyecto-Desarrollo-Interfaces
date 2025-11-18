@@ -65,21 +65,25 @@
                   <Font size="22.0" />
                </font>
             </Text>
+
+            <!-- 🔹 AÑADIDO: acción para ir a Registro -->
             <Button id="btnCrear" layoutX="19.0" layoutY="89.0" mnemonicParsing="false"
                     prefHeight="58.0" prefWidth="381.0" stylesheets="@../styles.css"
-                    text="Crear Cuenta" textFill="WHITE">
+                    text="Crear Cuenta" textFill="WHITE" onAction="#abrirVistaRegistro">
                <font>
                   <Font size="21.0" />
                </font>
             </Button>
-            <!-- 🔑 Aquí añadimos el fx:id para conectar con el controlador -->
+
+            <!-- 🔹 AÑADIDO: acción para ir a InicioSesión -->
             <Button fx:id="inicioSesion" id="inicioSesion" layoutX="19.0" layoutY="162.0"
                     mnemonicParsing="false" prefHeight="58.0" prefWidth="381.0"
-                    stylesheets="@../styles.css" text="Iniciar sesión">
+                    stylesheets="@../styles.css" text="Iniciar sesión" onAction="#abrirVistaInicioSesion">
                <font>
                   <Font size="21.0" />
                </font>
             </Button>
+
             <Text fill="#0b72b7" layoutX="153.0" layoutY="283.0" strokeType="OUTSIDE"
                   strokeWidth="0.0" text="Acceso Admin" underline="true"
                   wrappingWidth="110.5516357421875">
