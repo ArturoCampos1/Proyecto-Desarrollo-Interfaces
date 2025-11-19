@@ -73,7 +73,7 @@ public class vistaMain {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            mostrarError("No se pudo abrir la vista de registro");
+            mostrarError("No se pudo abrir la vista de registro" + e.getMessage());
         }
     }
 

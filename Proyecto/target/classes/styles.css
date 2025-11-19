@@ -62,3 +62,116 @@
     -fx-effect: dropshadow(gaussian, rgba(91,85,196,0.20), 16, 0.2, 0, 2);
     -fx-background-radius: 10;
 }
+
+/* ----------------------------------------------------------------------- */
+
+/* ============================
+   Label de búsqueda de películas
+   ============================ */
+#labelBusquedaPeliculas {
+    -fx-border-color: linear-gradient(to bottom right, #982cb7, #ff49fc);
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-radius: 10;
+
+    -fx-padding: 6 12;
+
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+#labelBusquedaPeliculas:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.4), 12, 0.2, 0, 0);
+    -fx-cursor: text;
+}
+
+/* ============================
+   Botón de filtros (ComboBox)
+   ============================ */
+#btnFiltros {
+    -fx-background-color: linear-gradient(to bottom right, #982cb7, #ff49fc);
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.25);
+    -fx-border-width: 1;
+}
+
+#btnFiltros:hover {
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to bottom right, #b845d5, #ff6aff);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.4), 10, 0.2, 0, 0);
+}
+
+#btnFiltros:focused {
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to bottom right, #7c2c99, #e13fe0);
+    -fx-border-color: white;
+}
+
+/* ============================
+   TextField de búsqueda
+   ============================ */
+#input {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+
+    -fx-border-color: linear-gradient(to bottom right, #982cb7, #ff49fc);
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255,255,255,0.5);
+
+    -fx-padding: 6 10;
+    -fx-font-size: 14px;
+}
+
+#input:focused {
+    -fx-border-color: linear-gradient(to bottom right, #ff49fc, #982cb7);
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-effect: dropshadow(gaussian, rgba(255,0,255,0.3), 10, 0.3, 0, 0);
+}
+
+#input .text-field {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* ============================
+   ScrollPane con fondo coherente
+   ============================ */
+#scrollpane {
+    -fx-background-color: rgba(255, 255, 255, 0.05); /* Fondo muy ligero */
+    -fx-background-insets: 0;
+    -fx-background-radius: 12;
+
+    -fx-border-color: rgba(255,255,255,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+
+    -fx-padding: 5;
+}
+
+#scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+#scrollpane .scroll-bar:vertical,
+#scrollpane .scroll-bar:horizontal {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-insets: 0;
+    -fx-background-radius: 5;
+}
+
+#scrollpane .scroll-bar .thumb {
+    -fx-background-color: linear-gradient(to bottom, #982cb7, #ff49fc);
+    -fx-background-radius: 5;
+}

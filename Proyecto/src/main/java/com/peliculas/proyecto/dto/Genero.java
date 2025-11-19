@@ -17,7 +17,7 @@ public enum Genero {
     ROMANCE,
     CIENCIA_FICCION,
     PELICULA_DE_TV,
-    SUSPENSO,
+    SUSPENSE,
     BELICA,
     OESTE;
 }
