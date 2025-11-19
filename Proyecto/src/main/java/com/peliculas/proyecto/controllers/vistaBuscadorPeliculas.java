@@ -5,11 +5,15 @@ import com.peliculas.proyecto.dto.Pelicula;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +41,7 @@ public class vistaBuscadorPeliculas {
     private Button search;
 
     ObservableList<String> opciones = FXCollections.observableArrayList(
-            "Nombre", "Autor", "Genero"
+            "Nombre", "Autor", "Género"
     );
 
     @FXML
@@ -66,7 +70,7 @@ public class vistaBuscadorPeliculas {
             mostrarPeliculas(boxs);
         }
 
-        if (boxFiltros.getValue().equalsIgnoreCase("Genero")){
+        if (boxFiltros.getValue().equalsIgnoreCase("Género")){
             ArrayList<Pelicula> p = tmdbDao.findByGenre(texto);
             ArrayList<VBox> boxs = returnPeliculaConFormatoArray(p);
             mostrarPeliculas(boxs);
@@ -96,15 +100,35 @@ public class vistaBuscadorPeliculas {
 
         Label titulo = new Label(p.getTitulo());
         titulo.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
+        titulo.setTextFill(Color.WHITE);
         titulo.setWrapText(true);
         titulo.setMaxWidth(180);
         Label director = new Label("Director: " + p.getDirector());
+        director.setTextFill(Color.WHITE);
         Label resumen = new Label("Resumen: " + p.getResumen());
+        resumen.setTextFill(Color.WHITE);
         Label anioSalida = new Label("Año de salida: " + p.getAnioSalida());
-        Label valoracion = new Label("Valoración: " + p.getValoracion());
+        anioSalida.setTextFill(Color.WHITE);
+        Label valoracion = new Label("Valoración: " + p.getValoracion() + "/5");
+        valoracion.setTextFill(Color.WHITE);
 
 
         box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion); // añadir la imagen también
+
+        LinearGradient gradient = new LinearGradient(
+                0, 0, // startX, startY (0%,0%)
+                1, 1, // endX, endY (100%,100%)
+                true, // proportional
+                CycleMethod.NO_CYCLE,
+                new Stop(0, Color.web("#a34fb0")),
+                new Stop(1, Color.web("#7b2cc9"))
+        );
+
+        box.setBackground(new Background(
+                new BackgroundFill(gradient, new CornerRadii(8), Insets.EMPTY)
+        ));
+        box.setPadding(new Insets(10));
+
         return box;
     }
 
@@ -135,15 +159,34 @@ public class vistaBuscadorPeliculas {
 
             Label titulo = new Label(p.get(i).getTitulo());
             titulo.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
+            titulo.setTextFill(Color.WHITE);
             titulo.setWrapText(true);
             titulo.setMaxWidth(180);
             Label director = new Label("Director: " + p.get(i).getDirector());
+            director.setTextFill(Color.WHITE);
             Label resumen = new Label("Resumen: " + p.get(i).getResumen());
+            resumen.setTextFill(Color.WHITE);
             Label anioSalida = new Label("Año de salida: " + p.get(i).getAnioSalida());
+            anioSalida.setTextFill(Color.WHITE);
             Label valoracion = new Label("Valoración: " + p.get(i).getValoracion());
-
+            valoracion.setTextFill(Color.WHITE);
 
             box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion); // añadir la imagen también
+
+            LinearGradient gradient = new LinearGradient(
+                    0, 0, // startX, startY (0%,0%)
+                    1, 1, // endX, endY (100%,100%)
+                    true, // proportional
+                    CycleMethod.NO_CYCLE,
+                    new Stop(0, Color.web("#a34fb0")),
+                    new Stop(1, Color.web("#7b2cc9"))
+            );
+
+            box.setBackground(new Background(
+                    new BackgroundFill(gradient, new CornerRadii(8), Insets.EMPTY)
+            ));
+            box.setPadding(new Insets(10));
+
             boxs.add(box);
         }
 

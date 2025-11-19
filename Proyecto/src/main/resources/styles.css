@@ -109,57 +109,21 @@
     -fx-border-color: white;
 }
 
-#input {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
-    -fx-background-insets: 0;
-    -fx-background-radius: 10;
-
-    -fx-border-color: linear-gradient(to bottom right, #982cb7, #ff49fc);
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-
+.btnSearchPelicula {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #a34fb0, #7b2cc9);
     -fx-text-fill: white;
-    -fx-prompt-text-fill: rgba(255,255,255,0.5);
-
-    -fx-padding: 6 10;
     -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4,0,0,2);
 }
 
-#input:focused {
-    -fx-border-color: linear-gradient(to bottom right, #ff49fc, #982cb7);
-    -fx-background-color: rgba(255, 255, 255, 0.25);
-    -fx-effect: dropshadow(gaussian, rgba(255,0,255,0.3), 10, 0.3, 0, 0);
+.btnSearchPelicula:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e988f7, #c155d0);
 }
 
-#input .text-field {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
+.input .viewport {
+    -fx-background-color: #F0F0F0;
 }
 
-#scrollpane {
-    -fx-background-color: rgba(255, 255, 255, 0.05); /* Fondo muy ligero */
-    -fx-background-insets: 0;
-    -fx-background-radius: 12;
-
-    -fx-border-color: rgba(255,255,255,0.15);
-    -fx-border-width: 1;
-    -fx-border-radius: 12;
-
-    -fx-padding: 5;
-}
-
-#scrollpane .viewport {
-    -fx-background-color: transparent;
-}
-
-#scrollpane .scroll-bar:vertical,
-#scrollpane .scroll-bar:horizontal {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-insets: 0;
-    -fx-background-radius: 5;
-}
-
-#scrollpane .scroll-bar .thumb {
-    -fx-background-color: linear-gradient(to bottom, #982cb7, #ff49fc);
-    -fx-background-radius: 5;
-}

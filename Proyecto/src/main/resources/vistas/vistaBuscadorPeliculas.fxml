@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -44,11 +45,17 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ComboBox>
-       <ScrollPane id="input" fx:id="scrollPeliculas" layoutX="108.0" layoutY="273.0" prefHeight="402.0" prefWidth="784.0" style="-fx-background-color: #F0F0F0;" stylesheets="@../styles.css">
+       <ScrollPane fx:id="scrollPeliculas" layoutX="162.0" layoutY="273.0" prefHeight="402.0" prefWidth="784.0" style="-fx-background-color: #F0F0F0;" styleClass="input" stylesheets="@../styles.css">
            <content>
                <GridPane fx:id="gridPeliculas" hgap="20.0" style="-fx-padding: 10;" vgap="20.0" />
            </content>
        </ScrollPane>
-      <Button fx:id="search" layoutX="765.0" layoutY="228.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Buscar" />
+      <Button fx:id="search" layoutX="763.0" layoutY="231.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" styleClass="btnSearchPelicula" stylesheets="@../styles.css" text="Buscar" textFill="#7b2cc9" textOverrun="WORD_ELLIPSIS" underline="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <Blend />
+         </effect></Button>
    </children>
 </AnchorPane>
