@@ -2,7 +2,6 @@
     -fx-font-family: "Segoe UI";
     -fx-font-size: 40;
     -fx-font-weight: bold;
-    -fx-fill: linear-gradient(to bottom right, #982cb7, #ff49fc);
 }
 
 #subTitle {
@@ -128,6 +127,25 @@
     -fx-background-color: #F0F0F0;
 }
 
-#explorar {
-    -fx-fill:#535353;
+/* -----------------------------------------------------------------------------------*/
+
+.paneAccount{
+    -fx-background-color: linear-gradient(from 16.2879% 0.0% to 100.0% 100.0%, #982cb7 0.0%, #ff49fc 100.0%);
+        -fx-background-radius: 10;
 }
+
+.btnIniciaSesion{
+    -fx-background-color: linear-gradient(from 16.2879% 0.0% to 100.0% 100.0%, #982cb7 0.0%, #ff49fc 100.0%);
+    -fx-background-radius: 10;
+    -fx-text-fill: #fff;
+}
+
+.btnVolver{
+    -fx-text-fill: #370340;
+    -fx-background-color: #fff;
+}
+
+.btnVolver:hover{
+    -fx-background-color: #cd6fde;
+}
+
