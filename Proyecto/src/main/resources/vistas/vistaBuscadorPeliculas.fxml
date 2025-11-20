@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
@@ -57,5 +58,17 @@
          <effect>
             <Blend />
          </effect></Button>
+      <Button fx:id="btnVolver" layoutX="41.0" layoutY="660.0" mnemonicParsing="false" onAction="#abrirLanding" prefHeight="30.0" prefWidth="70.0" stylesheets="@../styles.css" text="Volver" textFill="#7b2cc9" textOverrun="WORD_ELLIPSIS">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <Blend />
+         </effect>
+         <styleClass>
+            <String fx:value="btnVolver" />
+            <String fx:value="btnSearchPelicula" />
+         </styleClass>
+      </Button>
    </children>
 </AnchorPane>

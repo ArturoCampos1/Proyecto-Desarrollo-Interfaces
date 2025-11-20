@@ -5,7 +5,10 @@ import com.peliculas.proyecto.dto.Pelicula;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,13 +17,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class vistaBuscadorPeliculas {
 
     TMDBDao tmdbDao = new TMDBDao();
+
+    @FXML
+    Button btnVolver;
 
     @FXML
     Label labelBuscador;
@@ -51,6 +59,20 @@ public class vistaBuscadorPeliculas {
 
         search.setOnAction(e -> busqueda(labelText));
 
+    }
+
+    @FXML
+    private void abrirLanding() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) scrollPeliculas.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            mostrarError("No se pudo abrir la vista principal");
+        }
     }
 
     public void busqueda(TextField labelText){
@@ -206,5 +228,12 @@ public class vistaBuscadorPeliculas {
                 row++;
             }
         }
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }
