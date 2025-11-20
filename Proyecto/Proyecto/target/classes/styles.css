@@ -2,7 +2,6 @@
     -fx-font-family: "Segoe UI";
     -fx-font-size: 40;
     -fx-font-weight: bold;
-    -fx-fill: linear-gradient(to bottom right, #982cb7, #ff49fc);
 }
 
 #subTitle {
@@ -128,6 +127,3 @@
     -fx-background-color: #F0F0F0;
 }
 
-#explorar {
-    -fx-fill:#535353;
-}

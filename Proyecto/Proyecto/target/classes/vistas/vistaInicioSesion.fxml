@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: F0F0F0;"
+            stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.peliculas.proyecto.controllers.vistaInicioSesion">
+
+    <!-- Título principal con degradado -->
+    <Text id="titulo" layoutX="402.0" layoutY="182.0" text="CineVerse">
+        <fill>
+            <LinearGradient endX="1.0" endY="1.0" startX="0.162">
+                <stops>
+                    <Stop>
+                        <color>
+                            <Color red="0.596" green="0.172" blue="0.717" />
+                        </color>
+                    </Stop>
+                    <Stop offset="1.0">
+                        <color>
+                            <Color red="1.0" green="0.286" blue="0.988" />
+                        </color>
+                    </Stop>
+                </stops>
+            </LinearGradient>
+        </fill>
+    </Text>
+
+    <!-- Subtítulo -->
+    <Label id="subTitle" layoutX="416.0" layoutY="82.0" prefHeight="40.0" prefWidth="166.0"
+           text="🎥   Inicia sesión" />
+
+    <!-- Tarjeta de login -->
+    <Pane id="cardLogin" fx:id="paneLogin" layoutX="292.0" layoutY="252.0" prefHeight="342.0" prefWidth="433.0">
+        <Text id="letrasEspeciales" layoutX="153.0" layoutY="51.0" text="Iniciar Sesión">
+            <font>
+                <Font size="22.0" />
+            </font>
+        </Text>
+
+        <Label layoutX="30.0" layoutY="100.0" text="Usuario:" />
+        <TextField fx:id="campoUsuario" layoutX="120.0" layoutY="95.0" prefWidth="250.0" />
+
+        <Label layoutX="30.0" layoutY="150.0" text="Contraseña:" />
+        <PasswordField fx:id="campoContraseña" layoutX="120.0" layoutY="145.0" prefWidth="250.0" />
+
+        <!-- Botón iniciar sesión conectado al método procesarLogin -->
+        <Button fx:id="botonLogin" layoutX="120.0" layoutY="200.0"
+                prefHeight="40.0" prefWidth="250.0" text="Iniciar sesión"
+                onAction="#procesarLogin"/>
+
+        <!-- Botón volver conectado al método volverAMain -->
+        <Button fx:id="botonVolver" layoutX="120.0" layoutY="257.0"
+                prefHeight="40.0" prefWidth="250.0" text="← Volver"
+                onAction="#volverAMain"/>
+    </Pane>
+
+    <!-- Texto informativo -->
+    <Text fill="#535353" layoutX="292.0" layoutY="217.0" text="Accede a tu cuenta para descubrir y alquilar películas" />
+
+    <!-- Botón modo oscuro/claro -->
+    <Button id="darkLight" layoutX="927.0" layoutY="20.0" text="🌗" />
+</AnchorPane>
+

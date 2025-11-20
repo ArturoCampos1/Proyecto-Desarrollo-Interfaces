@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import javafx.event.ActionEvent;
 import java.io.IOException;
 
 public class vistaMain {
@@ -24,6 +25,8 @@ public class vistaMain {
     private Button inicioSesion;
     @FXML
     private Button crearCuenta;
+    @FXML
+    private Button darkLight;
 
     private Usuario usuario;
 
@@ -90,4 +93,25 @@ public class vistaMain {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
+    @FXML
+    private void cambiarModo(ActionEvent event) {
+        Scene scene = darkLight.getScene();
+        if (scene == null) return;
+
+        String darkCss = getClass().getResource("/dark-style.css").toExternalForm();
+        String normalCss = getClass().getResource("/styles.css").toExternalForm();
+
+        if (scene.getUserData() != null && scene.getUserData().equals("dark")) {
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(normalCss);
+            scene.setUserData("light");
+        } else {
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(darkCss);
+            scene.setUserData("dark");
+        }
+    }
+
+
 }
