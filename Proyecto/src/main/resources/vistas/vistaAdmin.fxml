@@ -54,7 +54,7 @@
             <Button layoutX="159.0" layoutY="209.0" mnemonicParsing="false" text="+   Añadir pelicula" />
          </children>
       </Pane>
-      <Pane layoutX="43.0" layoutY="167.0" prefHeight="508.0" prefWidth="430.0" styleClass="cardGestionUsers">
+      <Pane fx:id="panePerfiles" layoutX="43.0" layoutY="167.0" prefHeight="508.0" prefWidth="430.0" styleClass="cardGestionUsers">
          <children>
             <Text layoutX="74.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualizar perfiles">
                <font>

@@ -67,6 +67,20 @@ public class vistaMain {
     }
 
     @FXML
+    private void abrirAccesoAdmin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaInicioSesionAdmin.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) paneBusqueda.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            mostrarError("No se pudo abrir la vista de inicio de sesión admin");
+        }
+    }
+
+    @FXML
     private void abrirVistaRegistro() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaRegistro.fxml"));

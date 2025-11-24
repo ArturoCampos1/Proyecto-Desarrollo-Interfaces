@@ -13,6 +13,7 @@ public class Pelicula {
     private Genero genero;
     private String pathBanner;
     private double valoracion;
+    private int cantidad;
 
     public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, double valoracion) {
         this.idPelicula = idPelicula;
