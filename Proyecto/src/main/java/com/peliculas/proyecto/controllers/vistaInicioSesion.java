@@ -45,7 +45,7 @@ public class vistaInicioSesion {
 
             if (usuario != null) {
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "Bienvenido " + usuario.getNombreUsuario());
-                abrirVistaBuscadorPeliculas(usuario);
+                abrirPanelUsuarioDesdeLogin(usuario);
             } else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario o contraseña incorrectos");
             }
@@ -54,20 +54,23 @@ public class vistaInicioSesion {
         }
     }
 
-    private void abrirVistaBuscadorPeliculas(Usuario usuario) {
+    private void abrirPanelUsuarioDesdeLogin(Usuario usuario) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaBuscadorPeliculas.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
             Scene scene = new Scene(loader.load());
 
-            vistaBuscadorPeliculas controller = loader.getController();
+            vistaPanelUsuario controller = loader.getController();
+            // controller.setUsuario(usuario);  // si luego quieres mostrar el nombre
 
             Stage stage = (Stage) paneLogin.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
+
         } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el buscador");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de usuario");
         }
     }
+
 
     @FXML
     private void volverAMain() {

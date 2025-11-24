@@ -113,5 +113,22 @@ public class vistaMain {
         }
     }
 
+    public void abrirPanelUsuario(Usuario usuario) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
+            Parent root = loader.load();
+
+            // Pasar usuario al panel si luego lo usas
+            vistaPanelUsuario controller = loader.getController();
+            // controller.setUsuario(usuario);  // si quieres enviarle el usuario después
+
+            Stage stage = (Stage) paneBusqueda.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            mostrarError("No se pudo abrir el panel de usuario");
+        }
+    }
 
 }
