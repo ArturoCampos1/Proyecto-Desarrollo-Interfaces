@@ -2,6 +2,7 @@ package com.peliculas.proyecto.controllers;
 
 import com.peliculas.proyecto.dao.TMDBDao;
 import com.peliculas.proyecto.dto.Pelicula;
+import com.peliculas.proyecto.dto.Usuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -47,6 +48,13 @@ public class vistaBuscadorPeliculas {
 
     @FXML
     private Button search;
+
+    private Usuario usuario;
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
 
     ObservableList<String> opciones = FXCollections.observableArrayList(
             "Nombre", "Autor", "Género"

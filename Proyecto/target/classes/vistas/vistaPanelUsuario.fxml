@@ -1,109 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="800.0" prefWidth="1000.0"
-            stylesheets="@../styles.css"
-            xmlns="http://javafx.com/javafx/24.0.1"
+<AnchorPane xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.peliculas.proyecto.controllers.vistaPanelUsuario"
-            style="-fx-background-color: #F1F1F1;">
+            prefHeight="800.0" prefWidth="1000.0"
+            style="-fx-background-color: #F1F1F1;"
+            stylesheets="@../styles.css">
 
-    <!-- ICONO USUARIO IZQUIERDA -->
-    <ImageView fx:id="iconUser"
-               fitWidth="45" fitHeight="45"
-               layoutX="20" layoutY="20"
-               pickOnBounds="true"
-               preserveRatio="true"
-               style="-fx-cursor: hand;" />
+    <!-- ✅ ICONO PERSONA FUNCIONAL (solo uno, no duplicado) -->
+    <Pane layoutX="25.0" layoutY="15.0" prefHeight="50.0" prefWidth="50.0"
+          style="-fx-background-color: #F4FEFF;">
+        <children>
+            <ImageView fx:id="iconUser" fitHeight="50" fitWidth="50" style="-fx-cursor: hand;">
+                <image>
+                    <Image url="@../img/person2.png" />
+                </image>
+            </ImageView>
+        </children>
+    </Pane>
 
-    <!-- BOTÓN MODO OSCURO DERECHA -->
-    <Button fx:id="toggleDark"
-            layoutX="927.0" layoutY="20.0"
-            prefWidth="40" prefHeight="40"
-            style="-fx-background-radius: 20; -fx-background-color: #D9D9D9;" />
-
-    <!-- TITULO CINEVERSE -->
-    <Label text="CineVerse"
-           layoutX="402.0" layoutY="100.0"
+    <!-- ✅ TÍTULO CINEVERSE -->
+    <Label layoutX="407.0" layoutY="13.0"
            style="-fx-font-size: 40px; -fx-font-weight: bold;
-                  -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #C026D3, #4F46E5);" />
+                  -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #C026D3, #4F46E5);"
+           text="CineVerse" />
 
-    <!-- BOTÓN PANEL DE USUARIO (Decorativo) -->
-    <Button text="★  Panel de Usuario"
-            layoutX="410.0" layoutY="160.0"
+    <!-- ✅ BOTÓN PANEL DE USUARIO (Decorativo) -->
+    <Button layoutX="410.0" layoutY="160.0" prefHeight="40" prefWidth="180"
             style="-fx-background-color: #B2C7E1; -fx-text-fill: #1F1F1F;
                    -fx-font-size: 16px; -fx-background-radius: 20;"
-            prefWidth="180" prefHeight="40" />
+            text="★  Panel de Usuario" />
 
-    <Label text="Gestiona tu cuenta y películas"
-           layoutX="390.0" layoutY="210.0"
-           style="-fx-font-size: 14px; -fx-text-fill: #555;" />
+    <!-- ✅ CONTENEDOR DE LAS 3 TARJETAS -->
+    <HBox layoutX="150.0" layoutY="280.0" prefHeight="230" prefWidth="700" spacing="40">
 
-    <!-- CONTENEDOR DE LAS 3 TARJETAS -->
-    <HBox spacing="40"
-          layoutX="150.0" layoutY="280.0"
-          prefWidth="700" prefHeight="230">
-
-        <!-- TARJETA 1 -->
-        <StackPane prefWidth="200" prefHeight="200"
-                   fx:id="cardListas"
+        <!-- ✅ TARJETA 1: TUS LISTAS -->
+        <StackPane fx:id="cardListas" prefHeight="200" prefWidth="200"
                    style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 20;
                           -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
-
-            <VBox alignment="TOP_CENTER" spacing="10">
-                <ImageView fitWidth="50" fitHeight="50" />
-                <Label text="Tus listas"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-                <Label text="Películas favoritas y pendientes"
-                       style="-fx-font-size: 13px; -fx-text-fill: gray;" />
-            </VBox>
+            <children>
+                <Pane prefHeight="200" prefWidth="200">
+                    <children>
+                        <Label layoutX="31" layoutY="80"
+                               style="-fx-font-size: 20px; -fx-font-weight: bold;"
+                               text="Tus Listas" />
+                        <Label layoutX="-9" layoutY="110"
+                               style="-fx-font-size: 13px; -fx-text-fill: gray;"
+                               text="Películas favoritas y pendientes" />
+                        <Pane layoutX="51" layoutY="14" prefHeight="50" prefWidth="50"
+                              style="-fx-background-color: #F4FEFF;">
+                            <children>
+                                <ImageView fitHeight="50" fitWidth="50">
+                                    <image>
+                                        <Image url="@../img/listas.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </Pane>
+                    </children>
+                </Pane>
+            </children>
         </StackPane>
 
-        <!-- TARJETA 2 -->
-        <StackPane prefWidth="200" prefHeight="200"
-                   fx:id="cardPrestamos"
+        <!-- ✅ TARJETA 2: PRÉSTAMOS -->
+        <StackPane fx:id="cardPrestamos" prefHeight="200" prefWidth="200"
                    style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 20;
                           -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
-
-            <VBox alignment="TOP_CENTER" spacing="10">
-                <ImageView fitWidth="50" fitHeight="50" />
-                <Label text="Préstamos"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-                <Label text="Ver alquileres"
-                       style="-fx-font-size: 13px; -fx-text-fill: gray;" />
-            </VBox>
+            <children>
+                <Pane prefHeight="200" prefWidth="200">
+                    <children>
+                        <Label layoutX="31" layoutY="80"
+                               style="-fx-font-size: 20px; -fx-font-weight: bold;"
+                               text="Préstamos" />
+                        <Label layoutX="41" layoutY="110"
+                               style="-fx-font-size: 13px; -fx-text-fill: gray;"
+                               text="Ver alquileres" />
+                        <Pane layoutX="55" layoutY="14" prefHeight="50" prefWidth="50"
+                              style="-fx-background-color: #F4FEFF;">
+                            <children>
+                                <ImageView fitHeight="45" fitWidth="45" layoutX="3" layoutY="3">
+                                    <image>
+                                        <Image url="@../img/prestamos.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </Pane>
+                    </children>
+                </Pane>
+            </children>
         </StackPane>
 
-        <!-- TARJETA 3 -->
-        <StackPane prefWidth="200" prefHeight="200"
-                   fx:id="cardAlquilar"
+        <!-- ✅ TARJETA 3: ALQUILAR -->
+        <StackPane fx:id="cardAlquilar" prefHeight="200" prefWidth="200"
                    style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 20;
                           -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
-
-            <VBox alignment="TOP_CENTER" spacing="10">
-                <ImageView fitWidth="50" fitHeight="50" />
-                <Label text="Alquilar"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-                <Label text="Nueva película"
-                       style="-fx-font-size: 13px; -fx-text-fill: gray;" />
-            </VBox>
+            <children>
+                <Pane prefHeight="200" prefWidth="200">
+                    <children>
+                        <Label layoutX="43" layoutY="80"
+                               style="-fx-font-size: 20px; -fx-font-weight: bold;"
+                               text="Alquilar" />
+                        <Label layoutX="38" layoutY="108"
+                               style="-fx-font-size: 13px; -fx-text-fill: gray;"
+                               text="Nueva película" />
+                        <Pane layoutX="55" layoutY="14" prefHeight="50" prefWidth="50"
+                              style="-fx-background-color: #F4FEFF;">
+                            <children>
+                                <ImageView fitHeight="40" fitWidth="45" layoutX="3" layoutY="5">
+                                    <image>
+                                        <Image url="@../img/alquilar.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </Pane>
+                    </children>
+                </Pane>
+            </children>
         </StackPane>
+
     </HBox>
 
-    <!-- BOTÓN VOLVER -->
-    <Button fx:id="btnVolver"
-            text="← Volver"
-            layoutX="50.0" layoutY="720.0"
-            prefWidth="120" prefHeight="35"
-            style="-fx-background-color: #E5E5E5; -fx-background-radius: 10; -fx-font-size: 14px;" />
+    <!-- ✅ BOTÓN VOLVER -->
+    <Button fx:id="btnVolver" layoutX="50" layoutY="720" prefHeight="35" prefWidth="120"
+            style="-fx-background-color: #E5E5E5; -fx-background-radius: 10; -fx-font-size: 14px;"
+            text="← Volver" />
+
+    <!-- ✅ ICONO LUPA (funcional) -->
+    <Pane layoutX="920" layoutY="20" prefHeight="45" prefWidth="50"
+          style="-fx-background-color: #F4FEFF;">
+        <children>
+            <ImageView fx:id="iconSearch" fitHeight="40" fitWidth="45" layoutX="3" layoutY="3">
+                <image>
+                    <Image url="@../img/buscar.png" />
+                </image>
+            </ImageView>
+        </children>
+    </Pane>
+
+    <Label layoutX="408" layoutY="213"
+           style="-fx-font-size: 14px; -fx-text-fill: #555;"
+           text="Gestiona tu cuenta y películas" />
 
 </AnchorPane>

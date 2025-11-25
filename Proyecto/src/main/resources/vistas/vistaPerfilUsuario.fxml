@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.peliculas.proyecto.controllers.vistaPerfilUsuario"
+            prefWidth="1000" prefHeight="800"
+            style="-fx-background-color: white;">
+
+    <Label text="Editar Perfil" layoutX="420" layoutY="80"
+           style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #7b2cc9;" />
+
+    <Label text="Actualiza tu información personal" layoutX="390" layoutY="120"
+           style="-fx-font-size: 16px; -fx-text-fill: #555;" />
+
+    <Label text="Nombre" layoutX="300" layoutY="180" />
+    <TextField fx:id="txtNombre" layoutX="300" layoutY="200" prefWidth="400" />
+
+    <Label text="Correo" layoutX="300" layoutY="250" />
+    <TextField fx:id="txtCorreo" layoutX="300" layoutY="270" prefWidth="400" />
+
+    <Label text="Teléfono" layoutX="300" layoutY="320" />
+    <TextField fx:id="txtTelefono" layoutX="300" layoutY="340" prefWidth="400" />
+
+    <Label text="Contraseña" layoutX="300" layoutY="390" />
+    <PasswordField fx:id="txtContrasena" layoutX="300" layoutY="410" prefWidth="400" promptText="Dejar en blanco para no cambiar" />
+
+    <Button fx:id="btnGuardar" text="Guardar Cambios" layoutX="300" layoutY="480" prefWidth="180"
+            style="-fx-background-color: #7b2cc9; -fx-text-fill: white; -fx-background-radius: 10;" />
+
+    <Button fx:id="btnVolver" text="Volver" layoutX="520" layoutY="480" prefWidth="180"
+            style="-fx-background-color: #E5E5E5; -fx-background-radius: 10;" />
+</AnchorPane>

@@ -29,4 +29,8 @@ public class Usuario {
     public Usuario() {
 
     }
+
+    public String getTelef() {
+        return numTelef;
+    }
 }

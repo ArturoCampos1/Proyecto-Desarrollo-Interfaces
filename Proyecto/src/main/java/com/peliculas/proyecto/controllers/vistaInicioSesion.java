@@ -60,7 +60,7 @@ public class vistaInicioSesion {
             Scene scene = new Scene(loader.load());
 
             vistaPanelUsuario controller = loader.getController();
-            // controller.setUsuario(usuario);  // si luego quieres mostrar el nombre
+            controller.setUsuario(usuario);
 
             Stage stage = (Stage) paneLogin.getScene().getWindow();
             stage.setScene(scene);

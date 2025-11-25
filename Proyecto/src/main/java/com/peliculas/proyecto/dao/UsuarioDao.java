@@ -6,6 +6,8 @@ import com.peliculas.proyecto.dto.Usuario;
 import java.sql.*;
 import java.util.ArrayList;
 
+import static com.peliculas.proyecto.conexion.Conexion.conexion;
+
 public class UsuarioDao {
 
     private static UsuarioDao instance;
@@ -22,7 +24,7 @@ public class UsuarioDao {
     // Crear usuario vía procedimiento almacenado
     public void crear(Usuario u) throws SQLException {
         Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
+        Connection con = conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL crear_usuario(?,?,?,?)}")) {
             cs.setString(1, u.getNombreUsuario());
@@ -40,7 +42,7 @@ public class UsuarioDao {
         Usuario user = null;
 
         Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
+        Connection con = conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL buscar_usuario_por_nombre(?)}")) {
             cs.setString(1, nombreUsuario);
@@ -62,10 +64,10 @@ public class UsuarioDao {
         return user;
     }
 
-    // Modificar usuario
+    // Modificar usuario vía SP (requiere contraseña siempre)
     public void modificar(Usuario u) throws SQLException {
         Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
+        Connection con = conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL modificar_usuario(?,?,?,?,?)}")) {
             cs.setInt(1, u.getIdUsuario());
@@ -82,7 +84,7 @@ public class UsuarioDao {
     // Eliminar usuario
     public void eliminar(int idUsuario) throws SQLException {
         Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
+        Connection con = conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL eliminar_usuario(?)}")) {
             cs.setInt(1, idUsuario);
@@ -97,7 +99,7 @@ public class UsuarioDao {
         Usuario user = null;
 
         Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
+        Connection con = conexion;
 
         String sql = "SELECT id_usuario, nombre_usuario, correo, num_tel, contrasena " +
                 "FROM usuario WHERE nombre_usuario = ?";
@@ -107,8 +109,6 @@ public class UsuarioDao {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String passBD = rs.getString("contrasena");
-                    System.out.println("Contraseña en BD: " + passBD);
-                    System.out.println("Contraseña introducida: " + contrasena);
 
                     if (passBD != null && passBD.trim().equals(contrasena.trim())) {
                         user = new Usuario(
@@ -130,7 +130,7 @@ public class UsuarioDao {
     // Insert directo (sin SP)
     public void insert(Usuario usuario) throws SQLException {
         Conexion.abrirConexion();
-        Connection conn = Conexion.conexion;
+        Connection conn = conexion;
 
         String sql = "INSERT INTO usuario (nombre_usuario, correo, num_tel, contrasena) VALUES (?, ?, ?, ?)";
 
@@ -145,17 +145,16 @@ public class UsuarioDao {
         }
     }
 
-    //Consultar TODOS los usuarios registrados
-    public ArrayList<Usuario> consultarUsuarios() throws SQLException{
+    // Consultar TODOS los usuarios registrados
+    public ArrayList<Usuario> consultarUsuarios() throws SQLException {
         ArrayList<Usuario> usuarios = new ArrayList<>();
 
         Conexion.abrirConexion();
-        Connection conn = Conexion.conexion;
+        Connection conn = conexion;
 
         String sql = "{ CALL obtener_todos_usuarios() }";
 
         try {
-
             CallableStatement cs = conn.prepareCall(sql);
             ResultSet rs = cs.executeQuery();
 
@@ -167,8 +166,10 @@ public class UsuarioDao {
                 String contrasena = rs.getString("contrasena");
 
                 Usuario u = new Usuario(nombre, correo, telefono, contrasena);
+                u.setIdUsuario(id);
                 usuarios.add(u);
             }
+
             Conexion.cerrarConexion();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -177,4 +178,52 @@ public class UsuarioDao {
         return usuarios;
     }
 
+    public boolean existeUsuario(String nombreUsuario) throws SQLException {
+        Conexion.abrirConexion();
+        Connection conn = conexion;
+
+        String sql = "SELECT COUNT(*) FROM usuario WHERE nombre_usuario = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, nombreUsuario);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean existe = false;
+
+        if (rs.next()) {
+            existe = rs.getInt(1) > 0;
+        }
+
+        Conexion.cerrarConexion();
+        return existe;
+    }
+
+    // ✅ MÉTODO NUEVO: Actualizar usuario (para vistaPerfilUsuario)
+    public boolean actualizarUsuario(Usuario u) {
+        boolean actualizado = false;
+
+        try {
+            Conexion.abrirConexion();
+            Connection con = conexion;
+
+            String sql = "UPDATE usuario SET nombre_usuario = ?, correo = ?, num_tel = ?, contrasena = ? WHERE id_usuario = ?";
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+                ps.setString(1, u.getNombreUsuario());
+                ps.setString(2, u.getCorreo());
+                ps.setString(3, u.getNumTelef());
+                ps.setString(4, u.getContrasena());
+                ps.setInt(5, u.getIdUsuario());
+
+                actualizado = ps.executeUpdate() > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return actualizado;
+    }
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListaPeliculas">
+
+    <!-- TÍTULO PRINCIPAL -->
+    <Text id="titulo" fx:id="txtTituloLista" layoutX="344.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Películas de la lista" />
+
+    <Label id="subTitle" layoutX="400.0" layoutY="50.0" prefHeight="40.0" prefWidth="200.0" text="🎬    Gestión de películas" />
+
+    <!-- TARJETA PRINCIPAL -->
+    <Pane id="cardLogin" layoutX="150.0" layoutY="180.0" prefHeight="450.0" prefWidth="700.0">
+
+        <children>
+
+            <!-- LISTA DE PELÍCULAS -->
+            <ListView fx:id="listaPeliculas" layoutX="50.0" layoutY="60.0" prefHeight="260.0" prefWidth="600.0" />
+
+            <!-- BOTÓN AÑADIR -->
+            <Button id="btnCrear" fx:id="btnAgregar" layoutX="50.0" layoutY="350.0" prefHeight="50.0" prefWidth="280.0" text="➕ Añadir película">
+                <font>
+                    <Font size="18.0" />
+                </font>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+
+            <!-- BOTÓN QUITAR -->
+            <Button id="btnCrear" fx:id="btnQuitar" layoutX="370.0" layoutY="350.0" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;" text="Quitar película">
+                <font>
+                    <Font size="18.0" />
+                </font>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+
+        </children>
+    </Pane>
+
+    <!-- BOTÓN VOLVER -->
+    <Button id="btnCrear" fx:id="btnVolver" layoutX="50.0" layoutY="720.0" prefHeight="40.0" prefWidth="140.0" text="← Volver">
+        <font>
+            <Font size="18.0" />
+        </font>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
+
+</AnchorPane>

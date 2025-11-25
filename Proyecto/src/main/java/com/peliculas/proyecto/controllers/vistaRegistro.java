@@ -46,20 +46,43 @@ public class vistaRegistro {
         String telefono = campoTelefono.getText().trim();
         String contrasena = campoContraseña.getText().trim();
 
-        System.out.println("Datos:");
-        System.out.println("Usuario: " + nombreUsuario);
-        System.out.println("Correo: " + correo);
-        System.out.println("Teléfono: " + telefono);
-        System.out.println("Contraseña: " + contrasena);
-
+        // ✅ Validación de campos vacíos
         if (nombreUsuario.isEmpty() || correo.isEmpty() || telefono.isEmpty() || contrasena.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Todos los campos son obligatorios");
             return;
         }
 
+        // ✅ Validación de correo
+        if (!correo.contains("@") || !correo.contains(".")) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Correo inválido", "Introduce un correo válido");
+            return;
+        }
+
+        // ✅ Validación de teléfono (solo números)
+        if (!telefono.matches("\\d+")) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Teléfono inválido", "El teléfono solo puede contener números");
+            return;
+        }
+
+        // ✅ Validación de longitud de contraseña
+        if (contrasena.length() < 4) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Contraseña débil", "La contraseña debe tener al menos 4 caracteres");
+            return;
+        }
+
         try {
-            Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
             UsuarioDao usuarioDao = UsuarioDao.getInstance();
+
+            // ✅ Comprobar si el usuario ya existe
+            if (usuarioDao.existeUsuario(nombreUsuario)) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Usuario existente", "Ese nombre de usuario ya está registrado");
+                return;
+            }
+
+            // ✅ Crear usuario
+            Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
+
+            // ✅ Insertar en BD
             usuarioDao.insert(nuevoUsuario);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso", "Usuario creado correctamente");
@@ -70,6 +93,7 @@ public class vistaRegistro {
             mostrarAlerta(Alert.AlertType.ERROR, "Error BD", "No se pudo registrar el usuario:\n" + e.getMessage());
         }
     }
+
 
     private void volverAMain() {
         try {

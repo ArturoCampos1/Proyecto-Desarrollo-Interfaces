@@ -17,6 +17,7 @@ public class vistaAdmin {
 
     }
 
-    public
+    private void mostrarPerfiles() {
+    }
 
 }
