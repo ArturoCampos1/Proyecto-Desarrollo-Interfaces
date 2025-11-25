@@ -4,6 +4,7 @@ import com.peliculas.proyecto.conexion.Conexion;
 import com.peliculas.proyecto.dto.Usuario;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class UsuarioDao {
 
@@ -142,6 +143,38 @@ public class UsuarioDao {
         } finally {
             Conexion.cerrarConexion();
         }
+    }
+
+    //Consultar TODOS los usuarios registrados
+    public ArrayList<Usuario> consultarUsuarios() throws SQLException{
+        ArrayList<Usuario> usuarios = new ArrayList<>();
+
+        Conexion.abrirConexion();
+        Connection conn = Conexion.conexion;
+
+        String sql = "{ CALL obtener_todos_usuarios() }";
+
+        try {
+
+            CallableStatement cs = conn.prepareCall(sql);
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id_usuario");
+                String nombre = rs.getString("nombre_usuario");
+                String correo = rs.getString("correo");
+                String telefono = rs.getString("num_tel");
+                String contrasena = rs.getString("contrasena");
+
+                Usuario u = new Usuario(nombre, correo, telefono, contrasena);
+                usuarios.add(u);
+            }
+            Conexion.cerrarConexion();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return usuarios;
     }
 
 }

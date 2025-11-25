@@ -62,6 +62,15 @@ END //
 DELIMITER ;
 
 /*
+
+-- Obtener todos los uusarios
+DELIMITER //
+CREATE PROCEDURE obtener_todos_usuarios ()
+BEGIN
+    SELECT * FROM usuario;
+END //
+DELIMITER ;
+
 ----------------------------------
 PROCEDIMIENTOS CRUD PARA PELICULAS
 ----------------------------------

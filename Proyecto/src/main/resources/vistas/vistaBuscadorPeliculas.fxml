@@ -36,7 +36,10 @@
       <Group layoutX="332.0" layoutY="229.0">
          <children>
             <Label id="labelBusquedaPeliculas" fx:id="labelBuscador" opacity="0.78" prefHeight="29.0" prefWidth="419.0" stylesheets="@../styles.css" />
-            <TextField fx:id="labelText" layoutX="54.0" layoutY="1.0" opacity="0.35" prefHeight="33.0" prefWidth="365.0" />
+            <TextField fx:id="labelText" layoutX="54.0" layoutY="1.0" prefHeight="33.0" prefWidth="365.0">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></TextField>
             <ImageView fitHeight="29.0" fitWidth="28.0" layoutX="4.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/magnifier.png" />
