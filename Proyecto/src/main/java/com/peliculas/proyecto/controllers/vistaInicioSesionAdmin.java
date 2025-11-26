@@ -53,7 +53,7 @@ public class vistaInicioSesionAdmin {
                 mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario o contraseña incorrectos");
             }
         } catch (SQLException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", "No se pudo verificar el usuario. Error: " + e.getErrorCode());
+            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", "No se pudo verificar el administrador. Error: " + e.getErrorCode());
         }
     }
 
@@ -69,7 +69,7 @@ public class vistaInicioSesionAdmin {
             stage.show();
 
         } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de usuario");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de admin");
         }
     }
 

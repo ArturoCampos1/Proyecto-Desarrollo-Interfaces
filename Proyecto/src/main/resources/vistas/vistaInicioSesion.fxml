@@ -87,7 +87,4 @@
          </font>
       </Text>
     </Pane>
-
-    <!-- Botón modo oscuro/claro -->
-    <Button id="darkLight" layoutX="927.0" layoutY="20.0" text="🌗" />
 </AnchorPane>

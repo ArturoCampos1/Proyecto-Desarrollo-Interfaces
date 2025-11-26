@@ -61,9 +61,7 @@ BEGIN
 END //
 DELIMITER ;
 
-/*
-
--- Obtener todos los uusarios
+-- Obtener todos los usuarios
 DELIMITER //
 CREATE PROCEDURE obtener_todos_usuarios ()
 BEGIN
@@ -74,7 +72,6 @@ DELIMITER ;
 ----------------------------------
 PROCEDIMIENTOS CRUD PARA PELICULAS
 ----------------------------------
-*/
 
 -- Crear película
 DELIMITER //

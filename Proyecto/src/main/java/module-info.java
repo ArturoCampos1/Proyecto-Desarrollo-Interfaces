@@ -7,6 +7,7 @@ module com.peliculas.proyecto {
     requires java.sql;
     requires gson;
     requires javafx.graphics;
+    requires java.desktop;
 
     opens com.peliculas.proyecto.controllers to javafx.fxml;
     exports com.peliculas.proyecto;

@@ -42,7 +42,7 @@
         <AnchorPane id="campoFondo" layoutX="120.0" layoutY="200.0" prefHeight="40.0" prefWidth="250.0" />
 
         <!-- Número TLF -->
-        <Label layoutX="24.0" layoutY="274.0" text="Número TLF:">
+        <Label layoutX="24.0" layoutY="274.0" text="Número teléfono:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
@@ -84,9 +84,6 @@
          <TextField id="campoTexto" fx:id="campoTelefono" layoutX="23.0" layoutY="307.0" prefHeight="26.0" prefWidth="391.0" />
          <PasswordField id="campoTexto" fx:id="campoContraseña" layoutX="24.0" layoutY="376.0" prefHeight="26.0" prefWidth="390.0" />
     </Pane>
-
-    <!-- Botón modo oscuro/claro -->
-    <Button id="darkLight" layoutX="927.0" layoutY="20.0" text="🌗" />
    <Text layoutX="56.0" layoutY="59.0" text="CineVerse" wrappingWidth="109.46990966796875">
       <fill>
          <LinearGradient endX="1.0" endY="1.0" startX="0.162">

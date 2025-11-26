@@ -10,8 +10,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaMain">
    <children>
-      <Text id="titulo" layoutX="402.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CineVerse" wrappingWidth="197.07012939453125">
-      </Text>
       <Label id="subTitle" layoutX="416.0" layoutY="82.0" prefHeight="40.0" prefWidth="166.0" stylesheets="@../styles.css" text="🎥   Tu cine en línea" />
       <Pane id="cardLogin" fx:id="paneBusqueda" layoutX="68.0" layoutY="252.0" prefHeight="304.0" prefWidth="417.0" stylesheets="@../styles.css">
          <children>
@@ -68,5 +66,6 @@
          </children>
       </Pane>
       <Text id="textOut" layoutX="280.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descubre, alquila y disfruta de las mejores películas desde la comodidad de tu hogar" />
+      <Label layoutX="406.0" layoutY="135.0" style="-fx-font-size: 40px; -fx-font-weight: bold;                   -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #C026D3, #4F46E5);" text="CineVerse" />
    </children>
 </AnchorPane>

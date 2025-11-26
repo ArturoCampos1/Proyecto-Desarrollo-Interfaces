@@ -12,7 +12,7 @@ public class UsuarioDao {
 
     private static UsuarioDao instance;
 
-    private UsuarioDao() {}
+    public UsuarioDao() {}
 
     public static UsuarioDao getInstance() {
         if (instance == null) {

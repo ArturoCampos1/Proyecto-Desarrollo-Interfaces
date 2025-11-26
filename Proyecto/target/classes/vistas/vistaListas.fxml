@@ -6,15 +6,18 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListas">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListas">
 
     <!-- TÍTULO PRINCIPAL -->
-    <Text id="titulo" layoutX="400.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tus Listas" />
+    <Text id="titulo" layoutX="400.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tus Listas" />
 
-    <Label id="subTitle" layoutX="390.0" layoutY="37.0" prefHeight="40.0" prefWidth="200.0" text="🎬       Gestión de listas" />
+    <Label id="subTitle" layoutX="397.0" layoutY="65.0" prefHeight="40.0" prefWidth="200.0" text="🎬       Gestión de listas" />
 
     <!-- TARJETA PRINCIPAL -->
     <Pane id="cardLogin" layoutX="150.0" layoutY="180.0" prefHeight="450.0" prefWidth="700.0" stylesheets="@../styles.css">
@@ -63,5 +66,26 @@
             <Cursor fx:constant="HAND" />
         </cursor>
     </Button>
+   <Text layoutX="66.0" layoutY="69.0" text="CineVerse" wrappingWidth="109.46990966796875">
+      <fill>
+         <LinearGradient endX="1.0" endY="1.0" startX="0.162">
+            <stops>
+               <Stop>
+                  <color>
+                     <Color red="0.596" green="0.172" blue="0.717" />
+                  </color>
+               </Stop>
+               <Stop offset="1.0">
+                  <color>
+                     <Color red="1.0" green="0.286" blue="0.988" />
+                  </color>
+               </Stop>
+            </stops>
+         </LinearGradient>
+      </fill>
+      <font>
+         <Font size="23.0" />
+      </font>
+   </Text>
 
 </AnchorPane>
