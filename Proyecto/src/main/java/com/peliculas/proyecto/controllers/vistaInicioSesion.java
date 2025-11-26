@@ -4,6 +4,7 @@ import com.peliculas.proyecto.dao.UsuarioDao;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -30,8 +31,14 @@ public class vistaInicioSesion {
 
     @FXML
     private void initialize() {
+
         botonLogin.setOnMouseClicked(event -> procesarLogin());
         botonVolver.setOnMouseClicked(event -> volverAMain());
+
+        botonLogin.setCursor(Cursor.HAND);
+        botonVolver.setCursor(Cursor.HAND);
+
+        botonLogin.getStyleClass().add("btnMorado");
     }
 
     @FXML
@@ -70,7 +77,6 @@ public class vistaInicioSesion {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de usuario");
         }
     }
-
 
     @FXML
     private void volverAMain() {

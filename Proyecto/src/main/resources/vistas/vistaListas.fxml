@@ -44,8 +44,10 @@
                 </cursor>
             </Button>
 
-            <!-- BOTÓN ELIMINAR LISTA (BLANCO + TEXTO NEGRO) -->
-            <Button id="btnCrear" fx:id="btnEliminarLista" layoutX="370.0" layoutY="370.0" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;" text="Eliminar lista seleccionada">
+            <!-- BOTÓN ELIMINAR LISTA -->
+            <Button id="btnCrear" fx:id="btnEliminarLista" layoutX="370.0" layoutY="370.0" prefHeight="50.0" prefWidth="280.0"
+                    style="-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;"
+                    text="Eliminar lista seleccionada">
                 <font>
                     <Font size="18.0" />
                 </font>
@@ -57,35 +59,43 @@
         </children>
     </Pane>
 
-    <!-- BOTÓN VOLVER -->
-    <Button id="btnCrear" fx:id="btnVolver" layoutX="50.0" layoutY="720.0" prefHeight="40.0" prefWidth="140.0" text="← Volver">
-        <font>
-            <Font size="18.0" />
-        </font>
+    <!-- BOTÓN VOLVER (ACTUALIZADO) -->
+    <Button fx:id="btnVolver"
+            layoutX="50.0"
+            layoutY="720.0"
+            prefHeight="32.0"
+            prefWidth="120.0"
+            text="← Volver"
+            style="-fx-background-color: #E8E8E8;
+                   -fx-text-fill: black;
+                   -fx-font-size: 14px;
+                   -fx-background-radius: 8;
+                   -fx-border-radius: 8;">
         <cursor>
             <Cursor fx:constant="HAND" />
         </cursor>
     </Button>
-   <Text layoutX="66.0" layoutY="69.0" text="CineVerse" wrappingWidth="109.46990966796875">
-      <fill>
-         <LinearGradient endX="1.0" endY="1.0" startX="0.162">
-            <stops>
-               <Stop>
-                  <color>
-                     <Color red="0.596" green="0.172" blue="0.717" />
-                  </color>
-               </Stop>
-               <Stop offset="1.0">
-                  <color>
-                     <Color red="1.0" green="0.286" blue="0.988" />
-                  </color>
-               </Stop>
-            </stops>
-         </LinearGradient>
-      </fill>
-      <font>
-         <Font size="23.0" />
-      </font>
-   </Text>
+
+    <Text layoutX="66.0" layoutY="69.0" text="CineVerse" wrappingWidth="109.46990966796875">
+        <fill>
+            <LinearGradient endX="1.0" endY="1.0" startX="0.162">
+                <stops>
+                    <Stop>
+                        <color>
+                            <Color red="0.596" green="0.172" blue="0.717" />
+                        </color>
+                    </Stop>
+                    <Stop offset="1.0">
+                        <color>
+                            <Color red="1.0" green="0.286" blue="0.988" />
+                        </color>
+                    </Stop>
+                </stops>
+            </LinearGradient>
+        </fill>
+        <font>
+            <Font size="23.0" />
+        </font>
+    </Text>
 
 </AnchorPane>

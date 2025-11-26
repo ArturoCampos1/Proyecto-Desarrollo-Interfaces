@@ -5,6 +5,7 @@ import com.peliculas.proyecto.dto.Lista;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -31,6 +32,11 @@ public class vistaListas {
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
         btnCrearLista.setOnAction(e -> crearLista());
         btnEliminarLista.setOnAction(e -> eliminarLista());
+
+        btnVolver.setCursor(Cursor.HAND);
+        btnCrearLista.setCursor(Cursor.HAND);
+        btnEliminarLista.setCursor(Cursor.HAND);
+        listaListas.setCursor(Cursor.HAND);
 
         listaListas.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
@@ -100,7 +106,7 @@ public class vistaListas {
         Lista listaSeleccionada = listasUsuario.get(index);
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vvistas/vistaListaPeliculas.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaListaPeliculas.fxml"));
             Scene scene = new Scene(loader.load());
 
             vistaListaPeliculas controller = loader.getController();

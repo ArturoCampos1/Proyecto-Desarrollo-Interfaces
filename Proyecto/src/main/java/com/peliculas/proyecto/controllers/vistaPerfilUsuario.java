@@ -4,6 +4,7 @@ import com.peliculas.proyecto.dao.UsuarioDao;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -19,13 +20,11 @@ public class vistaPerfilUsuario {
 
     private Usuario usuario;
 
-    // ✅ Recibe el usuario desde el panel
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
         cargarDatos();
     }
 
-    // ✅ Cargar datos del usuario en los campos
     private void cargarDatos() {
         if (usuario != null) {
             txtNombre.setText(usuario.getNombreUsuario());
@@ -36,30 +35,36 @@ public class vistaPerfilUsuario {
 
     @FXML
     private void initialize() {
+
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
         btnGuardar.setOnAction(e -> guardarCambios());
+
+        // ✅ Cursor HAND en botones
+        btnVolver.setCursor(Cursor.HAND);
+        btnGuardar.setCursor(Cursor.HAND);
+
+        // ✅ Botón Guardar morado
+        btnGuardar.getStyleClass().add("btnMorado");
+
+        // ✅ Botón Volver también morado (para mantener coherencia visual)
+        btnVolver.getStyleClass().add("btnMorado"); // ✅ CAMBIO
     }
 
-    // ✅ Guardar cambios en BD
     private void guardarCambios() {
 
-        // Validaciones básicas
         if (txtNombre.getText().isEmpty() || txtCorreo.getText().isEmpty()) {
             mostrarAlerta("Error", "Nombre y correo son obligatorios.", Alert.AlertType.ERROR);
             return;
         }
 
-        // ✅ Actualizar datos en el objeto usuario
         usuario.setNombreUsuario(txtNombre.getText());
         usuario.setCorreo(txtCorreo.getText());
         usuario.setNumTelef(txtTelefono.getText());
 
-        // ✅ Contraseña: solo cambiar si el campo NO está vacío
         if (!txtContrasena.getText().isEmpty()) {
             usuario.setContrasena(txtContrasena.getText());
         }
 
-        // ✅ Guardar en BD
         boolean actualizado = UsuarioDao.getInstance().actualizarUsuario(usuario);
 
         if (actualizado) {
@@ -69,7 +74,6 @@ public class vistaPerfilUsuario {
         }
     }
 
-    // ✅ Volver al panel usuario manteniendo sesión
     private void volverAlPanelUsuario() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
@@ -87,7 +91,6 @@ public class vistaPerfilUsuario {
         }
     }
 
-    // ✅ Método para mostrar alertas
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

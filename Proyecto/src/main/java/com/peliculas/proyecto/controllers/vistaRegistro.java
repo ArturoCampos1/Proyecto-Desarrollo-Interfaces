@@ -4,6 +4,7 @@ import com.peliculas.proyecto.dao.UsuarioDao;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,13 +21,13 @@ public class vistaRegistro {
     @FXML
     private Pane paneRegistro;
     @FXML
-    private TextField campoNombre;       // Nombre Usuario
+    private TextField campoNombre;
     @FXML
-    private TextField campoCorreo;       // Correo
+    private TextField campoCorreo;
     @FXML
-    private TextField campoTelefono;     // Número TLF
+    private TextField campoTelefono;
     @FXML
-    private PasswordField campoContraseña; // Contraseña
+    private PasswordField campoContraseña;
     @FXML
     private Button botonRegistro;
     @FXML
@@ -34,8 +35,14 @@ public class vistaRegistro {
 
     @FXML
     private void initialize() {
+
         botonRegistro.setOnMouseClicked(event -> procesarRegistro());
         botonVolver.setOnMouseClicked(event -> volverAMain());
+
+        botonRegistro.setCursor(Cursor.HAND);
+        botonVolver.setCursor(Cursor.HAND);
+
+        botonRegistro.getStyleClass().add("btnMorado");
     }
 
     private void procesarRegistro() {
@@ -46,25 +53,21 @@ public class vistaRegistro {
         String telefono = campoTelefono.getText().trim();
         String contrasena = campoContraseña.getText().trim();
 
-        // ✅ Validación de campos vacíos
         if (nombreUsuario.isEmpty() || correo.isEmpty() || telefono.isEmpty() || contrasena.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Todos los campos son obligatorios");
             return;
         }
 
-        // ✅ Validación de correo
         if (!correo.contains("@") || !correo.contains(".")) {
             mostrarAlerta(Alert.AlertType.WARNING, "Correo inválido", "Introduce un correo válido");
             return;
         }
 
-        // ✅ Validación de teléfono (solo números)
         if (!telefono.matches("\\d+")) {
             mostrarAlerta(Alert.AlertType.WARNING, "Teléfono inválido", "El teléfono solo puede contener números");
             return;
         }
 
-        // ✅ Validación de longitud de contraseña
         if (contrasena.length() < 4) {
             mostrarAlerta(Alert.AlertType.WARNING, "Contraseña débil", "La contraseña debe tener al menos 4 caracteres");
             return;
@@ -73,20 +76,18 @@ public class vistaRegistro {
         try {
             UsuarioDao usuarioDao = UsuarioDao.getInstance();
 
-            // ✅ Comprobar si el usuario ya existe
             if (usuarioDao.existeUsuario(nombreUsuario)) {
                 mostrarAlerta(Alert.AlertType.WARNING, "Usuario existente", "Ese nombre de usuario ya está registrado");
                 return;
             }
 
-            // ✅ Crear usuario
             Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
 
-            // ✅ Insertar en BD
             usuarioDao.insert(nuevoUsuario);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso", "Usuario creado correctamente");
-            volverAMain();
+
+            abrirVistaInicioSesion();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,6 +95,17 @@ public class vistaRegistro {
         }
     }
 
+    private void abrirVistaInicioSesion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaInicioSesion.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) paneRegistro.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la pantalla de inicio de sesión");
+        }
+    }
 
     private void volverAMain() {
         try {
