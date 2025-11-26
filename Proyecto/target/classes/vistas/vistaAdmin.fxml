@@ -68,7 +68,7 @@
                   <Font size="21.0" />
                </font>
             </Text>
-            <ScrollPane fx:id="scrollPanePerfiles" layoutX="59.0" layoutY="72.0" prefHeight="405.0" prefWidth="313.0">
+            <ScrollPane fx:id="scrollPanePerfiles" layoutX="59.0" layoutY="72.0" prefHeight="405.0" prefWidth="313.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
                <content>
                   <VBox fx:id="contenedorUsuarios" spacing="5" style="-fx-padding: 10;" />
                </content>
@@ -93,5 +93,6 @@
             <Text layoutX="117.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" />
          </children>
       </Pane>
+      <Button id="btnVolver" fx:id="botonVolver" layoutX="413.0" layoutY="719.0" prefHeight="40.0" prefWidth="173.0" styleClass="btnVolver" stylesheets="@../styles.css" text="← Volver" />
    </children>
 </AnchorPane>

@@ -3,13 +3,19 @@ package com.peliculas.proyecto.controllers;
 import com.peliculas.proyecto.dao.UsuarioDao;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class vistaAdmin {
@@ -18,18 +24,20 @@ public class vistaAdmin {
     private ScrollPane scrollPanePerfiles;
 
     @FXML
+    private Button botonVolver;
+
+    @FXML
     private VBox contenedorUsuarios;
 
-    private UsuarioDao usuarioDao;
+    UsuarioDao usuarioDao = new UsuarioDao();
+
 
     @FXML
     public void initialize() {
-        usuarioDao = new UsuarioDao();
-
-        // Estilo del ScrollPane
-        scrollPanePerfiles.setStyle("-fx-background: white; -fx-border-color: transparent;");
 
         cargarUsuarios();
+        botonVolver.setOnMouseClicked(event -> volverAMain());
+
     }
 
     public void cargarUsuarios() {
@@ -102,10 +110,35 @@ public class vistaAdmin {
                         "-fx-text-fill: #6c757d;"
         );
 
-        vboxInfo.getChildren().addAll(lineaNombre, lblCorreo, lblTelefono);
+        // === LÍNea 3: Btn Eliminar ==
+        Button btnEliminar = new Button("Eliminar");
+        btnEliminar.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-text-fill: #8e44ad;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 6 16;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-border-color: #8e44ad;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-cursor: hand;"
+        );
+
+                btnEliminar.setOnMouseClicked(event -> {
+                    try {
+                        usuarioDao.eliminar(usuario.getIdUsuario());
+                        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Usuario eliminado.");
+                        cargarUsuarios();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+
+        vboxInfo.getChildren().addAll(lineaNombre, lblCorreo, lblTelefono, btnEliminar);
 
         fila.getChildren().addAll(icono, vboxInfo);
-        
+
         return fila;
     }
 
@@ -122,5 +155,24 @@ public class vistaAdmin {
                         "-fx-font-weight: bold;"
         );
         contenedorUsuarios.getChildren().add(lblError);
+    }
+
+    private void volverAMain() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) scrollPanePerfiles.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo volver a la pantalla principal");
+        }
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

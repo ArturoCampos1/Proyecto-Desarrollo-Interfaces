@@ -183,3 +183,10 @@
     -fx-border-color: #f8bbd0;
     -fx-text-fill: #e91e63;
 }
+
+/* ---------------------------------------------------------------------*/
+
+.scrollPaneAdmin{
+    -fx-background: white;
+    -fx-border-color: transparent;
+}
