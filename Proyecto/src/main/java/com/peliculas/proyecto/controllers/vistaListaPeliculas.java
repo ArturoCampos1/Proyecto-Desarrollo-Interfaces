@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class vistaListaPeliculas {
     @FXML private Button btnAgregar;
     @FXML private Button btnQuitar;
     @FXML private Button btnVolver;
-    @FXML private Label txtTituloLista;
+    @FXML private Text txtTituloLista;
 
     private Lista lista;
     private Usuario usuario;

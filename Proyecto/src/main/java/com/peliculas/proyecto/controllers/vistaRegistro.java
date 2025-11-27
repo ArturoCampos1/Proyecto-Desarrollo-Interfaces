@@ -35,7 +35,6 @@ public class vistaRegistro {
 
     @FXML
     private void initialize() {
-
         botonRegistro.setOnMouseClicked(event -> procesarRegistro());
         botonVolver.setOnMouseClicked(event -> volverAMain());
 
@@ -74,6 +73,7 @@ public class vistaRegistro {
         }
 
         try {
+            // Usar correctamente UsuarioDao y método crear()
             UsuarioDao usuarioDao = UsuarioDao.getInstance();
 
             if (usuarioDao.existeUsuario(nombreUsuario)) {
@@ -83,7 +83,8 @@ public class vistaRegistro {
 
             Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
 
-            usuarioDao.insert(nuevoUsuario);
+            // Método correcto para insertar el usuario en la base de datos
+            usuarioDao.crear(nuevoUsuario);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso", "Usuario creado correctamente");
 
@@ -122,6 +123,7 @@ public class vistaRegistro {
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
+        alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
     }

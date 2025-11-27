@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class vistaBuscadorPeliculas {
 
@@ -55,7 +54,6 @@ public class vistaBuscadorPeliculas {
         this.usuario = usuario;
     }
 
-
     ObservableList<String> opciones = FXCollections.observableArrayList(
             "Nombre", "Autor", "Género"
     );
@@ -63,10 +61,9 @@ public class vistaBuscadorPeliculas {
     @FXML
     public void initialize() {
         boxFiltros.setItems(opciones);
-        boxFiltros.getSelectionModel().selectFirst(); // Selecciona el primer item
-
+        boxFiltros.getSelectionModel().selectFirst();
         search.setOnAction(e -> busqueda(labelText));
-
+        btnVolver.setOnAction(e -> volver());
     }
 
     @FXML
@@ -74,7 +71,6 @@ public class vistaBuscadorPeliculas {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) scrollPeliculas.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -84,9 +80,7 @@ public class vistaBuscadorPeliculas {
     }
 
     public void busqueda(TextField labelText){
-
         gridPeliculas.getChildren().clear();
-
         String texto = labelText.getText();
 
         if (boxFiltros.getValue().equalsIgnoreCase("Nombre")){
@@ -105,22 +99,19 @@ public class vistaBuscadorPeliculas {
             ArrayList<VBox> boxs = returnPeliculaConFormatoArray(p);
             mostrarPeliculas(boxs);
         }
-
     }
 
     public VBox returnPeliculaConFormato(Pelicula p) {
-        VBox box = new VBox(5); // 5px de spacing
+        VBox box = new VBox(5);
         box.setPrefWidth(200);
 
-        // Construir URL completa de TMDb
-        String baseUrl = "https://image.tmdb.org/t/p/w500"; // w500 es tamaño de ejemplo
-        String fullUrl = baseUrl + p.getPathBanner(); // p.getPathBanner() debe ser "/abcd1234.jpg"
+        String baseUrl = "https://image.tmdb.org/t/p/w500";
+        String fullUrl = baseUrl + p.getPathBanner();
 
         ImageView img;
         try {
-            img = new ImageView(new Image(fullUrl, true)); // true = carga en background
+            img = new ImageView(new Image(fullUrl, true));
         } catch (IllegalArgumentException e) {
-            // Fallback si la imagen no se carga
             img = new ImageView();
         }
 
@@ -133,22 +124,25 @@ public class vistaBuscadorPeliculas {
         titulo.setTextFill(Color.WHITE);
         titulo.setWrapText(true);
         titulo.setMaxWidth(180);
+
         Label director = new Label("Director: " + p.getDirector());
         director.setTextFill(Color.WHITE);
+
         Label resumen = new Label("Resumen: " + p.getResumen());
         resumen.setTextFill(Color.WHITE);
+
         Label anioSalida = new Label("Año de salida: " + p.getAnioSalida());
         anioSalida.setTextFill(Color.WHITE);
+
         Label valoracion = new Label("Valoración: " + p.getValoracion() + "/5");
         valoracion.setTextFill(Color.WHITE);
 
-
-        box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion); // añadir la imagen también
+        box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion);
 
         LinearGradient gradient = new LinearGradient(
-                0, 0, // startX, startY (0%,0%)
-                1, 1, // endX, endY (100%,100%)
-                true, // proportional
+                0, 0,
+                1, 1,
+                true,
                 CycleMethod.NO_CYCLE,
                 new Stop(0, Color.web("#a34fb0")),
                 new Stop(1, Color.web("#7b2cc9"))
@@ -163,23 +157,19 @@ public class vistaBuscadorPeliculas {
     }
 
     public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
+        ArrayList<VBox> boxs = new ArrayList<>();
 
-        ArrayList<VBox> boxs = new ArrayList<VBox>();
-
-        for (int i = 0; i < p.size(); i++){
-
+        for (Pelicula pelicula : p) {
             VBox box = new VBox(5);
             box.setPrefWidth(200);
 
-            // Construir URL completa de TMDb
-            String baseUrl = "https://image.tmdb.org/t/p/w500"; // w500 es tamaño de ejemplo
-            String fullUrl = baseUrl + p.get(i).getPathBanner(); // p.getPathBanner() debe ser "/abcd1234.jpg"
+            String baseUrl = "https://image.tmdb.org/t/p/w500";
+            String fullUrl = baseUrl + pelicula.getPathBanner();
 
             ImageView img;
             try {
-                img = new ImageView(new Image(fullUrl, true)); // true = carga en background
+                img = new ImageView(new Image(fullUrl, true));
             } catch (IllegalArgumentException e) {
-                // Fallback si la imagen no se carga
                 img = new ImageView();
             }
 
@@ -187,26 +177,30 @@ public class vistaBuscadorPeliculas {
             img.setFitHeight(250);
             img.setPreserveRatio(true);
 
-            Label titulo = new Label(p.get(i).getTitulo());
+            Label titulo = new Label(pelicula.getTitulo());
             titulo.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
             titulo.setTextFill(Color.WHITE);
             titulo.setWrapText(true);
             titulo.setMaxWidth(180);
-            Label director = new Label("Director: " + p.get(i).getDirector());
+
+            Label director = new Label("Director: " + pelicula.getDirector());
             director.setTextFill(Color.WHITE);
-            Label resumen = new Label("Resumen: " + p.get(i).getResumen());
+
+            Label resumen = new Label("Resumen: " + pelicula.getResumen());
             resumen.setTextFill(Color.WHITE);
-            Label anioSalida = new Label("Año de salida: " + p.get(i).getAnioSalida());
+
+            Label anioSalida = new Label("Año de salida: " + pelicula.getAnioSalida());
             anioSalida.setTextFill(Color.WHITE);
-            Label valoracion = new Label("Valoración: " + p.get(i).getValoracion());
+
+            Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);
 
-            box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion); // añadir la imagen también
+            box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion);
 
             LinearGradient gradient = new LinearGradient(
-                    0, 0, // startX, startY (0%,0%)
-                    1, 1, // endX, endY (100%,100%)
-                    true, // proportional
+                    0, 0,
+                    1, 1,
+                    true,
                     CycleMethod.NO_CYCLE,
                     new Stop(0, Color.web("#a34fb0")),
                     new Stop(1, Color.web("#7b2cc9"))
@@ -221,17 +215,16 @@ public class vistaBuscadorPeliculas {
         }
 
         return boxs;
-
     }
 
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
-        gridPeliculas.getChildren().clear(); // Limpiar GridPane
+        gridPeliculas.getChildren().clear();
         int col = 0;
         int row = 0;
         for (VBox p : peliculas) {
             gridPeliculas.add(p, col, row);
             col++;
-            if (col == 3) { // 3 por fila
+            if (col == 3) {
                 col = 0;
                 row++;
             }
@@ -243,5 +236,34 @@ public class vistaBuscadorPeliculas {
         alert.setTitle("Error");
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void volver() {
+        try {
+            FXMLLoader loader;
+
+            if (usuario != null) {
+                loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
+            } else {
+                loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
+            }
+
+            Parent root = loader.load();
+
+            if (usuario != null) {
+                Object controller = loader.getController();
+                try {
+                    controller.getClass().getMethod("setUsuario", Usuario.class).invoke(controller, usuario);
+                } catch (Exception ignored) {}
+            }
+
+            Stage stage = (Stage) btnVolver.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            mostrarError("No se pudo volver a la pantalla anterior");
+        }
     }
 }

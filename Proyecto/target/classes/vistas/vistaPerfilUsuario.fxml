@@ -39,15 +39,21 @@
     <PasswordField fx:id="txtContrasena" layoutX="300" layoutY="410" prefWidth="400"
                    promptText="Dejar en blanco para no cambiar" />
 
-    <!-- 🔹 BOTÓN GUARDAR CON ESTILO DEL SEGUNDO FXML -->
-    <Button fx:id="btnGuardar" id="btnCrear"
+    <!-- ⭐ BOTÓN GUARDAR CAMBIOS (Mismo estilo que 'Crear Cuenta') -->
+    <Button fx:id="btnGuardar"
+            id="btnCrear"
             layoutX="300" layoutY="480" prefWidth="180"
-            text="Guardar Cambios" />
+            text="Guardar Cambios"
+            styleClass="btnIniciaSesion"
+            stylesheets="@../styles.css" />
 
-    <!-- 🔹 BOTÓN VOLVER CON ESTILO DEL SEGUNDO FXML -->
-    <Button fx:id="btnVolver" id="inicioSesion"
+    <!-- ⭐ BOTÓN VOLVER (Mismo hover y estilo que el registro) -->
+    <Button fx:id="btnVolver"
+            id="btnVolver"
             layoutX="520" layoutY="480" prefWidth="180"
-            text="Volver" />
+            text="Volver"
+            styleClass="btnVolver"
+            stylesheets="@../styles.css" />
 
     <Text layoutX="66.0" layoutY="69.0" text="CineVerse" wrappingWidth="109.46">
         <fill>

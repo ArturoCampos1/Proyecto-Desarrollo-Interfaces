@@ -7,6 +7,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
@@ -16,6 +17,10 @@ public class vistaPanelUsuario {
 
     @FXML private ImageView iconUser;
     @FXML private ImageView iconSearch;
+
+    // 🔹 NUEVOS fx:id PARA LOS CUADRADOS DETRÁS
+    @FXML private Pane paneUser;
+    @FXML private Pane paneSearch;
 
     @FXML private StackPane cardListas;
     @FXML private StackPane cardPrestamos;
@@ -58,8 +63,6 @@ public class vistaPanelUsuario {
             stage.setScene(scene);
             stage.show();
 
-            System.out.println("Buscador abierto correctamente");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +90,7 @@ public class vistaPanelUsuario {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
             Scene scene = new Scene(loader.load());
 
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
 
@@ -99,19 +102,29 @@ public class vistaPanelUsuario {
     @FXML
     private void initialize() {
 
+        // ICONOS
         iconUser.setOnMouseClicked(e -> abrirVistaPerfil());
         iconSearch.setOnMouseClicked(e -> abrirBuscador());
-        cardListas.setOnMouseClicked(e -> abrirVistaListas());
 
+        // CUADRADOS DETRÁS DE LOS ICONOS
+        paneUser.setOnMouseClicked(e -> abrirVistaPerfil());
+        paneSearch.setOnMouseClicked(e -> abrirBuscador());
+
+        // TARJETAS
+        cardListas.setOnMouseClicked(e -> abrirVistaListas());
+        cardPrestamos.setOnMouseClicked(e -> {});
+        cardAlquilar.setOnMouseClicked(e -> {});
+
+        // CURSORES
         iconUser.setCursor(Cursor.HAND);
         iconSearch.setCursor(Cursor.HAND);
+        paneUser.setCursor(Cursor.HAND);
+        paneSearch.setCursor(Cursor.HAND);
+
         cardListas.setCursor(Cursor.HAND);
         cardPrestamos.setCursor(Cursor.HAND);
         cardAlquilar.setCursor(Cursor.HAND);
         btnVolver.setCursor(Cursor.HAND);
-
-        cardPrestamos.setOnMouseClicked(e -> {});
-        cardAlquilar.setOnMouseClicked(e -> {});
 
         btnVolver.setOnAction(this::volverAMain);
     }

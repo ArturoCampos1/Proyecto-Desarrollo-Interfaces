@@ -12,90 +12,81 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListas">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css"
+            xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.peliculas.proyecto.controllers.vistaListas">
 
     <!-- TÍTULO PRINCIPAL -->
-    <Text id="titulo" layoutX="400.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tus Listas" />
+    <Text id="titulo" layoutX="400.0" layoutY="158.0" text="Tus Listas" />
 
-    <Label id="subTitle" layoutX="397.0" layoutY="65.0" prefHeight="40.0" prefWidth="200.0" text="🎬       Gestión de listas" />
+    <Label id="subTitle" layoutX="397.0" layoutY="65.0" prefHeight="40.0" prefWidth="200.0"
+           text="🎬       Gestión de listas" />
 
     <!-- TARJETA PRINCIPAL -->
-    <Pane id="cardLogin" layoutX="150.0" layoutY="180.0" prefHeight="450.0" prefWidth="700.0" stylesheets="@../styles.css">
+    <Pane id="cardLogin" layoutX="150.0" layoutY="180.0" prefHeight="450.0" prefWidth="700.0">
 
         <children>
 
             <!-- TÍTULO DENTRO DE LA TARJETA -->
-            <Text id="letrasEspeciales" layoutX="250.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Listas del usuario">
-                <font>
-                    <Font size="22.0" />
-                </font>
+            <Text id="letrasEspeciales" layoutX="250.0" layoutY="60.0" text="Listas del usuario">
+                <font><Font size="22.0" /></font>
             </Text>
 
             <!-- LISTVIEW -->
             <ListView fx:id="listaListas" layoutX="50.0" layoutY="90.0" prefHeight="260.0" prefWidth="600.0" />
 
             <!-- BOTÓN CREAR LISTA -->
-            <Button id="btnCrear" fx:id="btnCrearLista" layoutX="50.0" layoutY="370.0" prefHeight="50.0" prefWidth="280.0" text="➕ Crear nueva lista">
-                <font>
-                    <Font size="18.0" />
-                </font>
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
+            <Button id="btnCrear" fx:id="btnCrearLista"
+                    layoutX="50.0" layoutY="370.0" prefHeight="50.0" prefWidth="280.0"
+                    text="➕ Crear nueva lista"
+                    style="-fx-text-fill: white;
+                           -fx-focus-color: transparent;
+                           -fx-faint-focus-color: transparent;">
+                <font><Font size="18.0" /></font>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
 
             <!-- BOTÓN ELIMINAR LISTA -->
-            <Button id="btnCrear" fx:id="btnEliminarLista" layoutX="370.0" layoutY="370.0" prefHeight="50.0" prefWidth="280.0"
-                    style="-fx-background-color: white; -fx-text-fill: black; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;"
+            <Button id="btnCrear" fx:id="btnEliminarLista"
+                    layoutX="370.0" layoutY="370.0" prefHeight="50.0" prefWidth="280.0"
+                    style="-fx-background-color: white;
+                           -fx-text-fill: black;
+                           -fx-border-color: #ccc;
+                           -fx-border-radius: 10;
+                           -fx-background-radius: 10;
+                           -fx-focus-color: transparent;
+                           -fx-faint-focus-color: transparent;"
                     text="Eliminar lista seleccionada">
-                <font>
-                    <Font size="18.0" />
-                </font>
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
+                <font><Font size="18.0" /></font>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
 
         </children>
     </Pane>
 
-    <!-- BOTÓN VOLVER (ACTUALIZADO) -->
+    <!-- BOTÓN VOLVER -->
     <Button fx:id="btnVolver"
             layoutX="50.0"
             layoutY="720.0"
             prefHeight="32.0"
             prefWidth="120.0"
             text="← Volver"
-            style="-fx-background-color: #E8E8E8;
-                   -fx-text-fill: black;
-                   -fx-font-size: 14px;
-                   -fx-background-radius: 8;
-                   -fx-border-radius: 8;">
-        <cursor>
-            <Cursor fx:constant="HAND" />
-        </cursor>
+            styleClass="btnVolver"
+            style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;">
+        <cursor><Cursor fx:constant="HAND" /></cursor>
     </Button>
 
-    <Text layoutX="66.0" layoutY="69.0" text="CineVerse" wrappingWidth="109.46990966796875">
+    <Text layoutX="66.0" layoutY="69.0" text="CineVerse">
         <fill>
             <LinearGradient endX="1.0" endY="1.0" startX="0.162">
                 <stops>
-                    <Stop>
-                        <color>
-                            <Color red="0.596" green="0.172" blue="0.717" />
-                        </color>
-                    </Stop>
-                    <Stop offset="1.0">
-                        <color>
-                            <Color red="1.0" green="0.286" blue="0.988" />
-                        </color>
-                    </Stop>
+                    <Stop><color><Color red="0.596" green="0.172" blue="0.717" /></color></Stop>
+                    <Stop offset="1.0"><color><Color red="1.0" green="0.286" blue="0.988" /></color></Stop>
                 </stops>
             </LinearGradient>
         </fill>
-        <font>
-            <Font size="23.0" />
-        </font>
+        <font><Font size="23.0" /></font>
     </Text>
 
 </AnchorPane>
