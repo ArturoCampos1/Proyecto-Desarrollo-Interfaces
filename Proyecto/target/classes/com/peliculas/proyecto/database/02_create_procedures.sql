@@ -1,5 +1,3 @@
--- TODO: cambiar los actualizar por modificar y repasar los metodos de modificacion
-
 /*
 ----------------------------------
 PROCEDIMIENTOS CRUD PARA USUARIOS
@@ -7,7 +5,8 @@ PROCEDIMIENTOS CRUD PARA USUARIOS
 */
 
 -- Crear usuario
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS crear_usuario$$
 CREATE PROCEDURE crear_usuario (
     IN p_nombre_usuario VARCHAR(100),
     IN p_correo VARCHAR(150),
@@ -17,22 +16,24 @@ CREATE PROCEDURE crear_usuario (
 BEGIN
     INSERT INTO usuario (nombre_usuario, correo, num_tel, contrasena)
     VALUES (p_nombre_usuario, p_correo, p_num_tel, p_contrasena);
-END //
+END$$
 DELIMITER ;
 
 -- Buscar usuario por nombre de usuario
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS buscar_usuario_por_nombre$$
 CREATE PROCEDURE buscar_usuario_por_nombre (
     IN p_nombre_usuario VARCHAR(100)
 )
 BEGIN
     SELECT * FROM usuario
     WHERE nombre_usuario = p_nombre_usuario;
-END //
+END$$
 DELIMITER ;
 
 -- Modificar usuario
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS modificar_usuario$$
 CREATE PROCEDURE modificar_usuario (
     IN p_id_usuario INT,
     IN p_nombre_usuario VARCHAR(100),
@@ -47,34 +48,40 @@ BEGIN
         num_tel = p_num_tel,
         contrasena = p_contrasena
     WHERE id_usuario = p_id_usuario;
-END //
+END$$
 DELIMITER ;
 
 -- Eliminar usuario
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS eliminar_usuario$$
 CREATE PROCEDURE eliminar_usuario (
     IN p_id_usuario INT
 )
 BEGIN
     DELETE FROM usuario
     WHERE id_usuario = p_id_usuario;
-END //
+END$$
 DELIMITER ;
 
 -- Obtener todos los usuarios
-DELIMITER //
-CREATE PROCEDURE obtener_todos_usuarios ()
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_todos_usuarios$$
+CREATE PROCEDURE obtener_todos_usuarios()
 BEGIN
     SELECT * FROM usuario;
-END //
+END$$
 DELIMITER ;
 
+/*
 ----------------------------------
 PROCEDIMIENTOS CRUD PARA PELICULAS
 ----------------------------------
+*/
 
 -- Crear película
-DELIMITER //
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS crear_pelicula$$
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
     IN p_anio_salida YEAR,
@@ -86,22 +93,24 @@ CREATE PROCEDURE crear_pelicula (
         'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
         'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
     ),
-    IN p_valoracion DECIMAL(3,1)
+    IN p_valoracion DECIMAL(3,1),
+    IN p_disponible INT
 )
 BEGIN
-    INSERT INTO pelicula (
-        titulo, anio_salida, director, resumen, genero, valoracion
-    )
-    VALUES (
-        p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion
-    );
-END //
+    -- Asignar 0 si se pasa NULL
+    IF p_disponible IS NULL THEN
+        SET p_disponible = 0;
+    END IF;
+
+    INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, valoracion, disponible)
+    VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion, p_disponible);
+END$$
+
 DELIMITER ;
 
-
-
--- Buscar película(s) por nombre
-DELIMITER //
+-- Buscar películas por nombre
+DELIMITER $$
+DROP PROCEDURE IF EXISTS buscar_peliculas_por_nombre$$
 CREATE PROCEDURE buscar_peliculas_por_nombre (
     IN p_nombre VARCHAR(255)
 )
@@ -109,11 +118,12 @@ BEGIN
     SELECT *
     FROM pelicula
     WHERE titulo LIKE CONCAT('%', p_nombre, '%');
-END //
+END$$
 DELIMITER ;
 
 -- Modificar película
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS modificar_pelicula$$
 CREATE PROCEDURE modificar_pelicula (
     IN p_id_pelicula INT,
     IN p_titulo VARCHAR(255),
@@ -126,28 +136,32 @@ CREATE PROCEDURE modificar_pelicula (
         'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
         'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
     ),
+    IN p_valoracion DECIMAL(3,1),
+    IN p_disponible INT
 )
 BEGIN
     UPDATE pelicula
-    SET
-        titulo = p_titulo,
+    SET titulo = p_titulo,
         anio_salida = p_anio_salida,
         director = p_director,
         resumen = p_resumen,
         genero = p_genero,
+        valoracion = p_valoracion,
+        disponible = p_disponible
     WHERE id_pelicula = p_id_pelicula;
-END //
+END$$
 DELIMITER ;
 
 -- Eliminar película
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS eliminar_pelicula$$
 CREATE PROCEDURE eliminar_pelicula (
     IN p_id_pelicula INT
 )
 BEGIN
     DELETE FROM pelicula
     WHERE id_pelicula = p_id_pelicula;
-END //
+END$$
 DELIMITER ;
 
 /*
@@ -157,7 +171,8 @@ PROCEDIMIENTOS CRUD PARA RESEÑAS
 */
 
 -- Crear reseña
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS crear_resena$$
 CREATE PROCEDURE crear_resena (
     IN p_valoracion DECIMAL(3,1),
     IN p_texto TEXT,
@@ -167,12 +182,12 @@ CREATE PROCEDURE crear_resena (
 BEGIN
     INSERT INTO resena (valoracion, texto, id_usuario, id_pelicula)
     VALUES (p_valoracion, p_texto, p_id_usuario, p_id_pelicula);
-END //
+END$$
 DELIMITER ;
 
-
 -- Buscar reseñas por película
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS buscar_resenas_por_pelicula$$
 CREATE PROCEDURE buscar_resenas_por_pelicula (
     IN p_id_pelicula INT
 )
@@ -180,12 +195,12 @@ BEGIN
     SELECT r.*
     FROM resena r
     WHERE r.id_pelicula = p_id_pelicula;
-END //
+END$$
 DELIMITER ;
 
-
 -- Modificar reseña
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS modificar_resena$$
 CREATE PROCEDURE modificar_resena (
     IN p_id_resena INT,
     IN p_valoracion DECIMAL(3,1),
@@ -196,19 +211,19 @@ BEGIN
     SET valoracion = p_valoracion,
         texto = p_texto
     WHERE id_resena = p_id_resena;
-END //
+END$$
 DELIMITER ;
 
-
 -- Eliminar reseña
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS eliminar_resena$$
 CREATE PROCEDURE eliminar_resena (
     IN p_id_resena INT
 )
 BEGIN
     DELETE FROM resena
     WHERE id_resena = p_id_resena;
-END //
+END$$
 DELIMITER ;
 
 /*
@@ -218,7 +233,8 @@ PROCEDIMIENTOS CRUD PARA LISTA
 */
 
 -- Crear lista
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS crear_lista$$
 CREATE PROCEDURE crear_lista (
     IN p_id_usuario INT,
     IN p_nombre_lista VARCHAR(100)
@@ -226,12 +242,12 @@ CREATE PROCEDURE crear_lista (
 BEGIN
     INSERT INTO lista (id_usuario, nombre_lista)
     VALUES (p_id_usuario, p_nombre_lista);
-END //
+END$$
 DELIMITER ;
 
-
 -- Obtener listas de un usuario
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_listas_por_nombre_usuario$$
 CREATE PROCEDURE obtener_listas_por_nombre_usuario (
     IN p_nombre_usuario VARCHAR(100)
 )
@@ -240,12 +256,12 @@ BEGIN
     FROM lista l
     JOIN usuario u ON l.id_usuario = u.id_usuario
     WHERE u.nombre_usuario = p_nombre_usuario;
-END //
+END$$
 DELIMITER ;
 
-
--- Modificar lista (solo nombre)
-DELIMITER //
+-- Modificar lista
+DELIMITER $$
+DROP PROCEDURE IF EXISTS modificar_lista$$
 CREATE PROCEDURE modificar_lista (
     IN p_id_lista INT,
     IN p_nombre_lista VARCHAR(100)
@@ -254,18 +270,19 @@ BEGIN
     UPDATE lista
     SET nombre_lista = p_nombre_lista
     WHERE id_lista = p_id_lista;
-END //
+END$$
 DELIMITER ;
 
 -- Eliminar lista
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS eliminar_lista$$
 CREATE PROCEDURE eliminar_lista (
     IN p_id_lista INT
 )
 BEGIN
     DELETE FROM lista
     WHERE id_lista = p_id_lista;
-END //
+END$$
 DELIMITER ;
 
 /*
@@ -275,7 +292,8 @@ PROCEDIMIENTOS CRUD PARA ALQUILERES
 */
 
 -- Crear alquiler
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS crear_alquiler$$
 CREATE PROCEDURE crear_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT,
@@ -284,11 +302,12 @@ CREATE PROCEDURE crear_alquiler (
 BEGIN
     INSERT INTO alquiler (id_usuario, id_pelicula, precio)
     VALUES (p_id_usuario, p_id_pelicula, p_precio);
-END //
+END$$
 DELIMITER ;
 
 -- Obtener alquileres por usuario
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_alquileres_por_usuario$$
 CREATE PROCEDURE obtener_alquileres_por_usuario (
     IN p_id_usuario INT
 )
@@ -297,12 +316,12 @@ BEGIN
     FROM alquiler a
     JOIN pelicula p ON a.id_pelicula = p.id_pelicula
     WHERE a.id_usuario = p_id_usuario;
-END //
+END$$
 DELIMITER ;
 
-
 -- Modificar alquiler (fecha de devolución y precio)
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS modificar_alquiler$$
 CREATE PROCEDURE modificar_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT,
@@ -315,12 +334,12 @@ BEGIN
         fecha_devolucion = p_fecha_devolucion
     WHERE id_usuario = p_id_usuario
       AND id_pelicula = p_id_pelicula;
-END //
+END$$
 DELIMITER ;
 
-
 -- Eliminar alquiler
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS eliminar_alquiler$$
 CREATE PROCEDURE eliminar_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT
@@ -329,18 +348,14 @@ BEGIN
     DELETE FROM alquiler
     WHERE id_usuario = p_id_usuario
       AND id_pelicula = p_id_pelicula;
-END //
+END$$
 DELIMITER ;
 
-
-/*
-----------------------------------
-PROCEDIMIENTOS CRUD PARA LISTA_PELICULA
-----------------------------------
-*/
+/* ---------------------------------- PROCEDIMIENTOS CRUD PARA LISTA_PELICULA ---------------------------------- */
 
 -- Agregar película a una lista
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS agregar_pelicula_a_lista$$
 CREATE PROCEDURE agregar_pelicula_a_lista (
     IN p_id_lista INT,
     IN p_id_pelicula INT
@@ -348,11 +363,12 @@ CREATE PROCEDURE agregar_pelicula_a_lista (
 BEGIN
     INSERT IGNORE INTO lista_pelicula (id_lista, id_pelicula)
     VALUES (p_id_lista, p_id_pelicula);
-END //
+END$$
 DELIMITER ;
 
 -- Quitar película de una lista
-DELIMITER //
+DELIMITER $$
+DROP PROCEDURE IF EXISTS quitar_pelicula_de_lista$$
 CREATE PROCEDURE quitar_pelicula_de_lista (
     IN p_id_lista INT,
     IN p_id_pelicula INT
@@ -361,5 +377,5 @@ BEGIN
     DELETE FROM lista_pelicula
     WHERE id_lista = p_id_lista
       AND id_pelicula = p_id_pelicula;
-END //
+END$$
 DELIMITER ;

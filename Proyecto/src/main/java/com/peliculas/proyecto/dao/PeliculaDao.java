@@ -12,7 +12,7 @@ public class PeliculaDao {
 
     private static PeliculaDao instance;
 
-    private PeliculaDao() {}
+    public PeliculaDao() {}
 
     public static PeliculaDao getInstance() {
         if (instance == null) {
@@ -39,8 +39,8 @@ public class PeliculaDao {
         }
     }
 
-    public List<Pelicula> buscarPorNombre(String nombre) throws SQLException {
-        List<Pelicula> lista = new ArrayList<>();
+    public Pelicula buscarPorNombre(String nombre) throws SQLException {
+        Pelicula p = new Pelicula();
 
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
@@ -52,14 +52,13 @@ public class PeliculaDao {
             try (ResultSet rs = cs.executeQuery()) {
 
                 while (rs.next()) {
-                    Pelicula p = new Pelicula();
+                    p = new Pelicula();
                     p.setIdPelicula(rs.getInt("id_pelicula"));
                     p.setTitulo(rs.getString("titulo"));
                     p.setAnioSalida(rs.getString("anio_salida"));
                     p.setDirector(rs.getString("director"));
                     p.setResumen(rs.getString("resumen"));
                     p.setGenero(Genero.valueOf(rs.getString("genero"))); // si existe
-                    lista.add(p);
                 }
             }
 
@@ -67,7 +66,7 @@ public class PeliculaDao {
             Conexion.cerrarConexion();
         }
 
-        return lista;
+        return p;
     }
 
     public ArrayList<Pelicula> obtenerPeliculas() throws SQLException {

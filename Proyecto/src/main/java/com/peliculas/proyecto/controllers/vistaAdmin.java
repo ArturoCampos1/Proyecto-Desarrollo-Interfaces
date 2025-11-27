@@ -1,21 +1,23 @@
 package com.peliculas.proyecto.controllers;
 
+import com.peliculas.proyecto.dao.PeliculaDao;
+import com.peliculas.proyecto.dao.TMDBDao;
 import com.peliculas.proyecto.dao.UsuarioDao;
+import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class vistaAdmin {
@@ -29,14 +31,74 @@ public class vistaAdmin {
     @FXML
     private VBox contenedorUsuarios;
 
+    @FXML
+    private TextField campoNombre;
+
+    @FXML
+    private TextField campoCantidad;
+
+    @FXML
+    private Button btnAñadir;
+
+    @FXML
+    private Text textoInfo;
+
     UsuarioDao usuarioDao = new UsuarioDao();
 
+    PeliculaDao peliculaDao = new PeliculaDao();
+
+    TMDBDao tmdbDao = new TMDBDao();
 
     @FXML
     public void initialize() {
 
         cargarUsuarios();
         botonVolver.setOnMouseClicked(event -> volverAMain());
+        btnAñadir.setOnMouseClicked(event -> añadirPeliculaDisponible(campoNombre, campoCantidad));
+
+    }
+
+    public void añadirPeliculaDisponible(TextField campoNombre, TextField campoCantidad){
+        Pelicula pelicula = new Pelicula();
+
+        String nombre = campoNombre.getText();
+        String cantidadString = campoCantidad.getText();
+
+        if (nombre.isEmpty() || cantidadString.isEmpty()){
+            textoInfo.setText("❗ Debe rellenar los campos");
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadString);
+            if (cantidad < 0) {
+                textoInfo.setText("❗ La cantidad no puede ser negativa");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            textoInfo.setText("❗ La cantidad debe ser un número válido");
+            return;
+        }
+
+        try {
+            pelicula = peliculaDao.buscarPorNombre(nombre);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (pelicula == null){
+            pelicula = tmdbDao.findByName(nombre);
+        }
+
+        try {
+            if (pelicula != null) {
+                pelicula.setDisponible(cantidad);
+                peliculaDao.crear(pelicula);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
