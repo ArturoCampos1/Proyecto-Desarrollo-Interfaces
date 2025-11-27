@@ -86,18 +86,18 @@ CREATE PROCEDURE crear_pelicula (
         'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
         'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
     ),
-    IN p_valoracion DECIMAL(3,1)
+    IN p_valoracion DECIMAL(3,1),
+    IN p_disponible INT DEFAULT 0
 )
 BEGIN
     INSERT INTO pelicula (
-        titulo, anio_salida, director, resumen, genero, valoracion
+        titulo, anio_salida, director, resumen, genero, valoracion, disponible
     )
     VALUES (
-        p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion
+        p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion, p_disponible
     );
 END //
 DELIMITER ;
-
 
 
 -- Buscar película(s) por nombre
@@ -126,6 +126,8 @@ CREATE PROCEDURE modificar_pelicula (
         'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
         'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
     ),
+    IN p_valoracion DECIMAL(3,1),
+    IN p_disponible INT
 )
 BEGIN
     UPDATE pelicula
@@ -135,6 +137,8 @@ BEGIN
         director = p_director,
         resumen = p_resumen,
         genero = p_genero,
+        valoracion = p_valoracion,
+        disponible = p_disponible
     WHERE id_pelicula = p_id_pelicula;
 END //
 DELIMITER ;

@@ -13,7 +13,7 @@ public class Pelicula {
     private Genero genero;
     private String pathBanner;
     private double valoracion;
-    private int cantidad;
+    private int disponible;
 
     public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, double valoracion) {
         this.idPelicula = idPelicula;
@@ -23,8 +23,15 @@ public class Pelicula {
         this.resumen = resumen;
         this.genero = genero;
         this.valoracion = valoracion;
+        this.disponible = 0;
+    }
+
+    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, double valoracion, int disponible) {
+        this(idPelicula, titulo, anioSalida, director, resumen, genero, valoracion);
+        this.disponible = disponible;
     }
 
     public Pelicula() {
+        this.disponible = 0;
     }
 }
