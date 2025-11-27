@@ -127,24 +127,6 @@ public class UsuarioDao {
         return user;
     }
 
-    // Insert directo (sin SP)
-    public void insert(Usuario usuario) throws SQLException {
-        Conexion.abrirConexion();
-        Connection conn = conexion;
-
-        String sql = "INSERT INTO usuario (nombre_usuario, correo, num_tel, contrasena) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, usuario.getNombreUsuario());
-            stmt.setString(2, usuario.getCorreo());
-            stmt.setString(3, usuario.getNumTelef());
-            stmt.setString(4, usuario.getContrasena());
-            stmt.executeUpdate();
-        } finally {
-            Conexion.cerrarConexion();
-        }
-    }
-
     // Consultar TODOS los usuarios registrados
     public ArrayList<Usuario> consultarUsuarios() throws SQLException {
         ArrayList<Usuario> usuarios = new ArrayList<>();

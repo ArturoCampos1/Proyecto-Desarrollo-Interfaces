@@ -8,6 +8,7 @@ PROCEDIMIENTOS CRUD PARA USUARIOS
 
 -- Crear usuario
 DELIMITER //
+DROP PROCEDURE IF EXISTS crear_usuario;
 CREATE PROCEDURE crear_usuario (
     IN p_nombre_usuario VARCHAR(100),
     IN p_correo VARCHAR(150),
@@ -22,6 +23,7 @@ DELIMITER ;
 
 -- Buscar usuario por nombre de usuario
 DELIMITER //
+DROP PROCEDURE IF EXISTS buscar_usuario_por_nombre;
 CREATE PROCEDURE buscar_usuario_por_nombre (
     IN p_nombre_usuario VARCHAR(100)
 )
@@ -33,6 +35,7 @@ DELIMITER ;
 
 -- Modificar usuario
 DELIMITER //
+DROP PROCEDURE IF EXISTS modificar_usuario;
 CREATE PROCEDURE modificar_usuario (
     IN p_id_usuario INT,
     IN p_nombre_usuario VARCHAR(100),
@@ -52,6 +55,7 @@ DELIMITER ;
 
 -- Eliminar usuario
 DELIMITER //
+DROP PROCEDURE IF EXISTS eliminar_usuario;
 CREATE PROCEDURE eliminar_usuario (
     IN p_id_usuario INT
 )
@@ -63,7 +67,8 @@ DELIMITER ;
 
 -- Obtener todos los usuarios
 DELIMITER //
-CREATE PROCEDURE obtener_todos_usuarios ()
+DROP PROCEDURE IF EXISTS obtener_todos_usuarios;
+CREATE PROCEDURE obtener_todos_usuarios (
 BEGIN
     SELECT * FROM usuario;
 END //
@@ -75,6 +80,7 @@ PROCEDIMIENTOS CRUD PARA PELICULAS
 
 -- Crear película
 DELIMITER //
+DROP PROCEDURE IF EXISTS crear_pelicula;
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
     IN p_anio_salida YEAR,
@@ -102,6 +108,7 @@ DELIMITER ;
 
 -- Buscar película(s) por nombre
 DELIMITER //
+DROP PROCEDURE IF EXISTS buscar_peliculas_por_nombre;
 CREATE PROCEDURE buscar_peliculas_por_nombre (
     IN p_nombre VARCHAR(255)
 )
@@ -114,6 +121,7 @@ DELIMITER ;
 
 -- Modificar película
 DELIMITER //
+DROP PROCEDURE IF EXISTS modificar_pelicula;
 CREATE PROCEDURE modificar_pelicula (
     IN p_id_pelicula INT,
     IN p_titulo VARCHAR(255),
@@ -145,6 +153,7 @@ DELIMITER ;
 
 -- Eliminar película
 DELIMITER //
+DROP PROCEDURE IF EXISTS eliminar_pelicula;
 CREATE PROCEDURE eliminar_pelicula (
     IN p_id_pelicula INT
 )
@@ -162,6 +171,7 @@ PROCEDIMIENTOS CRUD PARA RESEÑAS
 
 -- Crear reseña
 DELIMITER //
+DROP PROCEDURE IF EXISTS crear_resena;
 CREATE PROCEDURE crear_resena (
     IN p_valoracion DECIMAL(3,1),
     IN p_texto TEXT,
@@ -177,6 +187,7 @@ DELIMITER ;
 
 -- Buscar reseñas por película
 DELIMITER //
+DROP PROCEDURE IF EXISTS buscar_resena_por_pelicula;
 CREATE PROCEDURE buscar_resenas_por_pelicula (
     IN p_id_pelicula INT
 )
@@ -190,6 +201,7 @@ DELIMITER ;
 
 -- Modificar reseña
 DELIMITER //
+DROP PROCEDURE IF EXISTS modificar_resena;
 CREATE PROCEDURE modificar_resena (
     IN p_id_resena INT,
     IN p_valoracion DECIMAL(3,1),
@@ -206,6 +218,7 @@ DELIMITER ;
 
 -- Eliminar reseña
 DELIMITER //
+DROP PROCEDURE IF EXISTS eliminar_resena;
 CREATE PROCEDURE eliminar_resena (
     IN p_id_resena INT
 )
@@ -223,6 +236,7 @@ PROCEDIMIENTOS CRUD PARA LISTA
 
 -- Crear lista
 DELIMITER //
+DROP PROCEDURE IF EXISTS crear_lista;
 CREATE PROCEDURE crear_lista (
     IN p_id_usuario INT,
     IN p_nombre_lista VARCHAR(100)
@@ -236,6 +250,7 @@ DELIMITER ;
 
 -- Obtener listas de un usuario
 DELIMITER //
+DROP PROCEDURE IF EXISTS obtener_listas_por_nombre_usuario;
 CREATE PROCEDURE obtener_listas_por_nombre_usuario (
     IN p_nombre_usuario VARCHAR(100)
 )
@@ -250,6 +265,7 @@ DELIMITER ;
 
 -- Modificar lista (solo nombre)
 DELIMITER //
+DROP PROCEDURE IF EXISTS modificar_lista;
 CREATE PROCEDURE modificar_lista (
     IN p_id_lista INT,
     IN p_nombre_lista VARCHAR(100)
@@ -263,6 +279,7 @@ DELIMITER ;
 
 -- Eliminar lista
 DELIMITER //
+DROP PROCEDURE IF EXISTS eliminar_lista;
 CREATE PROCEDURE eliminar_lista (
     IN p_id_lista INT
 )
@@ -280,6 +297,7 @@ PROCEDIMIENTOS CRUD PARA ALQUILERES
 
 -- Crear alquiler
 DELIMITER //
+DROP PROCEDURE IF EXISTS crear_alquiler;
 CREATE PROCEDURE crear_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT,
@@ -293,6 +311,7 @@ DELIMITER ;
 
 -- Obtener alquileres por usuario
 DELIMITER //
+DROP PROCEDURE IF EXISTS obtener_alquileres_por_usuario;
 CREATE PROCEDURE obtener_alquileres_por_usuario (
     IN p_id_usuario INT
 )
@@ -307,6 +326,7 @@ DELIMITER ;
 
 -- Modificar alquiler (fecha de devolución y precio)
 DELIMITER //
+DROP PROCEDURE IF EXISTS modificar_alquiler;
 CREATE PROCEDURE modificar_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT,
@@ -325,6 +345,7 @@ DELIMITER ;
 
 -- Eliminar alquiler
 DELIMITER //
+DROP PROCEDURE IF EXISTS eliminar_alquiler;
 CREATE PROCEDURE eliminar_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT
@@ -345,6 +366,7 @@ PROCEDIMIENTOS CRUD PARA LISTA_PELICULA
 
 -- Agregar película a una lista
 DELIMITER //
+DROP PROCEDURE IF EXISTS agregar_pelicula_a_lista;
 CREATE PROCEDURE agregar_pelicula_a_lista (
     IN p_id_lista INT,
     IN p_id_pelicula INT
@@ -357,6 +379,7 @@ DELIMITER ;
 
 -- Quitar película de una lista
 DELIMITER //
+DROP PROCEDURE IF EXISTS quitar_pelicula_de_lista;
 CREATE PROCEDURE quitar_pelicula_de_lista (
     IN p_id_lista INT,
     IN p_id_pelicula INT

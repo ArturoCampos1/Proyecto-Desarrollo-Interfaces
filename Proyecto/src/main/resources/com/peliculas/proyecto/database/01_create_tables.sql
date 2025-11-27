@@ -73,3 +73,9 @@ CREATE TABLE alquiler (
    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
    FOREIGN KEY (id_pelicula) REFERENCES pelicula(id_pelicula) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- TABLA PELICULAS DISPONIBLES
+CREATE TABLE peliculas_disponibles (
+   id_lista_peliculas_disponibles INT AUTO_INCREMENT PRIMARY KEY,
+   id_pelicula INT NOT NULL,
+) ENGINE=InnoDB;
