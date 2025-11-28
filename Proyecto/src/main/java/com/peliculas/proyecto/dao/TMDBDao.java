@@ -97,6 +97,8 @@ public class TMDBDao {
     // Buscar películas por género
     public ArrayList<Pelicula> findByGenre(String genero) {
         ArrayList<Pelicula> arrayPelis = new ArrayList<>();
+        int numero = (int)(Math.random() * 300) + 1;
+
         try {
             URL urlIdGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?api_key=" + API_KEY + "&language=es-ES");
             HttpURLConnection con = (HttpURLConnection) urlIdGenres.openConnection();
@@ -127,7 +129,7 @@ public class TMDBDao {
             }
 
             // Buscar películas por género
-            URL urlPeliculasConGen = new URL("https://api.themoviedb.org/3/discover/movie?with_genres=" + idEquivalenteParametro + "&api_key=" + API_KEY + "&language=es-ES&page=1");
+            URL urlPeliculasConGen = new URL("https://api.themoviedb.org/3/discover/movie?with_genres=" + idEquivalenteParametro + "&api_key=" + API_KEY + "&language=es-ES&page=" + numero);
             HttpURLConnection conexFinal = (HttpURLConnection) urlPeliculasConGen.openConnection();
             conexFinal.setRequestMethod("GET");
             conexFinal.setRequestProperty("Content-Type", "application/json");
@@ -149,6 +151,56 @@ public class TMDBDao {
             throw new RuntimeException(e + ": Película NO encontrada");
         }
         return arrayPelis;
+    }
+
+    public ArrayList<Pelicula> findTrendingFilms() {
+        ArrayList<Pelicula> peliculasPopulares = new ArrayList<>();
+        int numero = (int)(Math.random() * 500) + 1;
+
+        URL url = null;
+        try {
+            url = new URL("https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY + "&language=es-ES&page=" + numero);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            con.setRequestMethod("GET");
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        }
+        con.setRequestProperty("Content-Type", "application/json");
+        Gson gson = new Gson();
+        JsonObject jsonObject;
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        jsonObject = gson.fromJson(br, JsonObject.class);
+
+        JsonArray results = jsonObject.get("results").getAsJsonArray();
+        for (JsonElement element : results){
+            JsonObject resultado = element.getAsJsonObject();
+            Pelicula p = null;
+            try {
+                p = getPelicula(resultado);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (!revisarPelicula(p)){
+                peliculasPopulares.add(p);
+            }
+        }
+        return peliculasPopulares;
     }
 
     // Usado para la búsqueda por director, usando JsonObject ya parseado de créditos
@@ -250,19 +302,6 @@ public class TMDBDao {
             };
 
         return faltanDatos;
-    }
-
-
-    private static String getDirector(JsonArray trabajadoresArray) {
-        String director = "";
-        for (JsonElement trabajadorPelicula : trabajadoresArray) {
-            JsonObject person = trabajadorPelicula.getAsJsonObject();
-            if (person.has("job") && person.get("job").getAsString().equalsIgnoreCase("Director")) {
-                director = person.get("name").getAsString();
-                break;
-            }
-        }
-        return director;
     }
 
 }

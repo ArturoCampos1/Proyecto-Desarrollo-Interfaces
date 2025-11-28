@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -34,6 +35,9 @@ public class vistaBuscadorPeliculas {
     Label labelBuscador;
 
     @FXML
+    Text textoInfo;
+
+    @FXML
     ComboBox<String> boxFiltros;
 
     @FXML
@@ -46,7 +50,13 @@ public class vistaBuscadorPeliculas {
     private TextField labelText;
 
     @FXML
+    private ImageView imgRecarga;
+
+    @FXML
     private Button search;
+
+    @FXML
+    private Button btnActualizar;
 
     private Usuario usuario;
 
@@ -62,8 +72,49 @@ public class vistaBuscadorPeliculas {
     public void initialize() {
         boxFiltros.setItems(opciones);
         boxFiltros.getSelectionModel().selectFirst();
+
+        // Evitar foco en el label por si acaso
+        labelText.setFocusTraversable(false);
+
+        imgRecarga.setMouseTransparent(true);
+
+        returnPeliculaConFormatoArray(recarga()); //Random cuando inicializa
+
+        //Texto al etnrar
+        if (boxFiltros.getValue().equalsIgnoreCase("Nombre")){
+            textoInfo.setMouseTransparent(true); //Labvel invisible
+            labelText.setText("");
+            textoInfo.setText("Ingresa el título de la película");
+        }
+
+        boxFiltros.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null) return;
+            textoInfo.setMouseTransparent(true);
+            switch (newValue) {
+                case "Nombre":
+                    labelText.setText("");
+                    textoInfo.setText("Ingresa el título de la película");
+                    break;
+
+                case "Autor":
+                    labelText.setText("");
+                    textoInfo.setText("Ingresa el nombre del autor");
+                    break;
+
+                case "Género":
+                    labelText.setText("");
+                    textoInfo.setText("Ingresa el género");
+                    break;
+            }
+        });
+
+        labelText.setOnMouseClicked(mouseEvent -> {
+            textoInfo.setText("");
+        });
+
         search.setOnAction(e -> busqueda(labelText));
         btnVolver.setOnAction(e -> volver());
+        btnActualizar.setOnAction(e -> recarga());
     }
 
     @FXML
@@ -102,7 +153,14 @@ public class vistaBuscadorPeliculas {
         }
     }
 
-        public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
+    public ArrayList<Pelicula> recarga() {
+        ArrayList<Pelicula> peliculasTendring = tmdbDao.findTrendingFilms();
+        ArrayList<VBox> boxs = returnPeliculaConFormatoArray(peliculasTendring);
+        mostrarPeliculas(boxs);
+        return peliculasTendring;
+    }
+
+    public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
         for (Pelicula pelicula : p) {

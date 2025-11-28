@@ -36,7 +36,7 @@
       <Group layoutX="332.0" layoutY="229.0">
          <children>
             <Label id="labelBusquedaPeliculas" fx:id="labelBuscador" opacity="0.78" prefHeight="29.0" prefWidth="419.0" stylesheets="@../styles.css" />
-            <TextField fx:id="labelText" layoutX="54.0" layoutY="1.0" prefHeight="33.0" prefWidth="365.0">
+            <TextField fx:id="labelText" layoutX="54.0" layoutY="1.0" prefHeight="33.0" prefWidth="358.0">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></TextField>
@@ -45,6 +45,7 @@
                   <Image url="@../img/magnifier.png" />
                </image>
             </ImageView>
+            <Text fx:id="textoInfo" layoutX="61.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="368.3830966949463" />
          </children>
       </Group>
       <ComboBox id="btnFiltros" fx:id="boxFiltros" layoutX="171.0" layoutY="234.0" prefWidth="150.0" stylesheets="@../styles.css">
@@ -52,7 +53,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ComboBox>
-       <ScrollPane fx:id="scrollPeliculas" layoutX="162.0" layoutY="273.0" prefHeight="402.0" prefWidth="784.0" style="-fx-background-color: #F0F0F0;" styleClass="input" stylesheets="@../styles.css">
+       <ScrollPane fx:id="scrollPeliculas" layoutX="171.0" layoutY="280.0" prefHeight="402.0" prefWidth="784.0" style="-fx-background-color: #F0F0F0;" styleClass="input" stylesheets="@../styles.css">
            <content>
                <GridPane fx:id="gridPeliculas" hgap="20.0" style="-fx-padding: 10;" vgap="20.0" />
            </content>
@@ -97,5 +98,33 @@
             <Font size="23.0" />
          </font>
       </Text>
+      <Button fx:id="btnActualizar" layoutX="843.0" layoutY="230.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="54.0" styleClass="btnSearchPelicula" stylesheets="@../styles.css">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ImageView fx:id="imgRecarga" layoutX="858.0" layoutY="234.0">
+         <image>
+            <Image url="@../img/actualizar.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Text layoutX="829.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Randomizador">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Text>
+      <ImageView layoutX="800.0" layoutY="171.0">
+         <image>
+            <Image url="@../img/bombilla.png" />
+         </image>
+      </ImageView>
+      <ImageView layoutX="858.0" layoutY="199.0">
+         <image>
+            <Image url="@../img/arrow.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
