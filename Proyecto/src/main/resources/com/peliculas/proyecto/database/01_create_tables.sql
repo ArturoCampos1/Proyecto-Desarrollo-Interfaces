@@ -22,12 +22,7 @@ CREATE TABLE pelicula (
    anio_salida YEAR NOT NULL,
    director VARCHAR(95) NOT NULL,
    resumen TEXT,
-   genero ENUM(
-       'ACCION', 'AVENTURA', 'ANIMACION', 'COMEDIA', 'CRIMEN',
-       'DOCUMENTAL', 'DRAMA', 'FAMILIAR', 'FANTASIA', 'HISTORIA',
-       'TERROR', 'MUSICA', 'MISTERIO', 'ROMANCE', 'CIENCIA_FICCION',
-       'PELICULA_DE_TV', 'SUSPENSO', 'BELICA', 'OESTE'
-   ) NOT NULL,
+   genero VARCHAR(100) NOT NULL,
    disponible INT DEFAULT 0,
    valoracion DECIMAL(3,1) DEFAULT 0.0 CHECK (valoracion BETWEEN 0.5 AND 5 AND (valoracion * 2) = FLOOR(valoracion * 2))
 );
