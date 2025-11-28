@@ -2,12 +2,16 @@ package com.peliculas.proyecto.dao;
 
 import com.peliculas.proyecto.conexion.Conexion;
 import com.peliculas.proyecto.dto.Lista;
+import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.Usuario;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ListaDao {
+public class ListaDao implements CRUD<Lista> {
 
     private static ListaDao instance;
 
@@ -20,73 +24,78 @@ public class ListaDao {
         return instance;
     }
 
-    // ✅ Crear lista SIN procedimientos
-    public void crear(Lista lista) throws SQLException {
+    @Override
+    public void crear(Lista l) throws SQLException {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        String sql = "INSERT INTO listas (nombre_lista, id_usuario) VALUES (?, ?)";
+        try (CallableStatement cs = con.prepareCall("{CALL crear_lista(?,?)}")) {
+            cs.setInt(1, l.getUsuario().getIdUsuario());
+            cs.setString(2, l.getNombreLista());
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, lista.getNombreLista());
-            ps.setInt(2, lista.getUsuario().getIdUsuario());
-            ps.executeUpdate();
+            cs.executeUpdate();
         } finally {
             Conexion.cerrarConexion();
         }
     }
 
-    // ✅ Eliminar lista SIN procedimientos
-    public void eliminar(Lista lista) throws SQLException {
-        Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
-
-        String sql = "DELETE FROM listas WHERE id_lista = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, lista.getIdLista());
-            ps.executeUpdate();
-        } finally {
-            Conexion.cerrarConexion();
-        }
-    }
-
-    // ✅ Obtener listas del usuario SIN procedimientos
     public ArrayList<Lista> obtenerPorNombreUsuario(String nombreUsuario) throws SQLException {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        ArrayList<Lista> listas = new ArrayList<>();
+        try (CallableStatement cs = con.prepareCall("{CALL obtener_listas_por_nombre_usuario(?)}")) {
+            cs.setString(1, nombreUsuario);
+            ResultSet rs = cs.executeQuery();
 
-        String sql = """
-            SELECT l.id_lista, l.nombre_lista, u.id_usuario
-            FROM listas l
-            JOIN usuarios u ON l.id_usuario = u.id_usuario
-            WHERE u.nombre_usuario = ?
-        """;
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, nombreUsuario);
-            ResultSet rs = ps.executeQuery();
+            ArrayList<Lista> listas = new ArrayList<>();
 
             while (rs.next()) {
                 Lista l = new Lista();
                 l.setIdLista(rs.getInt("id_lista"));
                 l.setNombreLista(rs.getString("nombre_lista"));
 
+                // Crea usuario solo con ID para referenciar al usuario dueño de la lista
                 Usuario u = new Usuario();
                 u.setIdUsuario(rs.getInt("id_usuario"));
-                u.setNombreUsuario(nombreUsuario);
-
                 l.setUsuario(u);
+
+                // Inicializamos lista vacía de películas; se pueden cargar después
+                l.setPeliculas(new ArrayList<>());
 
                 listas.add(l);
             }
 
+            return listas;
         } finally {
             Conexion.cerrarConexion();
         }
+    }
 
-        return listas;
+    @Override
+    public void modificar(Lista l) throws SQLException {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        try (CallableStatement cs = con.prepareCall("{CALL modificar_lista(?,?)}")) {
+            cs.setInt(1, l.getIdLista());
+            cs.setString(2, l.getNombreLista());
+
+            cs.executeUpdate();
+        } finally {
+            Conexion.cerrarConexion();
+        }
+    }
+
+    @Override
+    public void eliminar(Lista l) throws SQLException {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        try (CallableStatement cs = con.prepareCall("{CALL eliminar_lista(?)}")) {
+            cs.setInt(1, l.getIdLista());
+            cs.executeUpdate();
+        } finally {
+            Conexion.cerrarConexion();
+        }
     }
 }
