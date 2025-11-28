@@ -84,8 +84,9 @@ public class vistaBuscadorPeliculas {
         String texto = labelText.getText();
 
         if (boxFiltros.getValue().equalsIgnoreCase("Nombre")){
-            Pelicula p = tmdbDao.findByName(texto);
-            gridPeliculas.add(returnPeliculaConFormato(p), 1, 1);
+            ArrayList<Pelicula> p = tmdbDao.findByName(texto);
+            ArrayList<VBox> boxs = returnPeliculaConFormatoArray(p);
+            mostrarPeliculas(boxs);
         }
 
         if (boxFiltros.getValue().equalsIgnoreCase("Autor")){
@@ -101,62 +102,7 @@ public class vistaBuscadorPeliculas {
         }
     }
 
-    public VBox returnPeliculaConFormato(Pelicula p) {
-        VBox box = new VBox(5);
-        box.setPrefWidth(200);
-
-        String baseUrl = "https://image.tmdb.org/t/p/w500";
-        String fullUrl = baseUrl + p.getPathBanner();
-
-        ImageView img;
-        try {
-            img = new ImageView(new Image(fullUrl, true));
-        } catch (IllegalArgumentException e) {
-            img = new ImageView();
-        }
-
-        img.setFitWidth(180);
-        img.setFitHeight(250);
-        img.setPreserveRatio(true);
-
-        Label titulo = new Label(p.getTitulo());
-        titulo.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
-        titulo.setTextFill(Color.WHITE);
-        titulo.setWrapText(true);
-        titulo.setMaxWidth(180);
-
-        Label director = new Label("Director: " + p.getDirector());
-        director.setTextFill(Color.WHITE);
-
-        Label resumen = new Label("Resumen: " + p.getResumen());
-        resumen.setTextFill(Color.WHITE);
-
-        Label anioSalida = new Label("Año de salida: " + p.getAnioSalida());
-        anioSalida.setTextFill(Color.WHITE);
-
-        Label valoracion = new Label("Valoración: " + p.getValoracion() + "/5");
-        valoracion.setTextFill(Color.WHITE);
-
-        box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion);
-
-        LinearGradient gradient = new LinearGradient(
-                0, 0,
-                1, 1,
-                true,
-                CycleMethod.NO_CYCLE,
-                new Stop(0, Color.web("#a34fb0")),
-                new Stop(1, Color.web("#7b2cc9"))
-        );
-
-        box.setBackground(new Background(
-                new BackgroundFill(gradient, new CornerRadii(8), Insets.EMPTY)
-        ));
-        box.setPadding(new Insets(10));
-
-        return box;
-    }
-
-    public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
+        public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
         for (Pelicula pelicula : p) {
@@ -189,13 +135,16 @@ public class vistaBuscadorPeliculas {
             Label resumen = new Label("Resumen: " + pelicula.getResumen());
             resumen.setTextFill(Color.WHITE);
 
+            Label generos = new Label("Resumen: " + pelicula.getGenero());
+            generos.setTextFill(Color.WHITE);
+
             Label anioSalida = new Label("Año de salida: " + pelicula.getAnioSalida());
             anioSalida.setTextFill(Color.WHITE);
 
             Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);
 
-            box.getChildren().addAll(img, titulo, director, resumen, anioSalida, valoracion);
+            box.getChildren().addAll(img, titulo, director, resumen, generos, anioSalida, valoracion);
 
             LinearGradient gradient = new LinearGradient(
                     0, 0,

@@ -10,12 +10,12 @@ public class Pelicula {
     private String anioSalida;
     private String director;
     private String resumen;
-    private Genero genero;
+    private String genero;
     private String pathBanner;
     private double valoracion;
     private int disponible;
 
-    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, String pathBanner, double valoracion, int disponible) {
+    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, String genero, String pathBanner, double valoracion, int disponible) {
         this.idPelicula = idPelicula;
         this.titulo = titulo;
         this.anioSalida = anioSalida;
@@ -27,7 +27,7 @@ public class Pelicula {
         this.disponible = disponible;
     }
 
-    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, double valoracion) {
+    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, String genero, double valoracion) {
         this.idPelicula = idPelicula;
         this.titulo = titulo;
         this.anioSalida = anioSalida;
@@ -38,7 +38,7 @@ public class Pelicula {
         this.disponible = 0;
     }
 
-    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, Genero genero, double valoracion, int disponible) {
+    public Pelicula(int idPelicula, String titulo, String anioSalida, String director, String resumen, String genero, double valoracion, int disponible) {
         this(idPelicula, titulo, anioSalida, director, resumen, genero, valoracion);
         this.disponible = disponible;
     }

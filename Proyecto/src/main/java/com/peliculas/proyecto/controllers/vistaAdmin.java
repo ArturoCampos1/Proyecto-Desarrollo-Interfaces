@@ -88,7 +88,7 @@ public class vistaAdmin {
         }
 
         if (pelicula == null){
-            pelicula = tmdbDao.findByName(nombre);
+            //pelicula = tmdbDao.findByName(nombre);
         }
 
         try {

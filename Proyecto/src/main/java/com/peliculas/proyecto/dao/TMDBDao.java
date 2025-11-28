@@ -7,20 +7,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TMDBDao {
 
     // Claves para el acceso a la API
     private static final String API_KEY = "490d5fcf9a1de19d8f7ba4c3bb2df832";
-    private static final String URL_BBDD = "https://api.themoviedb.org/3/movie/";
 
     // Método findByName
-    public Pelicula findByName(String nombre) {
-        Pelicula p = null;
+    public ArrayList<Pelicula> findByName(String nombre) {
+        ArrayList<Pelicula> arrayPeliculas = new ArrayList<>();
         try {
             URL urlAPINombre = new URL("https://api.themoviedb.org/3/search/movie?api_key=" + API_KEY + "&query=" + nombre + "&language=es-ES");
             HttpURLConnection con = (HttpURLConnection) urlAPINombre.openConnection();
@@ -30,16 +32,21 @@ public class TMDBDao {
             BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(br, JsonObject.class);
-            JsonArray results = jsonObject.getAsJsonArray("results");
 
-            if (results != null && results.size() > 0) {
-                JsonObject result = results.get(0).getAsJsonObject();
-                p = getPelicula(result);
+            JsonArray results = jsonObject.getAsJsonArray("results");
+            for (JsonElement resultado : results){
+                JsonObject result = resultado.getAsJsonObject();
+                Pelicula p = getPelicula(result);
+
+                if (!revisarPelicula(p)){
+                    arrayPeliculas.add(p);
+                }
+
             }
         } catch (Exception e) {
             throw new RuntimeException(e + ": Película NO encontrada");
         }
-        return p;
+        return arrayPeliculas;
     }
 
     // Buscar películas por director (autor)
@@ -74,13 +81,16 @@ public class TMDBDao {
                     JsonObject crew = elem.getAsJsonObject();
                     if (crew.get("job").getAsString().equalsIgnoreCase("Director")) {
                         Pelicula p = getPelicula(crew);
-                        arrayPelis.add(p);
+                        if (!revisarPelicula(p)){
+                            arrayPelis.add(p);
+                        }
                     }
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e + ": Películas del autor NO encontradas");
         }
+
         return arrayPelis;
     }
 
@@ -130,7 +140,10 @@ public class TMDBDao {
             for (JsonElement resultado : results){
                 JsonObject result = resultado.getAsJsonObject();
                 Pelicula p = getPelicula(result);
-                arrayPelis.add(p);
+
+                if (!revisarPelicula(p)){
+                    arrayPelis.add(p);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e + ": Película NO encontrada");
@@ -141,42 +154,104 @@ public class TMDBDao {
     // Usado para la búsqueda por director, usando JsonObject ya parseado de créditos
     private static Pelicula getPelicula(JsonObject result) throws IOException {
         Pelicula p = new Pelicula();
-        p.setIdPelicula(result.get("id").getAsInt());
-        p.setTitulo(result.get("original_title").getAsString());
-        p.setAnioSalida(result.has("release_date") ? result.get("release_date").getAsString() : "");
-        p.setResumen(result.has("overview") ? result.get("overview").getAsString() : "");
-        p.setPathBanner(result.has("backdrop_path") ? result.get("backdrop_path").getAsString() : "");
-        if (result.has("vote_average")) {
-            p.setValoracion(result.get("vote_average").getAsDouble() / 2);
-        }
-        try {
-            Gson gson = new Gson();
-            // Obtener datos completos de la película
-            URL urlMovie = new URL("https://api.themoviedb.org/3/movie/" + p.getIdPelicula() + "?api_key=" + API_KEY + "&language=es-ES&append_to_response=credits");
-            HttpURLConnection con = (HttpURLConnection) urlMovie.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json");
 
-            JsonObject results;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-                results = gson.fromJson(br, JsonObject.class);
+       p.setIdPelicula(result.get("id").getAsInt());
+       p.setTitulo(result.get("original_title").getAsString());
+       p.setResumen(result.has("overview") && !result.get("overview").isJsonNull()
+                ? result.get("overview").getAsString()
+                : "");
+       p.setPathBanner(result.has("backdrop_path") && !result.get("backdrop_path").isJsonNull()
+                ? result.get("backdrop_path").getAsString()
+                : "");
+       p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
+                ? result.get("release_date").getAsString()
+                : "");
+       p.setValoracion(result.has("vote_average") && !result.get("vote_average").isJsonNull()
+                ? result.get("vote_average").getAsDouble() / 2
+                : 0.0);
+       p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
+               ? result.get("release_date").getAsString()
+               : "");
+       URL urlDirector = new URL("https://api.themoviedb.org/3/movie/" + p.getIdPelicula() + "/credits?api_key=" + API_KEY + "&language=es-ES");
+       URL urlGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?language=es-ES&api_key=" + API_KEY);
+
+       //Conexión Directores
+        HttpURLConnection con = (HttpURLConnection) urlDirector.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(br, JsonObject.class);
+        JsonArray cast = jsonObject.getAsJsonArray("crew");
+
+        String director = "";
+        for (JsonElement trabajadorPelicula : cast) {
+            JsonObject person = trabajadorPelicula.getAsJsonObject();
+            if (person.get("job").getAsString().equalsIgnoreCase("director")) {
+                director = person.get("name").getAsString();
+                break;
             }
-
-            p.setIdPelicula(results.get("id").getAsInt());
-            p.setTitulo(results.get("original_title").getAsString());
-
-            // Obtener director correctamente
-            if (results.has("credits")) {
-                JsonObject credits = results.getAsJsonObject("credits");
-                if (credits.has("crew")) {
-                    p.setDirector(getDirector(credits.getAsJsonArray("crew")));
-                }
-            }
-            return p;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+        p.setDirector(director);
+
+        //Conexion Genres
+        JsonArray genres = result.getAsJsonArray("genre_ids");
+        ArrayList<Integer> genresInt = new ArrayList<>();
+        ArrayList<String> genresString = new ArrayList<>();
+        for (JsonElement g : genres){
+            genresInt.add(g.getAsInt());
+        }
+
+        HttpURLConnection conex = (HttpURLConnection) urlGenres.openConnection();
+        conex.setRequestMethod("GET");
+        conex.setRequestProperty("Content-Type", "application/json");
+
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(conex.getInputStream()));
+        Gson gson2 = new Gson();
+        JsonObject jsonObject2 = gson2.fromJson(br2, JsonObject.class);
+        JsonArray genresJson = jsonObject2.getAsJsonArray("genres");
+
+        HashMap<Integer, String> datosGeneros = new HashMap<>();
+        for (JsonElement genresObject : genresJson) {
+            JsonObject aux = genresObject.getAsJsonObject();
+            int id = aux.get("id").getAsInt();
+            String name = aux.get("name").getAsString();
+            datosGeneros.put(id, name);
+        }
+
+        int i = 0;
+
+        for (Integer genreId : genresInt) {
+            if (datosGeneros.containsKey(genreId)) {
+                genresString.add(datosGeneros.get(genreId));
+            }
+        }
+
+        String generos = String.join(", ", genresString);
+        p.setGenero(generos);
+
+        return p;
     }
+
+    public boolean revisarPelicula(Pelicula pelicula) {
+
+        boolean faltanDatos = false;
+
+            if (pelicula.getTitulo() == null || pelicula.getTitulo().isEmpty()
+                    || pelicula.getResumen() == null || pelicula.getResumen().isEmpty()
+                    || pelicula.getPathBanner() == null || pelicula.getPathBanner().isEmpty()
+                    || pelicula.getAnioSalida() == null || pelicula.getAnioSalida().isEmpty()
+                    || pelicula.getDirector() == null || pelicula.getDirector().isEmpty()
+                    || pelicula.getGenero() == null || pelicula.getGenero().isEmpty()
+                    || pelicula.getIdPelicula() == 0
+                    || pelicula.getValoracion() == 0.0) {
+                faltanDatos = true;
+            };
+
+        return faltanDatos;
+    }
+
 
     private static String getDirector(JsonArray trabajadoresArray) {
         String director = "";

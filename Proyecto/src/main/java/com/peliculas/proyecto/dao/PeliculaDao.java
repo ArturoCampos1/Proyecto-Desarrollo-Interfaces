@@ -31,7 +31,7 @@ public class PeliculaDao {
             cs.setString(2, p.getAnioSalida());
             cs.setString(3, p.getDirector());
             cs.setString(4, p.getResumen());
-            cs.setString(5, p.getGenero().name()); // suponiendo que Genero es enum
+            cs.setString(5, p.getGenero());
 
             cs.executeUpdate();
         } finally {
@@ -58,7 +58,7 @@ public class PeliculaDao {
                     p.setAnioSalida(rs.getString("anio_salida"));
                     p.setDirector(rs.getString("director"));
                     p.setResumen(rs.getString("resumen"));
-                    p.setGenero(Genero.valueOf(rs.getString("genero"))); // si existe
+                    p.setGenero(rs.getString("genero"));
                 }
             }
 
@@ -85,7 +85,7 @@ public class PeliculaDao {
                 p.setAnioSalida(rs.getString("anio_salida"));
                 p.setDirector(rs.getString("director"));
                 p.setResumen(rs.getString("resumen"));
-                p.setGenero(Genero.valueOf(rs.getString("genero")));
+                p.setGenero(rs.getString("genero"));
 
                 lista.add(p);
             }
@@ -114,7 +114,7 @@ public class PeliculaDao {
                 p.setAnioSalida(rs.getString("anio_salida"));
                 p.setDirector(rs.getString("director"));
                 p.setResumen(rs.getString("resumen"));
-                p.setGenero(Genero.valueOf(rs.getString("genero")));
+                p.setGenero(rs.getString("genero"));
 
                 lista.add(p);
             }
