@@ -164,6 +164,17 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_peliculas_disponibles$$
+CREATE PROCEDURE obtener_peliculas_disponibles()
+BEGIN
+    SELECT *
+    FROM pelicula
+    WHERE disponible > 0;
+END$$
+DELIMITER ;
+
 /*
 ----------------------------------
 PROCEDIMIENTOS CRUD PARA RESEÑAS
