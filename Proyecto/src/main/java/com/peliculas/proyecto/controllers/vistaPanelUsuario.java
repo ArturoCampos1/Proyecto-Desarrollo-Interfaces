@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -18,7 +19,6 @@ public class vistaPanelUsuario {
     @FXML private ImageView iconUser;
     @FXML private ImageView iconSearch;
 
-    // 🔹 NUEVOS fx:id PARA LOS CUADRADOS DETRÁS
     @FXML private Pane paneUser;
     @FXML private Pane paneSearch;
 
@@ -28,10 +28,18 @@ public class vistaPanelUsuario {
 
     @FXML private Button btnVolver;
 
+    // 🔹 NUEVO: Label para mostrar el nombre del usuario
+    @FXML private Label lblUsername;
+    @FXML private Label lblCorreo;
+
     private Usuario usuario;
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+        if (lblUsername != null && usuario != null) {
+            lblUsername.setText(usuario.getNombreUsuario().toUpperCase()); // muestra el nombre en la vista
+            lblCorreo.setText(usuario.getCorreo());
+        }
     }
 
     private void abrirVistaPerfil() {

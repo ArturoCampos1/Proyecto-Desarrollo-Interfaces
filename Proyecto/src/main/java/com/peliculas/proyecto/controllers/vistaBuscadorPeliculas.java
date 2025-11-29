@@ -193,7 +193,7 @@ public class vistaBuscadorPeliculas {
             Label resumen = new Label("Resumen: " + pelicula.getResumen());
             resumen.setTextFill(Color.WHITE);
 
-            Label generos = new Label("Resumen: " + pelicula.getGenero());
+            Label generos = new Label("Géneros: " + pelicula.getGenero());
             generos.setTextFill(Color.WHITE);
 
             Label anioSalida = new Label("Año de salida: " + pelicula.getAnioSalida());

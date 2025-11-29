@@ -60,7 +60,7 @@ public class ListaDao implements CRUD<Lista> {
                 l.setUsuario(u);
 
                 // Inicializamos lista vacía de películas; se pueden cargar después
-                l.setPeliculas(new ArrayList<>());
+                l.setPeliculas(PeliculaDao.getInstance().obtenerPeliculasDeLista(l.getIdLista()));
 
                 listas.add(l);
             }

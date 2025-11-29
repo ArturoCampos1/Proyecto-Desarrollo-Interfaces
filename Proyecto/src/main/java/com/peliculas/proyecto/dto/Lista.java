@@ -19,5 +19,6 @@ public class Lista {
     }
 
     public Lista() {
+        this.peliculas = new ArrayList<>();
     }
 }

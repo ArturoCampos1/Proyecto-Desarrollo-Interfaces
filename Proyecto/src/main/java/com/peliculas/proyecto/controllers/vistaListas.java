@@ -33,11 +33,7 @@ public class vistaListas {
         btnCrearLista.setOnAction(e -> crearLista());
         btnEliminarLista.setOnAction(e -> eliminarLista());
 
-        btnVolver.setCursor(Cursor.HAND);
-        btnCrearLista.setCursor(Cursor.HAND);
-        btnEliminarLista.setCursor(Cursor.HAND);
         listaListas.setCursor(Cursor.HAND);
-
         listaListas.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 abrirListaPeliculas();
@@ -49,11 +45,9 @@ public class vistaListas {
         try {
             listasUsuario = ListaDao.getInstance().obtenerPorNombreUsuario(usuario.getNombreUsuario());
             listaListas.getItems().clear();
-
             for (Lista l : listasUsuario) {
                 listaListas.getItems().add(l.getNombreLista());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,16 +58,13 @@ public class vistaListas {
         dialog.setTitle("Nueva lista");
         dialog.setHeaderText("Crear nueva lista");
         dialog.setContentText("Nombre de la lista:");
-
         dialog.showAndWait().ifPresent(nombre -> {
             try {
                 Lista nueva = new Lista();
                 nueva.setNombreLista(nombre);
                 nueva.setUsuario(usuario);
-
                 ListaDao.getInstance().crear(nueva);
                 cargarListas();
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -82,18 +73,14 @@ public class vistaListas {
 
     private void eliminarLista() {
         int index = listaListas.getSelectionModel().getSelectedIndex();
-
         if (index == -1) {
             mostrarAlerta("Error", "Selecciona una lista para eliminar.", Alert.AlertType.ERROR);
             return;
         }
-
         Lista lista = listasUsuario.get(index);
-
         try {
             ListaDao.getInstance().eliminar(lista);
             cargarListas();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,20 +89,15 @@ public class vistaListas {
     private void abrirListaPeliculas() {
         int index = listaListas.getSelectionModel().getSelectedIndex();
         if (index == -1) return;
-
         Lista listaSeleccionada = listasUsuario.get(index);
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaListaPeliculas.fxml"));
             Scene scene = new Scene(loader.load());
-
             vistaListaPeliculas controller = loader.getController();
             controller.setData(usuario, listaSeleccionada);
-
             Stage stage = (Stage) listaListas.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,14 +107,11 @@ public class vistaListas {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
             Scene scene = new Scene(loader.load());
-
             vistaPanelUsuario controller = loader.getController();
             controller.setUsuario(usuario);
-
             Stage stage = (Stage) btnVolver.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

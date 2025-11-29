@@ -59,10 +59,8 @@ public class vistaAdmin {
     }
 
     public void añadirPeliculaDisponible(TextField campoNombre, TextField campoCantidad){
-        Pelicula pelicula = new Pelicula();
-
-        String nombre = campoNombre.getText();
-        String cantidadString = campoCantidad.getText();
+        String nombre = campoNombre.getText().trim();
+        String cantidadString = campoCantidad.getText().trim();
 
         if (nombre.isEmpty() || cantidadString.isEmpty()){
             textoInfo.setText("❗ Debe rellenar los campos");
@@ -82,24 +80,40 @@ public class vistaAdmin {
         }
 
         try {
-            pelicula = peliculaDao.buscarPorNombre(nombre);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (pelicula == null){
-            //pelicula = tmdbDao.findByName(nombre);
-        }
-
-        try {
-            if (pelicula != null) {
-                pelicula.setDisponible(cantidad);
-                peliculaDao.crear(pelicula);
+            // Buscar la película por nombre
+            ArrayList<Pelicula> peliculas = peliculaDao.buscarPorNombre(nombre);
+            Pelicula pelicula = null;
+            if (!peliculas.isEmpty()) {
+                pelicula = peliculas.get(0); // Tomar la primera coincidencia
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
+            // Si no existe en nuestra base, buscar en TMDB (opcional)
+            if (pelicula == null) {
+                ArrayList<Pelicula> tmdbPeliculas = tmdbDao.findByName(nombre);
+                if (!tmdbPeliculas.isEmpty()) {
+                    pelicula = tmdbPeliculas.get(0);
+                }
+            }
+
+            if (pelicula == null) {
+                textoInfo.setText("❗ No se encontró la película");
+                return;
+            }
+
+            // Si ya existe en la BD, actualizar la disponibilidad
+            pelicula.setDisponible(cantidad);
+
+            // Si no existe en BD, crearla
+            if (peliculas.isEmpty()) {
+                peliculaDao.crear(pelicula);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Película añadida correctamente");
+            } else {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Disponibilidad actualizada");
+            }
+
+        } catch (SQLException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", e.getMessage());
+        }
     }
 
     public void cargarUsuarios() {

@@ -26,13 +26,14 @@ public class ListaPeliculaDao {
         Connection con = Conexion.conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL agregar_pelicula_a_lista(?,?)}")) {
-            cs.setInt(1, lista.getIdLista());
-            cs.setInt(2, pelicula.getIdPelicula());
+            cs.setInt(1, lista.getIdLista());       // ID de la lista
+            cs.setInt(2, pelicula.getIdPelicula()); // ID de la película recién insertada
             cs.executeUpdate();
         } finally {
             Conexion.cerrarConexion();
         }
     }
+
 
     public void quitarPelicula(Lista lista, Pelicula pelicula) throws SQLException {
         Conexion.abrirConexion();

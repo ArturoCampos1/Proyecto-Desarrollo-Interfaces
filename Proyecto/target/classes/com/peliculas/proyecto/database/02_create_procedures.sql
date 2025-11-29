@@ -81,6 +81,7 @@ PROCEDIMIENTOS CRUD PARA PELICULAS
 -- Crear película
 DELIMITER $$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS crear_pelicula$$
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
@@ -97,16 +98,18 @@ CREATE PROCEDURE crear_pelicula (
     IN p_disponible INT
 )
 BEGIN
-    -- Asignar 0 si se pasa NULL
     IF p_disponible IS NULL THEN
         SET p_disponible = 0;
     END IF;
 
     INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, valoracion, disponible)
     VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion, p_disponible);
-END$$
 
+    -- 🔹 Devolver el ID generado
+    SELECT LAST_INSERT_ID() AS id_pelicula;
+END$$
 DELIMITER ;
+
 
 -- Buscar películas por nombre
 DELIMITER $$
@@ -388,5 +391,18 @@ BEGIN
     DELETE FROM lista_pelicula
     WHERE id_lista = p_id_lista
       AND id_pelicula = p_id_pelicula;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_peliculas_de_lista$$
+CREATE PROCEDURE obtener_peliculas_de_lista (
+    IN p_id_lista INT
+)
+BEGIN
+    SELECT p.id_pelicula, p.titulo, p.anio_salida, p.director, p.resumen, p.genero
+    FROM pelicula p
+    INNER JOIN lista_pelicula lp ON p.id_pelicula = lp.id_pelicula
+    WHERE lp.id_lista = p_id_lista;
 END$$
 DELIMITER ;
