@@ -78,6 +78,19 @@ PROCEDIMIENTOS CRUD PARA PELICULAS
 ----------------------------------
 */
 
+-- OBTENER PELIXCULAS
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS obtener_todas_peliculas$$
+CREATE PROCEDURE obtener_todas_peliculas()
+BEGIN
+    SELECT *
+    FROM pelicula;
+END$$
+
+DELIMITER ;
+
+
 -- Crear película
 DELIMITER $$
 

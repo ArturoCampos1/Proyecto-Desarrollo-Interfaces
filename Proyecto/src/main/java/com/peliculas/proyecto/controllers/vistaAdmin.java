@@ -1,14 +1,14 @@
 package com.peliculas.proyecto.controllers;
 
-import com.peliculas.proyecto.dao.PeliculaDao;
-import com.peliculas.proyecto.dao.PeliculasDisponiblesDao;
-import com.peliculas.proyecto.dao.TMDBDao;
-import com.peliculas.proyecto.dao.UsuarioDao;
+import com.peliculas.proyecto.dao.*;
 import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -32,6 +32,9 @@ public class vistaAdmin {
     private ScrollPane scrollPanePerfiles;
 
     @FXML
+    private ScrollPane scrollPaneTodas;
+
+    @FXML
     private Button botonVolver;
 
     @FXML
@@ -52,6 +55,9 @@ public class vistaAdmin {
     @FXML
     private GridPane gridPeliculas;
 
+    @FXML
+    private GridPane gridTodasPeliculas;
+
     PeliculasDisponiblesDao peliculasDisponiblesDao = new PeliculasDisponiblesDao();
 
     UsuarioDao usuarioDao = new UsuarioDao();
@@ -65,77 +71,72 @@ public class vistaAdmin {
 
         cargarUsuarios();
         obtenerPeliculasDisponibles();
+        //obtenerTodasPeliculas();
 
         botonVolver.setOnMouseClicked(event -> volverAMain());
         btnAñadir.setOnMouseClicked(event -> {
-            try {
-                añadirPeliculaDisponible(campoNombre, campoCantidad);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            buscarYAgregarPelicula(campoNombre, campoCantidad);
         });
 
     }
 
-    public void añadirPeliculaDisponible(TextField campoNombre, TextField campoCantidad) throws IOException, SQLException {
-        Pelicula pelicula = new Pelicula();
-        textoInfo.setText("");
-
-        String nombre = campoNombre.getText();
-        String cantidadString = campoCantidad.getText();
-
-        //campos vacios
-        if (nombre.isEmpty() || cantidadString.isEmpty()){
-            textoInfo.setText("❗ Debe rellenar los campos");
-            return;
-        }
-
-        //control de cantidad
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(cantidadString);
-            if (cantidad < 0) {
-                textoInfo.setText("❗ La cantidad no puede ser negativa");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            textoInfo.setText("❗ La cantidad debe ser un número válido");
-            return;
-        }
-
-        //Busqueda por nombre el bd local
-        try {
-            pelicula = peliculaDao.buscarPorNombre(nombre);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        //Si no lo encuentra en local la creamos buscandolo en la api
-        if (pelicula.getTitulo() == null || pelicula.getGenero() == null || pelicula.getPathBanner() == null){
-            pelicula = tmdbDao.findBySpecificName(nombre);
-        }
-
-        if (pelicula != null) {
-            pelicula.setDisponible(cantidad);
-            peliculaDao.crear(pelicula);
-            obtenerPeliculasDisponibles();
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Película añadida.");
-        } else{
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "❌ Error al encontrar la película.");
-
-        }
-
+    public void obtenerTodasPeliculas() {
+        ArrayList<Pelicula> peliculas = peliculaDao.obtenerPeliculas();
+        ArrayList<VBox> boxs = returnPeliculaConFormatoArrayTodas(peliculas);
+        mostrarPeliculasTodas(boxs);
     }
 
     public void obtenerPeliculasDisponibles(){
         ArrayList<Pelicula> peliculas = peliculasDisponiblesDao.obtenerPeliculasDispos();
-        ArrayList<VBox> boxs = returnPeliculaConFormatoArray(peliculas);
+        ArrayList<VBox> boxs = returnPeliculaConFormatoArrayDispos(peliculas);
         mostrarPeliculas(boxs);
     }
 
-    public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
+
+    //Método copiado de vistaListaPeliculas (Iker)
+    private void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad) {
+        String nombre = campoNombre.getText();
+        String cantidad = campoCantidad.getText();
+
+        int cantidadInt = Integer.valueOf(cantidad);
+
+        if (nombre == null || nombre.isEmpty() || cantidad.isEmpty() || cantidad == null) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Escribe un nombre para buscar.");
+            return;
+        }
+
+        try {
+            ArrayList<Pelicula> coincidencias = tmdbDao.findByName(nombre);
+
+            if (coincidencias.isEmpty()) {
+                mostrarAlerta( Alert.AlertType.INFORMATION, "Sin resultados", "No se encontraron películas en TMDB.");
+                return;
+            }
+
+            ChoiceDialog<Pelicula> selector = new ChoiceDialog<>(coincidencias.get(0), coincidencias);
+            selector.setTitle("Selecciona película");
+            selector.setHeaderText("Coincidencias encontradas en TMDB");
+            selector.setContentText("Película:");
+
+            selector.showAndWait().ifPresent(pelicula -> {
+                try {
+                    pelicula.setDisponible(cantidadInt);
+                    peliculaDao.crear(pelicula);
+                    obtenerPeliculasDisponibles();
+                    obtenerTodasPeliculas();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo añadir la película.");
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo buscar la película en TMDB.");
+        }
+    }
+
+    public ArrayList<VBox> returnPeliculaConFormatoArrayDispos(ArrayList<Pelicula> p) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
         for (Pelicula pelicula : p) {
@@ -170,6 +171,36 @@ public class vistaAdmin {
         return boxs;
     }
 
+    public ArrayList<VBox> returnPeliculaConFormatoArrayTodas(ArrayList<Pelicula> p) {
+        ArrayList<VBox> boxs = new ArrayList<>();
+        for (Pelicula pelicula : p) {
+            VBox box = new VBox(5);
+            box.setPrefWidth(350);
+            box.setStyle(
+                    "-fx-background-radius: 8px;" +
+                            "-fx-background-color: #ffffff;" +
+                            "-fx-border-color: #dcdcdc;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-border-radius: 8px;" +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);"
+            );
+
+            Label titulo = new Label(pelicula.getTitulo() + " (" + pelicula.getIdPelicula() + ")");
+            titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            Label generos = new Label(pelicula.getGenero());
+            generos.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            Label disponible = new Label("Disponible: " + pelicula.getDisponible());
+            disponible.setStyle("-fx-font-size: 14px; -fx-text-fill: purple;");
+
+            box.getChildren().addAll(titulo, generos, disponible);
+            box.setPadding(new Insets(10));
+
+            boxs.add(box);
+        }
+        return boxs;
+    }
 
     public void cargarUsuarios() {
         try {
@@ -281,6 +312,21 @@ public class vistaAdmin {
             row++;
         }
     }
+
+    private void mostrarPeliculasTodas(ArrayList<VBox> peliculas) {
+        gridTodasPeliculas.getChildren().clear();
+        int col = 0;
+        int row = 0;
+        for (VBox p : peliculas) {
+            gridTodasPeliculas.add(p, col, row);
+            col++;
+            if (col > 1) { // 2 columnas: 0 y 1
+                col = 0;
+                row++;
+            }
+        }
+    }
+
 
     private void mostrarError() {
         Label lblError = new Label("❌ Error al cargar usuarios");

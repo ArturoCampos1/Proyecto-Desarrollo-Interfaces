@@ -74,13 +74,13 @@ public class PeliculaDao {
         return p;
     }
 
-    public ArrayList<Pelicula> obtenerPeliculas() throws SQLException {
+    public ArrayList<Pelicula> obtenerPeliculas() {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
         ArrayList<Pelicula> lista = new ArrayList<>();
 
-        try (CallableStatement cs = con.prepareCall("{CALL obtener_peliculas()}")) {
+        try (CallableStatement cs = con.prepareCall("{CALL obtener_todas_peliculas()}")) {
             ResultSet rs = cs.executeQuery();
 
             while (rs.next()) {
@@ -91,10 +91,14 @@ public class PeliculaDao {
                 p.setDirector(rs.getString("director"));
                 p.setResumen(rs.getString("resumen"));
                 p.setGenero(rs.getString("genero"));
+                p.setDisponible(rs.getInt("disponible"));
+                p.setPathBanner(rs.getString("url_photo"));
 
                 lista.add(p);
             }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally {
             Conexion.cerrarConexion();
         }

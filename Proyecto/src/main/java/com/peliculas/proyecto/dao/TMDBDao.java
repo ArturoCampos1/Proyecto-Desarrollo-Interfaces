@@ -237,7 +237,7 @@ public class TMDBDao {
                 : "");
        p.setPathBanner(result.has("backdrop_path") && !result.get("backdrop_path").isJsonNull()
                 ? result.get("backdrop_path").getAsString()
-                : "");
+                : "src/main/resources/img/noavailable.jpg");
        p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
                 ? result.get("release_date").getAsString()
                 : "");
