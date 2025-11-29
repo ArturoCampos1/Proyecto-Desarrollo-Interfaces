@@ -80,35 +80,30 @@ PROCEDIMIENTOS CRUD PARA PELICULAS
 
 -- Crear película
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS crear_pelicula$$
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
     IN p_anio_salida YEAR,
     IN p_director VARCHAR(255),
     IN p_resumen TEXT,
-    IN p_genero ENUM(
-        'ACCION','AVENTURA','ANIMACION','COMEDIA','CRIMEN',
-        'DOCUMENTAL','DRAMA','FAMILIAR','FANTASIA','HISTORIA',
-        'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
-        'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
-    ),
+    IN p_genero VARCHAR(100),
+    IN p_url_photo VARCHAR(100),
     IN p_valoracion DECIMAL(3,1),
-    IN p_disponible INT,
-    IN p_url_photo VARCHAR(100)   -- 🔹 nuevo parámetro para la foto
+    IN p_disponible INT
 )
 BEGIN
     IF p_disponible IS NULL THEN
         SET p_disponible = 0;
     END IF;
 
-    INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, valoracion, disponible, url_photo)
-    VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion, p_disponible, p_url_photo);
+    INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, url_photo, valoracion, disponible)
+    VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_url_photo, p_valoracion, p_disponible);
 
     SELECT LAST_INSERT_ID() AS id_pelicula;
 END$$
+
 DELIMITER ;
-
-
 
 -- Buscar películas por nombre
 DELIMITER $$
@@ -403,6 +398,21 @@ BEGIN
     WHERE lp.id_lista = p_id_lista;
 END$$
 DELIMITER ;
+
+
+--LISTA DISPONIBLES
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS obtener_peliculas_disponibles$$
+CREATE PROCEDURE obtener_peliculas_disponibles()
+BEGIN
+    SELECT pd.id_pelicula, p.titulo, p.genero, p.disponible, p.url_photo
+    FROM peliculas_disponibles pd
+    JOIN pelicula p ON p.id_pelicula = pd.id_pelicula;
+END$$
+
+
 
 /* ---------------------------------- PROCEDIMIENTOS CRUD PARA LISTAs-PUBLICAS ---------------------------------- */
 

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -27,71 +28,79 @@
          <font>
             <Font size="13.0" />
          </font></Text>
-      <Pane layoutX="511.0" layoutY="167.0" prefHeight="235.0" prefWidth="430.0" styleClass="cardGestionFilm">
+      <Pane layoutX="375.0" layoutY="167.0" prefHeight="190.0" prefWidth="566.0" styleClass="cardGestionFilm">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
          <children>
-            <Text layoutX="138.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestión de películas">
+            <Text layoutX="206.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestión de películas">
                <font>
                   <Font size="21.0" />
                </font>
             </Text>
-            <Text fill="#b613b9" layoutX="107.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🎬">
+            <Text fill="#b613b9" layoutX="175.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🎬">
                <font>
                   <Font size="21.0" />
                </font>
             </Text>
-            <Text layoutX="34.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre película:">
+            <Text layoutX="40.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre película:">
                <font>
                   <Font size="15.0" />
                </font></Text>
-            <Text layoutX="11.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cantidad disponible:">
+            <Text layoutX="17.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cantidad disponible:">
                <font>
                   <Font size="15.0" />
                </font></Text>
             <Text layoutX="117.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <TextField fx:id="campoNombre" layoutX="156.0" layoutY="86.0" />
-            <TextField fx:id="campoCantidad" layoutX="156.0" layoutY="137.0" />
-            <Button fx:id="btnAñadir" layoutX="323.0" layoutY="86.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="84.0" text="+   Añadir pelicula" />
-            <Text fx:id="textoInfo" fill="#8c0891" layoutX="150.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.27880859374994" />
+            <TextField fx:id="campoNombre" layoutX="162.0" layoutY="68.0" prefHeight="25.0" prefWidth="227.0" />
+            <TextField fx:id="campoCantidad" layoutX="162.0" layoutY="119.0" prefHeight="25.0" prefWidth="227.0" />
+            <Button fx:id="btnAñadir" layoutX="423.0" layoutY="68.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="84.0" styleClass="btnIniciaSesion" stylesheets="@../styles.css" text="Crear" />
+            <Text fx:id="textoInfo" fill="#8c0891" layoutX="156.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.27880859374994" />
          </children>
       </Pane>
-      <Pane fx:id="panePerfiles" layoutX="43.0" layoutY="167.0" prefHeight="508.0" prefWidth="430.0" styleClass="cardGestionUsers">
+      <Pane fx:id="panePerfiles" layoutX="43.0" layoutY="167.0" prefHeight="508.0" prefWidth="313.0" styleClass="cardGestionUsers">
          <children>
-            <Text layoutX="151.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualizar perfiles">
+            <Text layoutX="93.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualizar perfiles">
                <font>
                   <Font size="21.0" />
                </font>
             </Text>
-            <Text fill="#7044ea" layoutX="118.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="👥">
+            <Text fill="#7044ea" layoutX="60.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="👥">
                <font>
                   <Font size="21.0" />
                </font>
             </Text>
-            <ScrollPane fx:id="scrollPanePerfiles" layoutX="59.0" layoutY="72.0" prefHeight="405.0" prefWidth="313.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
+            <ScrollPane fx:id="scrollPanePerfiles" layoutX="22.0" layoutY="70.0" prefHeight="405.0" prefWidth="270.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
                <content>
                   <VBox fx:id="contenedorUsuarios" spacing="5" style="-fx-padding: 10;" />
                </content>
             </ScrollPane>
          </children>
       </Pane>
-      <Pane layoutX="511.0" layoutY="439.0" prefHeight="235.0" prefWidth="430.0" styleClass="cardGestionFilm">
+      <Pane layoutX="375.0" layoutY="386.0" prefHeight="290.0" prefWidth="566.0" styleClass="cardGestionFilm">
          <cursor>
-            <Cursor fx:constant="HAND" />
+            <Cursor fx:constant="DEFAULT" />
          </cursor>
          <children>
-            <Text layoutX="138.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Peliculas disponibles">
+            <Text layoutX="209.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Peliculas disponibles">
                <font>
                   <Font size="21.0" />
                </font>
             </Text>
-            <Text fill="#b613b9" layoutX="107.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🎬">
+            <Text fill="#b613b9" layoutX="178.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🟢">
                <font>
                   <Font size="21.0" />
                </font>
             </Text>
             <Text layoutX="117.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <ScrollPane fx:id="scrollPaneDispo" layoutX="59.0" layoutY="57.0" prefHeight="219.0" prefWidth="459.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
+               <content>
+                  <GridPane fx:id="gridPeliculas" hgap="20.0" style="-fx-padding: 10;" vgap="20.0" />
+               </content>
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </ScrollPane>
          </children>
       </Pane>
       <Button id="btnVolver" fx:id="botonVolver" layoutX="413.0" layoutY="719.0" prefHeight="40.0" prefWidth="173.0" styleClass="btnVolver" stylesheets="@../styles.css" text="← Volver" />

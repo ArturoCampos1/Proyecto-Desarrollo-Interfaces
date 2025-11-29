@@ -24,7 +24,7 @@
                   <Font size="41.0" />
                </font>
             </Label>
-            <Label id="popular" layoutX="176.0" layoutY="184.0" text="Popular 🔥" />
+            <Label id="popular" layoutX="153.0" layoutY="189.0" text="Opción popular 🔥" />
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />

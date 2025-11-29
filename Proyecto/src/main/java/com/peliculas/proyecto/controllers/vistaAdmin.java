@@ -1,6 +1,7 @@
 package com.peliculas.proyecto.controllers;
 
 import com.peliculas.proyecto.dao.PeliculaDao;
+import com.peliculas.proyecto.dao.PeliculasDisponiblesDao;
 import com.peliculas.proyecto.dao.TMDBDao;
 import com.peliculas.proyecto.dao.UsuarioDao;
 import com.peliculas.proyecto.dto.Pelicula;
@@ -10,8 +11,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -43,6 +49,11 @@ public class vistaAdmin {
     @FXML
     private Text textoInfo;
 
+    @FXML
+    private GridPane gridPeliculas;
+
+    PeliculasDisponiblesDao peliculasDisponiblesDao = new PeliculasDisponiblesDao();
+
     UsuarioDao usuarioDao = new UsuarioDao();
 
     PeliculaDao peliculaDao = new PeliculaDao();
@@ -53,6 +64,8 @@ public class vistaAdmin {
     public void initialize() {
 
         cargarUsuarios();
+        obtenerPeliculasDisponibles();
+
         botonVolver.setOnMouseClicked(event -> volverAMain());
         btnAñadir.setOnMouseClicked(event -> {
             try {
@@ -68,6 +81,7 @@ public class vistaAdmin {
 
     public void añadirPeliculaDisponible(TextField campoNombre, TextField campoCantidad) throws IOException, SQLException {
         Pelicula pelicula = new Pelicula();
+        textoInfo.setText("");
 
         String nombre = campoNombre.getText();
         String cantidadString = campoCantidad.getText();
@@ -106,9 +120,56 @@ public class vistaAdmin {
         if (pelicula != null) {
             pelicula.setDisponible(cantidad);
             peliculaDao.crear(pelicula);
+            obtenerPeliculasDisponibles();
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Película añadida.");
+        } else{
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "❌ Error al encontrar la película.");
+
         }
 
     }
+
+    public void obtenerPeliculasDisponibles(){
+        ArrayList<Pelicula> peliculas = peliculasDisponiblesDao.obtenerPeliculasDispos();
+        ArrayList<VBox> boxs = returnPeliculaConFormatoArray(peliculas);
+        mostrarPeliculas(boxs);
+    }
+
+    public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
+        ArrayList<VBox> boxs = new ArrayList<>();
+
+        for (Pelicula pelicula : p) {
+            VBox box = new VBox(5);
+            box.setPrefWidth(400);
+
+            // Estilos CSS directamente en el VBox
+            box.setStyle(
+                    "-fx-background-color: linear-gradient(to bottom, #ffffff, #e0e0e0);" +
+                            "-fx-border-color: #333;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 10;" +
+                            "-fx-background-radius: 10;" +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);"
+            );
+
+            Label titulo = new Label(pelicula.getTitulo() + " (" + pelicula.getIdPelicula() + ")");
+            titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            Label generos = new Label(pelicula.getGenero());
+            generos.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            Label disponible = new Label("Disponible: " + pelicula.getDisponible());
+            disponible.setStyle("-fx-font-size: 14px; -fx-text-fill: purple;");
+
+            box.getChildren().addAll(titulo, generos, disponible);
+            box.setPadding(new Insets(10));
+
+            boxs.add(box);
+        }
+
+        return boxs;
+    }
+
 
     public void cargarUsuarios() {
         try {
@@ -212,7 +273,14 @@ public class vistaAdmin {
         return fila;
     }
 
-
+    private void mostrarPeliculas(ArrayList<VBox> peliculas) {
+        gridPeliculas.getChildren().clear();
+        int row = 0;
+        for (VBox p : peliculas) {
+            gridPeliculas.add(p, 1, row);
+            row++;
+        }
+    }
 
     private void mostrarError() {
         Label lblError = new Label("❌ Error al cargar usuarios");
