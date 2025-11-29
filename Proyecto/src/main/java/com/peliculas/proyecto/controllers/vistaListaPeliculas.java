@@ -41,6 +41,25 @@ public class vistaListaPeliculas {
         btnVolver.setOnAction(e -> volverAListas());
         btnBuscarAgregar.setOnAction(e -> buscarYAgregarPelicula());
         btnQuitar.setOnAction(e -> quitarPelicula());
+
+        // 🔹 Personalizar las celdas de las películas para que se vean más grandes
+        listaPeliculas.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                        // Texto más grande y con padding
+                        setStyle("-fx-font-size: 16px; -fx-padding: 8px;");
+                    }
+                }
+            };
+            cell.setPrefHeight(40); // 🔹 cada celda ocupa más espacio que lo normal
+            return cell;
+        });
     }
 
     // 🔹 Auxiliar: extraer solo el año

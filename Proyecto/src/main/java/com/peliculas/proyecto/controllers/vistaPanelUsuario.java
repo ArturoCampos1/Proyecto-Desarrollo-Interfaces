@@ -23,6 +23,7 @@ public class vistaPanelUsuario {
     @FXML private Pane paneSearch;
 
     @FXML private StackPane cardListas;
+    @FXML private StackPane cardListasPublicas;   // 🔹 NUEVO
     @FXML private StackPane cardPrestamos;
     @FXML private StackPane cardAlquilar;
 
@@ -93,6 +94,23 @@ public class vistaPanelUsuario {
         }
     }
 
+    private void abrirVistaListasPublicas() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaListasPublicas.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            vistaListasPublicas controller = loader.getController();
+            controller.setUsuario(usuario); // pasa el usuario actual
+
+            Stage stage = (Stage) cardListasPublicas.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void volverAMain(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
@@ -120,6 +138,7 @@ public class vistaPanelUsuario {
 
         // TARJETAS
         cardListas.setOnMouseClicked(e -> abrirVistaListas());
+        cardListasPublicas.setOnMouseClicked(e -> abrirVistaListasPublicas()); // 🔹 abre Listas Públicas
         cardPrestamos.setOnMouseClicked(e -> {});
         cardAlquilar.setOnMouseClicked(e -> {});
 
@@ -130,10 +149,12 @@ public class vistaPanelUsuario {
         paneSearch.setCursor(Cursor.HAND);
 
         cardListas.setCursor(Cursor.HAND);
+        cardListasPublicas.setCursor(Cursor.HAND); // 🔹 nuevo
         cardPrestamos.setCursor(Cursor.HAND);
         cardAlquilar.setCursor(Cursor.HAND);
         btnVolver.setCursor(Cursor.HAND);
 
+        // BOTÓN VOLVER
         btnVolver.setOnAction(this::volverAMain);
     }
 }

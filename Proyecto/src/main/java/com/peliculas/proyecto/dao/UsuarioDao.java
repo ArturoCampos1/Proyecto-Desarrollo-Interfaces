@@ -208,4 +208,26 @@ public class UsuarioDao {
 
         return actualizado;
     }
+
+    public ArrayList<Usuario> obtenerUsuariosExcepto(String nombreActual) throws SQLException {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+        ArrayList<Usuario> usuarios = new ArrayList<>();
+
+        try (CallableStatement cs = con.prepareCall("{CALL obtener_usuarios_excepto(?)}")) {
+            cs.setString(1, nombreActual);
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("id_usuario"));
+                u.setNombreUsuario(rs.getString("nombre_usuario"));
+                usuarios.add(u);
+            }
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return usuarios;
+    }
 }

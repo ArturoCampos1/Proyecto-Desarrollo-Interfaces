@@ -27,20 +27,26 @@ public class PeliculaDao {
         Connection con = Conexion.conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
-            cs.setString(1, p.getTitulo());
-            cs.setString(2, p.getAnioSalida());
-            cs.setString(3, p.getDirector());
-            cs.setString(4, p.getResumen());
-            cs.setString(5, p.getGenero());
-            cs.setString(6, p.getPathBanner());
-            cs.setDouble(7, p.getValoracion());
-            cs.setInt(8, p.getDisponible());
+            cs.setString(1, p.getTitulo());          // p_titulo
+            cs.setString(2, p.getAnioSalida());      // p_anio_salida
+            cs.setString(3, p.getDirector());        // p_director
+            cs.setString(4, p.getResumen());         // p_resumen
+            cs.setString(5, p.getGenero());          // p_genero
+            cs.setDouble(6, p.getValoracion());   // p_valoracion
+            cs.setInt(7, p.getDisponible());      // p_disponible
+            cs.setString(8, p.getPathBanner());   // p_url_photo
 
-            cs.executeUpdate();
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    int idGenerado = rs.getInt("id_pelicula");
+                    p.setIdPelicula(idGenerado); // opcional: guardar el ID en tu objeto
+                }
+            }
         } finally {
             Conexion.cerrarConexion();
         }
     }
+
 
     public Pelicula buscarPorNombre(String nombre) throws SQLException {
         Pelicula p = new Pelicula();

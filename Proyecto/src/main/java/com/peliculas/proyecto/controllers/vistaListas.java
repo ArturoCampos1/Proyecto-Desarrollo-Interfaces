@@ -39,6 +39,25 @@ public class vistaListas {
                 abrirListaPeliculas();
             }
         });
+
+        // 🔹 Personalizar las celdas para que se vean más grandes
+        listaListas.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                        // Texto un poco más grande y con menos padding
+                        setStyle("-fx-font-size: 16px; -fx-padding: 8px;");
+                    }
+                }
+            };
+            cell.setPrefHeight(40); // 🔹 más grande que lo normal (~24px), pero más pequeño que los 60px anteriores
+            return cell;
+        });
     }
 
     private void cargarListas() {
