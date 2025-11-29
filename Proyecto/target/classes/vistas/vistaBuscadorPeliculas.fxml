@@ -103,7 +103,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <ImageView fx:id="imgRecarga" layoutX="858.0" layoutY="234.0">
+      <ImageView fx:id="imgRecarga" layoutX="857.0" layoutY="234.0">
          <image>
             <Image url="@../img/actualizar.png" />
          </image>

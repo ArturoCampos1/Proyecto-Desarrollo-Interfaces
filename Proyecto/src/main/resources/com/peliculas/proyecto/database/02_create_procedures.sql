@@ -81,19 +81,14 @@ PROCEDIMIENTOS CRUD PARA PELICULAS
 -- Crear película
 DELIMITER $$
 
-DELIMITER $$
 DROP PROCEDURE IF EXISTS crear_pelicula$$
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
-    IN p_anio_salida YEAR,
+    IN p_anio_salida VARCHAR(20),
     IN p_director VARCHAR(255),
     IN p_resumen TEXT,
-    IN p_genero ENUM(
-        'ACCION','AVENTURA','ANIMACION','COMEDIA','CRIMEN',
-        'DOCUMENTAL','DRAMA','FAMILIAR','FANTASIA','HISTORIA',
-        'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
-        'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
-    ),
+    IN p_genero VARCHAR(100),
+    IN p_url_photo VARCHAR(100),
     IN p_valoracion DECIMAL(3,1),
     IN p_disponible INT
 )
@@ -102,12 +97,10 @@ BEGIN
         SET p_disponible = 0;
     END IF;
 
-    INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, valoracion, disponible)
-    VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_valoracion, p_disponible);
-
-    -- 🔹 Devolver el ID generado
-    SELECT LAST_INSERT_ID() AS id_pelicula;
+    INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, url_photo, valoracion, disponible)
+    VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_url_photo, p_valoracion, p_disponible);
 END$$
+
 DELIMITER ;
 
 
@@ -126,6 +119,7 @@ DELIMITER ;
 
 -- Modificar película
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS modificar_pelicula$$
 CREATE PROCEDURE modificar_pelicula (
     IN p_id_pelicula INT,
@@ -133,12 +127,7 @@ CREATE PROCEDURE modificar_pelicula (
     IN p_anio_salida YEAR,
     IN p_director VARCHAR(255),
     IN p_resumen TEXT,
-    IN p_genero ENUM(
-        'ACCION','AVENTURA','ANIMACION','COMEDIA','CRIMEN',
-        'DOCUMENTAL','DRAMA','FAMILIAR','FANTASIA','HISTORIA',
-        'TERROR','MUSICA','MISTERIO','ROMANCE','CIENCIA_FICCION',
-        'PELICULA_DE_TV','SUSPENSO','BELICA','OESTE'
-    ),
+    IN p_genero VARCHAR(100),
     IN p_valoracion DECIMAL(3,1),
     IN p_disponible INT
 )
@@ -153,7 +142,9 @@ BEGIN
         disponible = p_disponible
     WHERE id_pelicula = p_id_pelicula;
 END$$
+
 DELIMITER ;
+
 
 -- Eliminar película
 DELIMITER $$
@@ -391,18 +382,5 @@ BEGIN
     DELETE FROM lista_pelicula
     WHERE id_lista = p_id_lista
       AND id_pelicula = p_id_pelicula;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-DROP PROCEDURE IF EXISTS obtener_peliculas_de_lista$$
-CREATE PROCEDURE obtener_peliculas_de_lista (
-    IN p_id_lista INT
-)
-BEGIN
-    SELECT p.id_pelicula, p.titulo, p.anio_salida, p.director, p.resumen, p.genero
-    FROM pelicula p
-    INNER JOIN lista_pelicula lp ON p.id_pelicula = lp.id_pelicula
-    WHERE lp.id_lista = p_id_lista;
 END$$
 DELIMITER ;

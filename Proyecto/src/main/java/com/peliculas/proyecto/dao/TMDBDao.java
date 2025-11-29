@@ -6,10 +6,8 @@ import com.peliculas.proyecto.dto.Pelicula;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -201,6 +199,31 @@ public class TMDBDao {
             }
         }
         return peliculasPopulares;
+    }
+
+    //METODO PARA PANEL ADMIN
+    public Pelicula findBySpecificName(String nombre) throws IOException {
+        Pelicula p = null;
+
+        URL url = new URL("https://api.themoviedb.org/3/search/movie?api_key=" + API_KEY
+                    + "&query=" + URLEncoder.encode(nombre, StandardCharsets.UTF_8)
+                    + "&language=es-ES");
+        HttpURLConnection con = null;
+        con = (HttpURLConnection) url.openConnection();
+
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
+        Gson gson = new Gson();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+        JsonObject jsonObject = gson.fromJson(br, JsonObject.class);
+        JsonArray arrayJson = jsonObject.get("results").getAsJsonArray();
+        for (JsonElement element : arrayJson) {
+            JsonObject resultados = element.getAsJsonObject();
+            p = getPelicula(resultados);
+        }
+
+        return p;
     }
 
     // Usado para la búsqueda por director, usando JsonObject ya parseado de créditos

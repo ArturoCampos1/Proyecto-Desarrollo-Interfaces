@@ -54,19 +54,31 @@ public class vistaAdmin {
 
         cargarUsuarios();
         botonVolver.setOnMouseClicked(event -> volverAMain());
-        btnAñadir.setOnMouseClicked(event -> añadirPeliculaDisponible(campoNombre, campoCantidad));
+        btnAñadir.setOnMouseClicked(event -> {
+            try {
+                añadirPeliculaDisponible(campoNombre, campoCantidad);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
     }
 
-    public void añadirPeliculaDisponible(TextField campoNombre, TextField campoCantidad){
-        String nombre = campoNombre.getText().trim();
-        String cantidadString = campoCantidad.getText().trim();
+    public void añadirPeliculaDisponible(TextField campoNombre, TextField campoCantidad) throws IOException, SQLException {
+        Pelicula pelicula = new Pelicula();
 
+        String nombre = campoNombre.getText();
+        String cantidadString = campoCantidad.getText();
+
+        //campos vacios
         if (nombre.isEmpty() || cantidadString.isEmpty()){
             textoInfo.setText("❗ Debe rellenar los campos");
             return;
         }
 
+        //control de cantidad
         int cantidad;
         try {
             cantidad = Integer.parseInt(cantidadString);
@@ -79,13 +91,22 @@ public class vistaAdmin {
             return;
         }
 
+        //Busqueda por nombre el bd local
         try {
-            // Buscar la película por nombre
-            ArrayList<Pelicula> peliculas = peliculaDao.buscarPorNombre(nombre);
-            Pelicula pelicula = null;
-            if (!peliculas.isEmpty()) {
-                pelicula = peliculas.get(0); // Tomar la primera coincidencia
-            }
+            pelicula = peliculaDao.buscarPorNombre(nombre);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Si no lo encuentra en local la creamos buscandolo en la api
+        if (pelicula.getTitulo() == null || pelicula.getGenero() == null || pelicula.getPathBanner() == null){
+            pelicula = tmdbDao.findBySpecificName(nombre);
+        }
+
+        if (pelicula != null) {
+            pelicula.setDisponible(cantidad);
+            peliculaDao.crear(pelicula);
+        }
 
             // Si no existe en nuestra base, buscar en TMDB (opcional)
             if (pelicula == null) {
