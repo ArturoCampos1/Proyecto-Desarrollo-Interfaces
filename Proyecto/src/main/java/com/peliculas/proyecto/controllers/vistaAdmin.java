@@ -108,33 +108,6 @@ public class vistaAdmin {
             peliculaDao.crear(pelicula);
         }
 
-            // Si no existe en nuestra base, buscar en TMDB (opcional)
-            if (pelicula == null) {
-                ArrayList<Pelicula> tmdbPeliculas = tmdbDao.findByName(nombre);
-                if (!tmdbPeliculas.isEmpty()) {
-                    pelicula = tmdbPeliculas.get(0);
-                }
-            }
-
-            if (pelicula == null) {
-                textoInfo.setText("❗ No se encontró la película");
-                return;
-            }
-
-            // Si ya existe en la BD, actualizar la disponibilidad
-            pelicula.setDisponible(cantidad);
-
-            // Si no existe en BD, crearla
-            if (peliculas.isEmpty()) {
-                peliculaDao.crear(pelicula);
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Película añadida correctamente");
-            } else {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Disponibilidad actualizada");
-            }
-
-        } catch (SQLException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", e.getMessage());
-        }
     }
 
     public void cargarUsuarios() {
@@ -221,15 +194,15 @@ public class vistaAdmin {
                         "-fx-cursor: hand;"
         );
 
-                btnEliminar.setOnMouseClicked(event -> {
-                    try {
-                        usuarioDao.eliminar(usuario.getIdUsuario());
-                        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Usuario eliminado.");
-                        cargarUsuarios();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        btnEliminar.setOnMouseClicked(event -> {
+            try {
+                usuarioDao.eliminar(usuario.getIdUsuario());
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Usuario eliminado.");
+                cargarUsuarios();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
         vboxInfo.getChildren().addAll(lineaNombre, lblCorreo, lblTelefono, btnEliminar);
