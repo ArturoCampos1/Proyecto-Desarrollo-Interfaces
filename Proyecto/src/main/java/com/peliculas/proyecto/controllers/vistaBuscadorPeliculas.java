@@ -160,21 +160,33 @@ public class vistaBuscadorPeliculas {
         return peliculasTendring;
     }
 
-    public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> p) {
+    public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> peliculas) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
-        for (Pelicula pelicula : p) {
+        for (Pelicula pelicula : peliculas) {
             VBox box = new VBox(5);
             box.setPrefWidth(200);
 
-            String baseUrl = "https://image.tmdb.org/t/p/w500";
-            String fullUrl = baseUrl + pelicula.getPathBanner();
-
             ImageView img;
             try {
-                img = new ImageView(new Image(fullUrl, true));
-            } catch (IllegalArgumentException e) {
-                img = new ImageView();
+                if (pelicula.getPathBanner() != null && !pelicula.getPathBanner().isEmpty()) {
+                    if (pelicula.getPathBanner().startsWith("/")) {
+                        // Es ruta TMDB
+                        String baseUrl = "https://image.tmdb.org/t/p/w500";
+                        img = new ImageView(new Image(baseUrl + pelicula.getPathBanner(), true));
+                    } else if (pelicula.getPathBanner().equals("local_no_image")) {
+                        // Imagen local por defecto
+                        img = new ImageView(new Image(getClass().getResourceAsStream("/img/noavailable.jpg")));
+                    } else {
+                        // Cualquier otra ruta absoluta o URL
+                        img = new ImageView(new Image(pelicula.getPathBanner(), true));
+                    }
+                } else {
+                    // Fallback seguro
+                    img = new ImageView(new Image(getClass().getResourceAsStream("/img/noavailable.jpg")));
+                }
+            } catch (Exception e) {
+                img = new ImageView(new Image(getClass().getResourceAsStream("/img/noavailable.jpg")));
             }
 
             img.setFitWidth(180);

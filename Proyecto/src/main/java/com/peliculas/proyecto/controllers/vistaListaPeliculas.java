@@ -134,27 +134,6 @@ public class vistaListaPeliculas {
 
             selector.showAndWait().ifPresent(pelicula -> {
                 try {
-                    // Normalizar datos
-                    pelicula.setAnioSalida(extraerAnio(pelicula.getAnioSalida()));
-                    pelicula.setGenero(mapearGenero(pelicula.getGenero()));
-                    pelicula.setDisponible(1);
-
-                    // 🔹 Validar que la valoración sea realmente un número
-                    String valoracionStr = String.valueOf(pelicula.getValoracion());
-                    if (valoracionStr.contains(".jpg") || valoracionStr.contains(".png") || valoracionStr.contains("/")) {
-                        pelicula.setPathBanner(valoracionStr); // mover la URL al campo correcto
-                        pelicula.setValoracion(0.0);           // valor por defecto
-                    }
-
-                    // 🔹 Asegurar que la valoración se guarda (ejemplo: redondear a 1 decimal)
-                    double valoracion = pelicula.getValoracion();
-                    pelicula.setValoracion(Math.round(valoracion * 10.0) / 10.0);
-
-                    // Debug opcional para verificar
-                    System.out.println("DEBUG -> titulo: " + pelicula.getTitulo()
-                            + ", banner: " + pelicula.getPathBanner()
-                            + ", valoracion: " + pelicula.getValoracion());
-
                     // Insertar en BD
                     PeliculaDao.getInstance().crear(pelicula);
                     ListaPeliculaDao.getInstance().agregarPelicula(lista, pelicula);

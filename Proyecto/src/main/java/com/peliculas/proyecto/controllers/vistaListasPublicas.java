@@ -91,8 +91,10 @@ public class vistaListasPublicas {
             peliculasSeleccionadas = PeliculaDao.getInstance().obtenerPeliculasDeLista(lista.getIdLista());
             listaPeliculas.getItems().clear();
 
+            int cont = 1;
             for (Pelicula p : peliculasSeleccionadas) {
-                listaPeliculas.getItems().add(p.getTitulo());
+                listaPeliculas.getItems().add(cont + " ➡ " + p.getTitulo() + " (" + p.getAnioSalida() + "): " + p.getGenero() );
+                cont++;
             }
         } catch (Exception e) {
             e.printStackTrace();

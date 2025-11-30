@@ -55,6 +55,38 @@ public class PeliculaDao {
         }
     }
 
+    //Actualizar pelicula
+    public boolean actualizar(Pelicula p) {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+        String sql = "UPDATE pelicula SET titulo = ?, anio_salida = ?, director = ?, resumen = ?, " +
+                "genero = ?, disponible = ?, url_photo = ?, valoracion = ? " +
+                "WHERE id_pelicula = ?";
+
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+
+            pst.setString(1, p.getTitulo());
+            pst.setString(2, p.getAnioSalida());
+            pst.setString(3, p.getDirector());
+            pst.setString(4, p.getResumen());
+            pst.setString(5, p.getGenero());
+            pst.setInt(6, p.getDisponible());
+            pst.setString(7, p.getPathBanner());
+            pst.setDouble(8, p.getValoracion());
+
+            pst.setInt(9, p.getIdPelicula()); // WHERE
+
+            int rows = pst.executeUpdate();
+            con.close();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
     // Crear películas disponibles
     public void crearPeliculaDisponible(Pelicula p) throws SQLException {
         Conexion.abrirConexion();
