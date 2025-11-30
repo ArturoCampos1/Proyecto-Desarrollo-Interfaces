@@ -42,38 +42,18 @@ DELIMITER ;
 
 -- TRIGGERS PARA LISTA DE DISPONIBLES
 
+-- Trigger que elimina de peliculas_disponibles si la película deja de estar disponible
 DELIMITER $$
 
-CREATE TRIGGER trg_update_peliculas_disponibles
-AFTER INSERT ON pelicula
-FOR EACH ROW
-BEGIN
-    IF NEW.disponible > 0 THEN
-        INSERT INTO peliculas_disponibles (id_pelicula)
-        VALUES (NEW.id_pelicula);
-    END IF;
-END$$
-
-DELIMITER ;
-
-DELIMITER $$
-
-CREATE TRIGGER trg_modify_peliculas_disponibles
+CREATE TRIGGER trg_quitar_pelicula_disponible
 AFTER UPDATE ON pelicula
 FOR EACH ROW
 BEGIN
-    -- Si ahora está disponible y antes no lo estaba
-    IF NEW.disponible > 0 AND OLD.disponible = 0 THEN
-        INSERT INTO peliculas_disponibles (id_pelicula)
-        VALUES (NEW.id_pelicula);
-    END IF;
-
-    -- Si ahora no está disponible, eliminar de la lista
-    IF NEW.disponible = 0 AND OLD.disponible > 0 THEN
+    -- Si antes estaba disponible y ahora no lo está, eliminar de la lista
+    IF OLD.disponible > 0 AND NEW.disponible = 0 THEN
         DELETE FROM peliculas_disponibles
         WHERE id_pelicula = NEW.id_pelicula;
     END IF;
 END$$
 
 DELIMITER ;
-

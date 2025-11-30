@@ -93,7 +93,7 @@ public class vistaAdmin {
     }
 
     //Método copiado de vistaListaPeliculas (Iker)
-    private void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad) {
+    public void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad) {
         String nombre = campoNombre.getText();
         String cantidad = campoCantidad.getText();
 
@@ -120,7 +120,7 @@ public class vistaAdmin {
             selector.showAndWait().ifPresent(pelicula -> {
                 try {
                     pelicula.setDisponible(cantidadInt);
-                    peliculaDao.crearPeliculaDisponible(pelicula);
+                    peliculaDao.crear(pelicula);
                     obtenerPeliculasDisponibles();
                     obtenerTodasPeliculas();
                 } catch (Exception ex) {

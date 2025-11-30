@@ -26,30 +26,61 @@ public class PeliculaDao {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
-
-            cs.setString(1, p.getTitulo());
-            cs.setString(2, p.getAnioSalida());   // VARCHAR
-            cs.setString(3, p.getDirector());
-            cs.setString(4, p.getResumen());
-            cs.setString(5, p.getGenero());
-            cs.setString(6, p.getPathBanner());   // URL
-            cs.setDouble(7, p.getValoracion());   // DECIMAL
-            cs.setInt(8, p.getDisponible());
-
-            // 🔹 Usar execute() en lugar de executeQuery()
-            boolean hasResultSet = cs.execute();
-
-            // 🔹 Si el SP devuelve el id, lo leemos
-            if (hasResultSet) {
-                try (ResultSet rs = cs.getResultSet()) {
+        try {
+            // Primero verificamos si la película ya existe por título y año
+            String sqlCheck = "SELECT id_pelicula FROM pelicula WHERE titulo = ? AND anio_salida = ?";
+            try (PreparedStatement ps = con.prepareStatement(sqlCheck)) {
+                ps.setString(1, p.getTitulo());
+                ps.setString(2, p.getAnioSalida());
+                try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        int idGenerado = rs.getInt("id_pelicula");
-                        p.setIdPelicula(idGenerado);
-                        System.out.println("DEBUG -> Película insertada con id: " + idGenerado);
+                        // Película ya existe: actualizamos la disponibilidad
+                        int idExistente = rs.getInt("id_pelicula");
+                        p.setIdPelicula(idExistente);
+
+                        String sqlUpdate = "UPDATE pelicula SET disponible = ? WHERE id_pelicula = ?";
+                        try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdate)) {
+                            psUpdate.setInt(1, p.getDisponible());
+                            psUpdate.setInt(2, idExistente);
+                            psUpdate.executeUpdate();
+                        }
+
+                        // Aseguramos que solo haya un registro en peliculas_disponibles
+                        String sqlInsertDisponible = "INSERT IGNORE INTO peliculas_disponibles (id_pelicula) VALUES (?)";
+                        try (PreparedStatement psDisponible = con.prepareStatement(sqlInsertDisponible)) {
+                            psDisponible.setInt(1, idExistente);
+                            psDisponible.executeUpdate();
+                        }
+
+                        return; // Ya se actualizó, no necesitamos insertar de nuevo
                     }
                 }
             }
+
+            // Si no existe, llamamos al procedimiento para crear la película
+            try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
+                cs.setString(1, p.getTitulo());
+                cs.setString(2, p.getAnioSalida());
+                cs.setString(3, p.getDirector());
+                cs.setString(4, p.getResumen());
+                cs.setString(5, p.getGenero());
+                cs.setString(6, p.getPathBanner());
+                cs.setDouble(7, p.getValoracion());
+                cs.setInt(8, p.getDisponible());
+
+                boolean hasResultSet = cs.execute();
+
+                if (hasResultSet) {
+                    try (ResultSet rs = cs.getResultSet()) {
+                        if (rs.next()) {
+                            int idGenerado = rs.getInt("id_pelicula");
+                            p.setIdPelicula(idGenerado);
+                            System.out.println("DEBUG -> Película insertada con id: " + idGenerado);
+                        }
+                    }
+                }
+            }
+
         } finally {
             Conexion.cerrarConexion();
         }
@@ -92,31 +123,10 @@ public class PeliculaDao {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        String fechaCompleta = p.getAnioSalida();
-        String anioSolo = "";
-        int anioSalidaNumerico;
-
-        try {
-            if (fechaCompleta != null && fechaCompleta.length() >= 4) {
-                anioSolo = fechaCompleta.substring(0, 4);
-
-                anioSalidaNumerico = Integer.parseInt(anioSolo);
-            } else {
-                throw new NumberFormatException("Formato de fecha inválido o vacío.");
-            }
-
-        } catch (NumberFormatException e) {
-            throw new SQLException(
-                    "Error de formato al extraer el año. El valor original era: " + fechaCompleta,
-                    e
-            );
-        }
-
         try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
 
             cs.setString(1, p.getTitulo());
-            cs.setInt(2, anioSalidaNumerico);
-
+            cs.setString(2, p.getAnioSalida());
             cs.setString(3, p.getDirector());
             cs.setString(4, p.getResumen());
             cs.setString(5, p.getGenero());
