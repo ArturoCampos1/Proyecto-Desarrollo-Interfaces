@@ -29,15 +29,27 @@ public class PeliculaDao {
         try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
 
             cs.setString(1, p.getTitulo());
-            cs.setString(2, p.getAnioSalida());
+            cs.setString(2, p.getAnioSalida());   // VARCHAR
             cs.setString(3, p.getDirector());
             cs.setString(4, p.getResumen());
             cs.setString(5, p.getGenero());
-            cs.setString(6, p.getPathBanner());
-            cs.setDouble(7, p.getValoracion());
+            cs.setString(6, p.getPathBanner());   // URL
+            cs.setDouble(7, p.getValoracion());   // DECIMAL
             cs.setInt(8, p.getDisponible());
 
-            cs.executeQuery();
+            // 🔹 Usar execute() en lugar de executeQuery()
+            boolean hasResultSet = cs.execute();
+
+            // 🔹 Si el SP devuelve el id, lo leemos
+            if (hasResultSet) {
+                try (ResultSet rs = cs.getResultSet()) {
+                    if (rs.next()) {
+                        int idGenerado = rs.getInt("id_pelicula");
+                        p.setIdPelicula(idGenerado);
+                        System.out.println("DEBUG -> Película insertada con id: " + idGenerado);
+                    }
+                }
+            }
         } finally {
             Conexion.cerrarConexion();
         }
