@@ -22,13 +22,19 @@ public class PeliculasDisponiblesDao {
                 while (rs.next()) {
                     int idPelicula = rs.getInt("id_pelicula");
                     String titulo = rs.getString("titulo");
+                    double valoracion = rs.getDouble("valoracion");
                     String genero = rs.getString("genero");
+                    String resumen = rs.getString("resumen");
+                    String director = rs.getString("director");
                     int disponible = rs.getInt("disponible");
                     String pathBanner = rs.getString("url_photo");
 
                     Pelicula pelicula = new Pelicula();
                     pelicula.setIdPelicula(idPelicula);
                     pelicula.setTitulo(titulo);
+                    pelicula.setDirector(director);
+                    pelicula.setResumen(resumen);
+                    pelicula.setValoracion(valoracion);
                     pelicula.setGenero(genero);
                     pelicula.setDisponible(disponible);
                     pelicula.setPathBanner(pathBanner);

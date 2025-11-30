@@ -47,7 +47,7 @@ public class vistaAlquiler {
         cargarPeliculasParaAlquiler();
     }
 
-    private void cargarPeliculasParaAlquiler() {
+    public void cargarPeliculasParaAlquiler() {
         ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos(); //ESTO ES TEMPORAL PARA PROBAR
 
         ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
