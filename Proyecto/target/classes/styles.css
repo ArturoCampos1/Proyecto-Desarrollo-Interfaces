@@ -200,3 +200,9 @@
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
+
+.tag-blue {
+    -fx-background-color: #fce4ec;
+    -fx-border-color: #f8bbd0;
+    -fx-text-fill: #e91e63;
+}

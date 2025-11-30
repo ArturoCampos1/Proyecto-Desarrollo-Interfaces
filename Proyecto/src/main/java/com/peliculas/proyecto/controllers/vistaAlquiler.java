@@ -48,7 +48,7 @@ public class vistaAlquiler {
     }
 
     private void cargarPeliculasParaAlquiler() {
-        ArrayList<Pelicula> peliculasDisponibles = tmdbDao.findTrendingFilms(); //ESTO ES TEMPORAL PARA PROBAR
+        ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos(); //ESTO ES TEMPORAL PARA PROBAR
 
         ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
 

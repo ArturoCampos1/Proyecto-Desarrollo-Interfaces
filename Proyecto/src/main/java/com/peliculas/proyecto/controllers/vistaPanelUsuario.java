@@ -128,6 +128,23 @@ public class vistaPanelUsuario {
         }
     }
 
+    private void abrirVistaPrestamos() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPrestamos.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            vistaPrestamos controller = loader.getController();
+            controller.setUsuario(usuario);
+
+            Stage stage = (Stage) iconSearch.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void volverAMain(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
@@ -156,7 +173,7 @@ public class vistaPanelUsuario {
         // TARJETAS
         cardListas.setOnMouseClicked(e -> abrirVistaListas());
         cardListasPublicas.setOnMouseClicked(e -> abrirVistaListasPublicas()); // 🔹 abre Listas Públicas
-        cardPrestamos.setOnMouseClicked(e -> {});
+        cardPrestamos.setOnMouseClicked(e -> abrirVistaPrestamos());
         cardAlquilar.setOnMouseClicked(e -> abrirVistaAlquilar());
 
         // CURSORES
