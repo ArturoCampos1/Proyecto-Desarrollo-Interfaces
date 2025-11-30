@@ -16,16 +16,17 @@ CREATE TABLE IF NOT EXISTS usuario (
 ) ENGINE=InnoDB;
 
 -- TABLA PELICULA
-CREATE TABLE IF NOT EXISTS pelicula (
+CREATE TABLE pelicula (
    id_pelicula INT AUTO_INCREMENT PRIMARY KEY,
    titulo VARCHAR(155) NOT NULL,
-   anio_salida YEAR NOT NULL,
+   anio_salida VARCHAR(20) NOT NULL,
    director VARCHAR(95) NOT NULL,
    resumen TEXT,
    genero VARCHAR(100) NOT NULL,
    disponible INT DEFAULT 0,
-   valoracion DECIMAL(3,1) DEFAULT 0.0 CHECK (valoracion BETWEEN 0.5 AND 5 AND (valoracion * 2) = FLOOR(valoracion * 2))
-);
+   url_photo VARCHAR(100) NOT NULL,
+   valoracion DECIMAL(3,1) DEFAULT 0.0
+) ENGINE=InnoDB;
 
 -- TABLA LISTA
 CREATE TABLE IF NOT EXISTS lista (
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS resena (
 CREATE TABLE IF NOT EXISTS peliculas_disponibles (
    id_lista_peliculas_disponibles INT AUTO_INCREMENT PRIMARY KEY,
    id_pelicula INT NOT NULL
-) ENGINE=InnoDB;
+);
 
 -- TABLA ALQUILER
 CREATE TABLE IF NOT EXISTS alquiler (

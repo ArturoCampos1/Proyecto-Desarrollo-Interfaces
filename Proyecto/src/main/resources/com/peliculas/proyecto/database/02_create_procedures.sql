@@ -78,7 +78,7 @@ PROCEDIMIENTOS CRUD PARA PELICULAS
 ----------------------------------
 */
 
--- OBTENER PELIXCULAS
+-- OBTENER PELICULAS
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS obtener_todas_peliculas$$
@@ -93,7 +93,6 @@ DELIMITER ;
 
 -- Crear película
 DELIMITER $$
-
 DROP PROCEDURE IF EXISTS crear_pelicula$$
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
@@ -106,6 +105,11 @@ CREATE PROCEDURE crear_pelicula (
     IN p_disponible INT
 )
 BEGIN
+    DECLARE v_id_pelicula INT;
+
+    -- Iniciar la transacción
+    START TRANSACTION;
+
     IF p_disponible IS NULL THEN
         SET p_disponible = 0;
     END IF;
@@ -113,8 +117,21 @@ BEGIN
     INSERT INTO pelicula (titulo, anio_salida, director, resumen, genero, url_photo, valoracion, disponible)
     VALUES (p_titulo, p_anio_salida, p_director, p_resumen, p_genero, p_url_photo, p_valoracion, p_disponible);
 
-    SELECT LAST_INSERT_ID() AS id_pelicula;
+    SET v_id_pelicula = LAST_INSERT_ID();
+
+    IF p_disponible > 0 THEN
+        IF v_id_pelicula IS NOT NULL AND v_id_pelicula > 0 THEN
+            INSERT INTO peliculas_disponibles (id_pelicula)
+            VALUES (v_id_pelicula);
+        END IF;
+    END IF;
+
+    COMMIT;
+
+    SELECT v_id_pelicula AS id_pelicula;
+
 END$$
+DELIMITER ;
 
 DELIMITER ;
 
@@ -169,17 +186,6 @@ CREATE PROCEDURE eliminar_pelicula (
 BEGIN
     DELETE FROM pelicula
     WHERE id_pelicula = p_id_pelicula;
-END$$
-DELIMITER ;
-
-
-DELIMITER $$
-DROP PROCEDURE IF EXISTS obtener_peliculas_disponibles$$
-CREATE PROCEDURE obtener_peliculas_disponibles()
-BEGIN
-    SELECT *
-    FROM pelicula
-    WHERE disponible > 0;
 END$$
 DELIMITER ;
 
@@ -413,7 +419,7 @@ END$$
 DELIMITER ;
 
 
---LISTA DISPONIBLES
+-- LISTA DISPONIBLES
 
 DELIMITER $$
 

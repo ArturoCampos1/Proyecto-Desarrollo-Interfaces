@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class PeliculasDisponiblesDao {
 
-    public ArrayList<Pelicula> obtenerPeliculasDispos(){
+    public static ArrayList<Pelicula> obtenerPeliculasDispos(){
         ArrayList<Pelicula> peliculasDisponibles = new ArrayList<>();
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;

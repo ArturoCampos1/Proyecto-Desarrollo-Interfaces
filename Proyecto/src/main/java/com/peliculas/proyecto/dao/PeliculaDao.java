@@ -43,6 +43,49 @@ public class PeliculaDao {
         }
     }
 
+    // Crear películas disponibles
+    public void crearPeliculaDisponible(Pelicula p) throws SQLException {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        String fechaCompleta = p.getAnioSalida();
+        String anioSolo = "";
+        int anioSalidaNumerico;
+
+        try {
+            if (fechaCompleta != null && fechaCompleta.length() >= 4) {
+                anioSolo = fechaCompleta.substring(0, 4);
+
+                anioSalidaNumerico = Integer.parseInt(anioSolo);
+            } else {
+                throw new NumberFormatException("Formato de fecha inválido o vacío.");
+            }
+
+        } catch (NumberFormatException e) {
+            throw new SQLException(
+                    "Error de formato al extraer el año. El valor original era: " + fechaCompleta,
+                    e
+            );
+        }
+
+        try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
+
+            cs.setString(1, p.getTitulo());
+            cs.setInt(2, anioSalidaNumerico);
+
+            cs.setString(3, p.getDirector());
+            cs.setString(4, p.getResumen());
+            cs.setString(5, p.getGenero());
+            cs.setString(6, p.getPathBanner());
+            cs.setDouble(7, p.getValoracion());
+            cs.setInt(8, p.getDisponible());
+
+            cs.executeQuery();
+
+        } finally {
+            Conexion.cerrarConexion();
+        }
+    }
 
     public Pelicula buscarPorNombre(String nombre) throws SQLException {
         Pelicula p = new Pelicula();

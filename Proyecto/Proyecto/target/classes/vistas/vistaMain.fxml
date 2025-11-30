@@ -5,32 +5,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: F0F0F0;" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaMain">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaMain">
    <children>
-      <Text id="titulo" layoutX="402.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CineVerse" wrappingWidth="197.07012939453125">
-         <fill>
-            <LinearGradient endX="1.0" endY="1.0" startX="0.16287876801057294">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.5960784554481506" green="0.1725490242242813" blue="0.7176470756530762" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="0.2862745225429535" blue="0.9882352948188782" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </fill>
-      </Text>
       <Label id="subTitle" layoutX="416.0" layoutY="82.0" prefHeight="40.0" prefWidth="166.0" stylesheets="@../styles.css" text="🎥   Tu cine en línea" />
       <Pane id="cardLogin" fx:id="paneBusqueda" layoutX="68.0" layoutY="252.0" prefHeight="304.0" prefWidth="417.0" stylesheets="@../styles.css">
          <children>
@@ -39,13 +18,13 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <Text fill="#535353" layoutX="143.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Explora nuestro catálogo!" />
+            <Text id="explorar" layoutX="143.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Explora nuestro catálogo!" />
             <Label id="lupa" layoutX="167.0" layoutY="53.0" text="🔍">
                <font>
                   <Font size="41.0" />
                </font>
             </Label>
-            <Label id="popular" layoutX="176.0" layoutY="184.0" text="Popular 🔥" />
+            <Label id="popular" layoutX="153.0" layoutY="189.0" text="Opción popular 🔥" />
          </children>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -60,7 +39,7 @@
             </Text>
 
             <!-- 🔹 AÑADIDO: acción para ir a Registro -->
-            <Button id="btnCrear" layoutX="19.0" layoutY="89.0" mnemonicParsing="false" onAction="#abrirVistaRegistro" prefHeight="58.0" prefWidth="381.0" stylesheets="@../styles.css" text="Crear Cuenta" textFill="WHITE">
+            <Button id="btnCrear" layoutX="19.0" layoutY="89.0" mnemonicParsing="false" onAction="#abrirVistaRegistro" prefHeight="58.0" prefWidth="381.0" stylesheets="@../styles.css" text="Crear Cuenta">
                <font>
                   <Font size="21.0" />
                </font>
@@ -79,14 +58,14 @@
                </cursor>
             </Button>
 
-            <Text fill="#0b72b7" layoutX="153.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Acceso Admin" underline="true" wrappingWidth="110.5516357421875">
+            <Text fill="#0b72b7" layoutX="153.0" layoutY="283.0" onMouseClicked="#abrirAccesoAdmin" strokeType="OUTSIDE" strokeWidth="0.0" text="Acceso Admin" underline="true" wrappingWidth="110.5516357421875">
                <font>
                   <Font size="16.0" />
                </font>
             </Text>
          </children>
       </Pane>
-      <Text fill="#535353" layoutX="280.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descubre, alquila y disfruta de las mejores películas desde la comodidad de tu hogar" />
-      <Button fx:id="darkLight" layoutX="927.0" layoutY="20.0" mnemonicParsing="false" stylesheets="@../styles.css" text="🌗" onAction="#cambiarModo" />
+      <Text id="textOut" layoutX="280.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descubre, alquila y disfruta de las mejores películas desde la comodidad de tu hogar" />
+      <Label layoutX="406.0" layoutY="135.0" style="-fx-font-size: 40px; -fx-font-weight: bold;                   -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #C026D3, #4F46E5);" text="CineVerse" />
    </children>
 </AnchorPane>

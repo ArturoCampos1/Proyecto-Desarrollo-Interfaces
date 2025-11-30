@@ -71,7 +71,7 @@ public class vistaAdmin {
 
         cargarUsuarios();
         obtenerPeliculasDisponibles();
-        //obtenerTodasPeliculas();
+        obtenerTodasPeliculas();
 
         botonVolver.setOnMouseClicked(event -> volverAMain());
         btnAñadir.setOnMouseClicked(event -> {
@@ -91,7 +91,6 @@ public class vistaAdmin {
         ArrayList<VBox> boxs = returnPeliculaConFormatoArrayDispos(peliculas);
         mostrarPeliculas(boxs);
     }
-
 
     //Método copiado de vistaListaPeliculas (Iker)
     private void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad) {
@@ -121,7 +120,7 @@ public class vistaAdmin {
             selector.showAndWait().ifPresent(pelicula -> {
                 try {
                     pelicula.setDisponible(cantidadInt);
-                    peliculaDao.crear(pelicula);
+                    peliculaDao.crearPeliculaDisponible(pelicula);
                     obtenerPeliculasDisponibles();
                     obtenerTodasPeliculas();
                 } catch (Exception ex) {
