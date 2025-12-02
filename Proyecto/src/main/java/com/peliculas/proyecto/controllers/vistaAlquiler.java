@@ -1,8 +1,7 @@
 package com.peliculas.proyecto.controllers;
 
-import com.peliculas.proyecto.dao.PeliculasDisponiblesDao;
-import com.peliculas.proyecto.dao.TMDBDao;
-import com.peliculas.proyecto.dao.UsuarioDao;
+import com.peliculas.proyecto.dao.*;
+import com.peliculas.proyecto.dto.Alquiler;
 import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.PeliculasDisponibles;
 import com.peliculas.proyecto.dto.Usuario;
@@ -22,6 +21,10 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 // Asegúrate que el nombre de la clase coincida exactamente con el fx:controller de tu FXML
@@ -31,27 +34,28 @@ public class vistaAlquiler {
     @FXML private ScrollPane scrollPeliculas; // Conexión al ScrollPane
     @FXML private GridPane gridPeliculas; // Conexión al GridPane (donde inyectamos las tarjetas)
 
-    // Necesitas el DAO para obtener las películas
-    private TMDBDao tmdbDao = new TMDBDao();
+    private AlquilerDao alquilerDao = new AlquilerDao();
+    private PeliculaDao peliculaDao = new PeliculaDao();
     private Usuario usuarioActual;
 
     // Recibe el usuario actual desde vistaPanelUsuario
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
+        cargarPeliculasParaAlquiler();
     }
 
     // 2. INICIALIZACIÓN
     @FXML
     public void initialize() {
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
-        cargarPeliculasParaAlquiler();
+        //cargarPeliculasParaAlquiler();
     }
 
+
+
     public void cargarPeliculasParaAlquiler() {
-        ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos(); //ESTO ES TEMPORAL PARA PROBAR
-
+        ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos();
         ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
-
         mostrarPeliculas(cards);
     }
 
@@ -106,11 +110,58 @@ public class vistaAlquiler {
             Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);
 
-            // Botón de alquiler
-            Button btnAlquilar = new Button("Alquilar ahora");
+            Label disponible = new Label("Disponible: " + pelicula.getDisponible());
+            disponible.setTextFill(Color.WHITE);
+
+            ArrayList<Alquiler> alquileres = new ArrayList<>();
+            try {
+                alquileres = alquilerDao.obtenerTodos();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            Region spacer = new Region();
+            VBox.setVgrow(spacer, Priority.ALWAYS); // Crece para llenar el espacio
+
+            Button btnAlquilar = new Button("Alquilar Película");
+            btnAlquilar.setStyle(
+                    "-fx-text-fill: #7B2CC9;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-size: 14px;" +
+                            "-fx-background-radius: 25;"
+            );
+
+            for (Alquiler a : alquileres){
+                if (a.getIdPelicula() == pelicula.getIdPelicula() && a.getIdUsuario() == usuarioActual.getIdUsuario()){
+                    btnAlquilar.setText("Ya alquilada");
+                    btnAlquilar.setStyle(
+                            "-fx-text-fill: #7B2CC9;" +
+                                    "-fx-font-weight: bold;" +
+                                    "-fx-font-size: 14px;" +
+                                    "-fx-background-radius: 25;" +
+                                    "-fx-cursor: default;"
+                    );
+                    btnAlquilar.setDisable(true);
+                    break; // Sale del bucle una vez encontrado
+                }
+            }
+            btnAlquilar.setOnAction(actionEvent -> {
+
+                Date fecha_alquiler = Date.valueOf(LocalDate.now());
+                String fechaParseada = fecha_alquiler.toString();
+
+                Alquiler alquiler = new Alquiler(usuarioActual.getIdUsuario(), pelicula.getIdPelicula(), fechaParseada);
+                try {
+                    alquilerDao.crear(alquiler);
+                    peliculaDao.actualizarDisponibilidad(pelicula, 1);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                btnAlquilar.setDisable(true);
+                cargarPeliculasParaAlquiler();
+            }
+            );
             btnAlquilar.setPrefWidth(180);
-            btnAlquilar.setCursor(javafx.scene.Cursor.HAND);
-            btnAlquilar.setStyle("-fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;");
 
             LinearGradient btnGradient = new LinearGradient(
                     0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
@@ -121,15 +172,13 @@ public class vistaAlquiler {
                     new BackgroundFill(btnGradient, new CornerRadii(8), Insets.EMPTY)
             ));
 
-            box.getChildren().addAll(img, titulo, director, resumen, valoracion, btnAlquilar);
+            box.getChildren().addAll(img, titulo, director, resumen, valoracion, disponible, spacer, btnAlquilar);
 
             boxs.add(box);
         }
 
         return boxs;
     }
-
-
 
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();

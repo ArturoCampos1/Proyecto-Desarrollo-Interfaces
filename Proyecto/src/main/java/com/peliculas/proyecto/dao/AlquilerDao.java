@@ -15,7 +15,7 @@ public class AlquilerDao implements CRUD<Alquiler> {
 
     private static AlquilerDao instance;
 
-    private AlquilerDao() {}
+    public AlquilerDao() {}
 
     public static AlquilerDao getInstance() {
         if (instance == null) {
@@ -29,10 +29,11 @@ public class AlquilerDao implements CRUD<Alquiler> {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        try (CallableStatement cs = con.prepareCall("{CALL crear_alquiler(?,?,?)}")) {
+        try (CallableStatement cs = con.prepareCall("{CALL crear_alquiler(?,?,?,?)}")) {
             cs.setInt(1, a.getIdUsuario());
             cs.setInt(2, a.getIdPelicula());
-            cs.setInt(3, a.getPrecio());
+            cs.setString(3, a.getFechaAlquiler());
+            cs.setString(4, a.getFechaDevolucion());
 
             cs.executeUpdate();
         } finally {
@@ -40,7 +41,7 @@ public class AlquilerDao implements CRUD<Alquiler> {
         }
     }
 
-    public List<Alquiler> obtenerPorUsuario(int idUsuario) throws SQLException {
+    public ArrayList<Alquiler> obtenerPorUsuario(int idUsuario) throws SQLException {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
@@ -48,23 +49,39 @@ public class AlquilerDao implements CRUD<Alquiler> {
             cs.setInt(1, idUsuario);
             ResultSet rs = cs.executeQuery();
 
-            List<Alquiler> lista = new ArrayList<>();
+            ArrayList<Alquiler> lista = new ArrayList<>();
 
             while (rs.next()) {
                 Alquiler a = new Alquiler();
                 a.setIdUsuario(rs.getInt("id_usuario"));
                 a.setIdPelicula(rs.getInt("id_pelicula"));
-                a.setPrecio(rs.getInt("precio"));
+                a.setFechaAlquiler(rs.getString("fecha_alquiler"));
+                a.setFechaDevolucion(rs.getString("fecha_devolucion"));
 
-                Timestamp tsAlquiler = rs.getTimestamp("fecha_alquiler");
-                if (tsAlquiler != null) {
-                    a.setFechaAlquiler(new java.util.Date(tsAlquiler.getTime()));
-                }
+                lista.add(a);
+            }
 
-                Timestamp tsDevolucion = rs.getTimestamp("fecha_devolucion");
-                if (tsDevolucion != null) {
-                    a.setFechaDevolucion(new java.util.Date(tsDevolucion.getTime()));
-                }
+            return lista;
+        } finally {
+            Conexion.cerrarConexion();
+        }
+    }
+
+    public ArrayList<Alquiler> obtenerTodos() throws SQLException {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        try (CallableStatement cs = con.prepareCall("SELECT * FROM alquiler")) {
+            ResultSet rs = cs.executeQuery();
+
+            ArrayList<Alquiler> lista = new ArrayList<>();
+
+            while (rs.next()) {
+                Alquiler a = new Alquiler();
+                a.setIdUsuario(rs.getInt("id_usuario"));
+                a.setIdPelicula(rs.getInt("id_pelicula"));
+                a.setFechaAlquiler(rs.getString("fecha_alquiler"));
+                a.setFechaDevolucion(rs.getString("fecha_devolucion"));
 
                 lista.add(a);
             }
@@ -76,15 +93,15 @@ public class AlquilerDao implements CRUD<Alquiler> {
     }
 
     @Override
-    public void modificar(Alquiler a) throws SQLException {
+    public void modificar(Alquiler a) throws SQLException { // NO USADO
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
         try (CallableStatement cs = con.prepareCall("{CALL modificar_alquiler(?,?,?,?)}")) {
             cs.setInt(1, a.getIdUsuario());
             cs.setInt(2, a.getIdPelicula());
-            cs.setInt(3, a.getPrecio());
-            cs.setTimestamp(4, new Timestamp(a.getFechaDevolucion().getTime()));
+            //cs.setInt(3, a.getPrecio());
+            //cs.setTimestamp(4, new Timestamp(a.getFechaDevolucion().getTime()));
 
             cs.executeUpdate();
         } finally {

@@ -117,6 +117,27 @@ public class PeliculaDao {
         }
     }
 
+    //Actualizar pelicula
+    public boolean actualizarDisponibilidad(Pelicula p, int cantidad) {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+        String sql = "UPDATE pelicula SET disponible = ? " +
+                "WHERE id_pelicula = ?";
+
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+
+            pst.setInt(1, p.getDisponible() - cantidad);
+            pst.setInt(2, p.getIdPelicula()); // WHERE
+
+            int rows = pst.executeUpdate();
+            con.close();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // Crear películas disponibles
     public void crearPeliculaDisponible(Pelicula p) throws SQLException {

@@ -2,23 +2,19 @@ package com.peliculas.proyecto.dto;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class Alquiler {
 
     private int idUsuario;
     private int idPelicula;
-    private Date fechaAlquiler;
-    private Date fechaDevolucion;
-    private int precio;
+    private String fechaAlquiler;
+    private String fechaDevolucion;
 
-    public Alquiler(int idUsuario, int idPelicula, Date fechaAlquiler, Date fechaDevolucion, int precio) {
+    public Alquiler(int idUsuario, int idPelicula, String fechaAlquiler) {
         this.idUsuario = idUsuario;
         this.idPelicula = idPelicula;
         this.fechaAlquiler = fechaAlquiler;
-        this.fechaDevolucion = fechaDevolucion;
-        this.precio = precio;
+        this.fechaDevolucion = "";
     }
 
     public Alquiler() {

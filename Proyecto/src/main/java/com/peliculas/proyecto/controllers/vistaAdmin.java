@@ -97,12 +97,12 @@ public class vistaAdmin {
         String nombre = campoNombre.getText();
         String cantidad = campoCantidad.getText();
 
-        int cantidadInt = Integer.valueOf(cantidad);
-
         if (nombre == null || nombre.isEmpty() || cantidad.isEmpty() || cantidad == null) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "Escribe un nombre para buscar.");
             return;
         }
+
+        int cantidadInt = Integer.valueOf(cantidad);
 
         try {
             ArrayList<Pelicula> coincidencias = tmdbDao.findByName(nombre);

@@ -26,7 +26,7 @@ public class Pelicula {
         this.genero = genero;
         this.pathBanner = pathBanner;
         this.valoracion = valoracion;
-        this.disponible = 1;
+        this.disponible = 0;
     }
 
     // Constructor completo (por si lo necesitas al leer de BD)
@@ -46,7 +46,7 @@ public class Pelicula {
 
     // Constructor vacío
     public Pelicula() {
-        this.disponible = 1;
+        this.disponible = 0;
     }
 
     @Override
