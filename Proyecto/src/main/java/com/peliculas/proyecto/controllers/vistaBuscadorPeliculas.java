@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -230,12 +231,89 @@ public class vistaBuscadorPeliculas {
             ));
             box.setPadding(new Insets(10));
 
+            box.setOnMouseClicked(event -> {
+                abrirCartaPelicula(pelicula);
+            });
+
             boxs.add(box);
         }
 
         return boxs;
     }
 
+    private void abrirCartaPelicula(Pelicula pelicula) {
+        Stage ventana = new Stage();
+        ventana.setTitle(pelicula.getTitulo());
+        ventana.setResizable(false);
+
+        VBox root = new VBox(15);
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, #7b2cc9, #a34fb0);");
+
+        HBox imageContainer = new HBox();
+        imageContainer.setAlignment(Pos.CENTER);
+        imageContainer.setPadding(new Insets(0, 0, 10, 0));
+
+        // Imagen grande
+        ImageView imageView;
+        try {
+            String baseUrl = "https://image.tmdb.org/t/p/w500";
+            imageView = new ImageView(new Image(baseUrl + pelicula.getPathBanner(), true));
+        } catch (Exception e) {
+            imageView = new ImageView(new Image(getClass().getResourceAsStream("/img/noavailable.jpg")));
+        }
+
+        imageView.setFitWidth(380);
+        imageView.setPreserveRatio(true);
+
+        imageContainer.getChildren().add(imageView);
+
+        // LABELS
+        Label lblTitulo = new Label(pelicula.getTitulo());
+        lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
+
+        Label lblDirector = new Label("Director: " + pelicula.getDirector());
+        lblDirector.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+
+        Label lblAnio = new Label("Año: " + pelicula.getAnioSalida());
+        lblAnio.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+
+        Label lblGenero = new Label("Género: " + pelicula.getGenero());
+        lblGenero.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+
+        Label lblValoracion = new Label("Valoración: " + pelicula.getValoracion());
+        lblValoracion.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+
+
+        Label lblResumen = new Label(pelicula.getResumen());
+        lblResumen.setWrapText(true);
+        lblResumen.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+
+        ScrollPane scrollResumen = new ScrollPane(lblResumen);
+        scrollResumen.setFitToWidth(true);
+        scrollResumen.setPrefViewportHeight(120);
+        scrollResumen.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;");
+
+        Button btnCerrar = new Button("Cerrar");
+        btnCerrar.setStyle("-fx-background-color: white; -fx-text-fill: #7b2cc9; -fx-font-weight: bold;");
+        btnCerrar.setOnAction(e -> ventana.close());
+
+        root.getChildren().addAll(
+                imageContainer,
+                lblTitulo,
+                lblDirector,
+                lblAnio,
+                lblGenero,
+                lblValoracion,
+                scrollResumen,
+                btnCerrar
+        );
+
+        Scene scene = new Scene(root, 450, 720);
+        ventana.setScene(scene);
+        ventana.show();
+    }
+    
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
         int col = 0;
