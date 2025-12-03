@@ -244,19 +244,22 @@ public class vistaBuscadorPeliculas {
     }
 
     private void abrirCartaPelicula(Pelicula pelicula) {
+        if (usuario == null) {
+            mostrarError("Debes iniciar sesión para ver los detalles de la película.");
+            return;
+        }
         Stage ventana = new Stage();
         ventana.setTitle(pelicula.getTitulo());
         ventana.setResizable(false);
 
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #7b2cc9, #a34fb0);");
+        root.setStyle("-fx-background-radius: 15; -fx-background-color: linear-gradient(to bottom, #7b2cc9, #a34fb0);");
 
         HBox imageContainer = new HBox();
         imageContainer.setAlignment(Pos.CENTER);
         imageContainer.setPadding(new Insets(0, 0, 10, 0));
 
-        // Imagen grande
         ImageView imageView;
         try {
             String baseUrl = "https://image.tmdb.org/t/p/w500";
@@ -270,7 +273,6 @@ public class vistaBuscadorPeliculas {
 
         imageContainer.getChildren().add(imageView);
 
-        // LABELS
         Label lblTitulo = new Label(pelicula.getTitulo());
         lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
 
@@ -283,9 +285,43 @@ public class vistaBuscadorPeliculas {
         Label lblGenero = new Label("Género: " + pelicula.getGenero());
         lblGenero.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
 
-        Label lblValoracion = new Label("Valoración: " + pelicula.getValoracion());
+        Label lblValoracion = new Label("Valoración:");
         lblValoracion.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
 
+        HBox starsBox = new HBox(5);
+        starsBox.setAlignment(Pos.CENTER);
+
+        double val = pelicula.getValoracion();
+        double rounded = Math.round(val * 2) / 2.0;  // redondeo a .0 o .5
+
+        String fileName;
+        if (rounded % 1 == 0) {
+            fileName = "star_" + (int) rounded + ".png";
+        } else {
+            fileName = "star_" + ((int) rounded) + "5.png";
+        }
+
+        try {
+            ImageView starImg = new ImageView(new Image(
+                    getClass().getResourceAsStream("/img/" + fileName)
+            ));
+
+            starImg.setFitWidth(160);   // ajusta el tamaño si quieres
+            starImg.setPreserveRatio(true);
+
+            starsBox.getChildren().add(starImg);
+
+        } catch (Exception e) {
+            System.out.println("Error cargando estrellas: " + fileName);
+        }
+
+        Label lblValorSmall = new Label("(" + val + ")");
+        lblValorSmall.setStyle("-fx-text-fill: #C4C4C4; -fx-font-size: 13px;");
+        lblValorSmall.setPadding(new Insets(2, 0, 0, 3));
+
+        HBox valoracionLinea = new HBox(10);
+        valoracionLinea.setAlignment(Pos.CENTER_LEFT);
+        valoracionLinea.getChildren().addAll(lblValoracion, starsBox, lblValorSmall);
 
         Label lblResumen = new Label(pelicula.getResumen());
         lblResumen.setWrapText(true);
@@ -298,7 +334,6 @@ public class vistaBuscadorPeliculas {
 
         Button btnCerrar = new Button("Cerrar");
         btnCerrar.setStyle("-fx-background-color: white; -fx-text-fill: #7b2cc9; -fx-font-weight: bold;");
-        btnCerrar.setCursor(Cursor.HAND);
         btnCerrar.setOnAction(e -> ventana.close());
 
         root.getChildren().addAll(
@@ -307,7 +342,7 @@ public class vistaBuscadorPeliculas {
                 lblDirector,
                 lblAnio,
                 lblGenero,
-                lblValoracion,
+                valoracionLinea,
                 scrollResumen,
                 btnCerrar
         );
