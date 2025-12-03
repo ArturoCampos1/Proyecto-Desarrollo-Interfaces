@@ -39,7 +39,7 @@
             </Text>
 
             <!-- 🔹 AÑADIDO: acción para ir a Registro -->
-            <Button id="btnCrear" layoutX="19.0" layoutY="89.0" mnemonicParsing="false" onAction="#abrirVistaRegistro" prefHeight="58.0" prefWidth="381.0" stylesheets="@../styles.css" text="Crear Cuenta">
+            <Button id="btnCrear" layoutX="19.0" layoutY="89.0" mnemonicParsing="false" onAction="#abrirVistaRegistro" prefHeight="58.0" prefWidth="381.0" stylesheets="@../styles.css" text="Crear Cuenta" textFill="WHITE">
                <font>
                   <Font size="21.0" />
                </font>

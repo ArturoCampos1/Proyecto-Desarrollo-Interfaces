@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -215,6 +216,7 @@ public class vistaBuscadorPeliculas {
             Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);
 
+            box.setStyle("-fx-cursor: hand;");
             box.getChildren().addAll(img, titulo, director, resumen, generos, anioSalida, valoracion);
 
             LinearGradient gradient = new LinearGradient(
@@ -296,6 +298,7 @@ public class vistaBuscadorPeliculas {
 
         Button btnCerrar = new Button("Cerrar");
         btnCerrar.setStyle("-fx-background-color: white; -fx-text-fill: #7b2cc9; -fx-font-weight: bold;");
+        btnCerrar.setCursor(Cursor.HAND);
         btnCerrar.setOnAction(e -> ventana.close());
 
         root.getChildren().addAll(
