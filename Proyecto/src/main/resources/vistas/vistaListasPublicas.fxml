@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -13,10 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css"
-            xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.peliculas.proyecto.controllers.vistaListasPublicas">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListasPublicas">
 
     <children>
         <!-- TÍTULO PRINCIPAL -->
@@ -25,15 +21,12 @@
             <style>-fx-font-weight: bold;</style>
         </Text>
 
-        <Label layoutX="360.0" layoutY="40.0" text="🌍 Explora listas de otros usuarios">
-            <styleClass>
-                <String fx:value="tag-base" />
-                <String fx:value="tag-pink" />
-            </styleClass>
+        <Label id="subTitle" layoutX="360.0" layoutY="40.0" prefHeight="40.0" prefWidth="280.0" text="🌍      Explora listas de otros usuarios">
+            <font><Font size="18.0" /></font>
         </Label>
 
         <!-- TARJETA USUARIOS -->
-        <Pane layoutX="55.0" layoutY="150.0" prefHeight="200.0" prefWidth="370.0" styleClass="cardGestionFilm">
+        <Pane layoutX="56.0" layoutY="150.0" prefHeight="244.0" prefWidth="370.0" styleClass="cardGestionFilm">
             <children>
                 <Text layoutX="162.0" layoutY="41.0" text="Usuarios">
                     <font><Font size="18.0" /></font>
@@ -46,7 +39,7 @@
         </Pane>
 
         <!-- TARJETA LISTAS DEL USUARIO -->
-        <Pane layoutX="575.0" layoutY="150.0" prefHeight="200.0" prefWidth="370.0" styleClass="cardGestionFilm">
+        <Pane layoutX="56.0" layoutY="406.0" prefHeight="244.0" prefWidth="370.0" styleClass="cardGestionFilm">
             <children>
                 <Text layoutX="129.0" layoutY="42.0" text="Listas del usuario">
                     <font><Font size="18.0" /></font>
@@ -60,22 +53,20 @@
         </Pane>
 
         <!-- TARJETA PELÍCULAS DE LA LISTA -->
-        <Pane layoutX="55.0" layoutY="400.0" prefHeight="250.0" prefWidth="890.0" styleClass="cardGestionFilm">
+        <Pane layoutX="450.0" layoutY="150.0" prefHeight="500.0" prefWidth="493.0" styleClass="cardGestionFilm">
             <children>
-                <Text layoutX="386.0" layoutY="34.0" text="Películas de la lista">
+                <Text layoutX="174.0" layoutY="44.0" text="Películas de la lista">
                     <font><Font size="18.0" /></font>
                 </Text>
-                <Text fill="#b613b9" layoutX="356.0" layoutY="33.0" text="🎬">
+                <Text fill="#b613b9" layoutX="147.0" layoutY="43.0" text="🎬">
                     <font><Font size="18.0" /></font>
                 </Text>
-                <ListView fx:id="listaPeliculas" layoutX="25.0" layoutY="70.0" prefHeight="150.0" prefWidth="839.0" />
+                <ListView fx:id="listaPeliculas" layoutX="26.0" layoutY="68.0" prefHeight="398.0" prefWidth="444.0" />
             </children>
         </Pane>
 
         <!-- BOTÓN VOLVER -->
-        <Button fx:id="btnVolver" layoutX="50.0" layoutY="720.0" prefHeight="40.0" prefWidth="120.0"
-                style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;"
-                styleClass="btnVolver" text="← Volver">
+        <Button fx:id="btnVolver" layoutX="50.0" layoutY="720.0" prefHeight="40.0" prefWidth="120.0" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" styleClass="btnVolver" text="← Volver">
             <cursor><Cursor fx:constant="HAND" /></cursor>
         </Button>
 

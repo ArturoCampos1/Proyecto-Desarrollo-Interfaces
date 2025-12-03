@@ -62,8 +62,10 @@ public class vistaRegistro {
             return;
         }
 
-        if (!telefono.matches("\\d+")) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Teléfono inválido", "El teléfono solo puede contener números");
+        // Validación: exactamente 9 dígitos
+        if (!telefono.matches("\\d{9}")) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Teléfono inválido",
+                    "El teléfono debe contener exactamente 9 dígitos");
             return;
         }
 
