@@ -113,6 +113,22 @@ public class vistaAlquiler {
             Label disponible = new Label("Disponible: " + pelicula.getDisponible());
             disponible.setTextFill(Color.WHITE);
 
+            Region spacer1 = new Region();
+            VBox.setVgrow(spacer1, Priority.ALWAYS); // Crece para llenar el espacio
+
+            ImageView star;
+            try {
+                star = new ImageView(new Image(getClass().getResourceAsStream("/img/starVacia.png")));
+                star.setFitWidth(25);
+                star.setFitHeight(25);
+                star.setPreserveRatio(true);
+                star.setSmooth(true);
+                star.setCache(true);
+            } catch (IllegalArgumentException e) {
+                System.err.println("No se pudo cargar starVacia.png: " + e.getMessage());
+                star = new ImageView();
+            }
+
             ArrayList<Alquiler> alquileres = new ArrayList<>();
             try {
                 alquileres = alquilerDao.obtenerTodos();
@@ -147,6 +163,18 @@ public class vistaAlquiler {
             }
             btnAlquilar.setOnAction(actionEvent -> {
 
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPayment.fxml"));
+                                Scene scene = new Scene(loader.load());
+                                PaymentController controller = loader.getController();
+                                controller.setUsuario(usuarioActual);
+                                Stage stage = (Stage) btnVolver.getScene().getWindow();
+                                stage.setScene(scene);
+                                stage.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                /*
                 Date fecha_alquiler = Date.valueOf(LocalDate.now());
                 String fechaParseada = fecha_alquiler.toString();
 
@@ -159,6 +187,7 @@ public class vistaAlquiler {
                 }
                 btnAlquilar.setDisable(true);
                 cargarPeliculasParaAlquiler();
+                */
             }
             );
             btnAlquilar.setPrefWidth(180);
@@ -172,8 +201,7 @@ public class vistaAlquiler {
                     new BackgroundFill(btnGradient, new CornerRadii(8), Insets.EMPTY)
             ));
 
-            box.getChildren().addAll(img, titulo, director, resumen, valoracion, disponible, spacer, btnAlquilar);
-
+            box.getChildren().addAll(img, titulo, director, resumen, valoracion, disponible, spacer1, star, spacer, btnAlquilar);
             boxs.add(box);
         }
 

@@ -102,7 +102,8 @@ CREATE PROCEDURE crear_pelicula (
     IN p_genero VARCHAR(100),
     IN p_url_photo VARCHAR(100),
     IN p_valoracion DECIMAL(3,1),
-    IN p_disponible INT
+    IN p_disponible INT,
+    IN p_precio DECIMAL(4,2)
 )
 BEGIN
     DECLARE v_id_pelicula INT;
@@ -121,7 +122,8 @@ BEGIN
         genero,
         url_photo,
         valoracion,
-        disponible
+        disponible,
+        precio
     )
     VALUES (
         p_titulo,
@@ -131,7 +133,8 @@ BEGIN
         p_genero,
         p_url_photo,
         p_valoracion,
-        p_disponible
+        p_disponible,
+        p_precio
     );
 
     SET v_id_pelicula = LAST_INSERT_ID();

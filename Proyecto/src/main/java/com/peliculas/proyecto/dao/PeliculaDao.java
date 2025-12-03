@@ -58,7 +58,7 @@ public class PeliculaDao {
             }
 
             // Si no existe, llamamos al procedimiento para crear la película
-            try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
+            try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?,?)}")) {
                 cs.setString(1, p.getTitulo());
                 cs.setString(2, p.getAnioSalida());
                 cs.setString(3, p.getDirector());
@@ -67,6 +67,7 @@ public class PeliculaDao {
                 cs.setString(6, p.getPathBanner());
                 cs.setDouble(7, p.getValoracion());
                 cs.setInt(8, p.getDisponible());
+                cs.setDouble(9, p.getPrecio());
 
                 boolean hasResultSet = cs.execute();
 

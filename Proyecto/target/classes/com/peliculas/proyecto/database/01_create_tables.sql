@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS pelicula (
    genero VARCHAR(100) NOT NULL,
    disponible INT DEFAULT 0,
    url_photo VARCHAR(100) NOT NULL,
-   valoracion DECIMAL(3,1) DEFAULT 0.0
+   valoracion DECIMAL(3,1) DEFAULT 0.0,
+   precio DECIMAL(4,2)
 ) ENGINE=InnoDB;
 
 -- TABLA LISTA

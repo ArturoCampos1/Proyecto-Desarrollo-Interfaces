@@ -14,11 +14,12 @@ public class Pelicula {
     private String pathBanner;
     private double valoracion;
     private int disponible;
+    private double precio;
 
     // Constructor para crear nuevas películas
     public Pelicula(String titulo, String anioSalida, String director,
                     String resumen, String genero,
-                    String pathBanner, double valoracion) {
+                    String pathBanner, double valoracion, double precio) {
         this.titulo = titulo;
         this.anioSalida = anioSalida;
         this.director = director;
@@ -27,6 +28,7 @@ public class Pelicula {
         this.pathBanner = pathBanner;
         this.valoracion = valoracion;
         this.disponible = 0;
+        this.precio = 0;
     }
 
     // Constructor completo (por si lo necesitas al leer de BD)

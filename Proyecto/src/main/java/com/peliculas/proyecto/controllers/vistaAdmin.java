@@ -47,6 +47,9 @@ public class vistaAdmin {
     private TextField campoCantidad;
 
     @FXML
+    private TextField campoPrecio;
+
+    @FXML
     private Button btnAñadir;
 
     @FXML
@@ -75,7 +78,7 @@ public class vistaAdmin {
 
         botonVolver.setOnMouseClicked(event -> volverAMain());
         btnAñadir.setOnMouseClicked(event -> {
-            buscarYAgregarPelicula(campoNombre, campoCantidad);
+            buscarYAgregarPelicula(campoNombre, campoCantidad, campoPrecio);
         });
 
     }
@@ -93,16 +96,18 @@ public class vistaAdmin {
     }
 
     //Método copiado de vistaListaPeliculas (Iker)
-    public void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad) {
+    public void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad, TextField campoPrecio) {
         String nombre = campoNombre.getText();
         String cantidad = campoCantidad.getText();
+        String precio = campoPrecio.getText();
 
-        if (nombre == null || nombre.isEmpty() || cantidad.isEmpty() || cantidad == null) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Escribe un nombre para buscar.");
+        if (nombre == null || nombre.isEmpty() || cantidad.isEmpty() || cantidad == null || precio == null || precio.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Escribe datos para agregarla.");
             return;
         }
 
         int cantidadInt = Integer.valueOf(cantidad);
+        double precioDouble = Double.valueOf(precio.replace(",", "."));
 
         try {
             ArrayList<Pelicula> coincidencias = tmdbDao.findByName(nombre);
@@ -120,6 +125,7 @@ public class vistaAdmin {
             selector.showAndWait().ifPresent(pelicula -> {
                 try {
                     pelicula.setDisponible(cantidadInt);
+                    pelicula.setPrecio(precioDouble);
                     peliculaDao.crear(pelicula);
                     obtenerPeliculasDisponibles();
                     obtenerTodasPeliculas();

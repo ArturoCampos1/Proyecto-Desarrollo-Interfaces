@@ -245,7 +245,7 @@ public class vistaBuscadorPeliculas {
 
     private void abrirCartaPelicula(Pelicula pelicula) {
         if (usuario == null) {
-            mostrarError("Debes iniciar sesión para ver los detalles de la película.");
+            mostrarError("Debes registrarte/iniciar sesión para ver los detalles de la película.");
             return;
         }
         Stage ventana = new Stage();

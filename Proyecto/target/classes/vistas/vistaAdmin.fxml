@@ -33,7 +33,7 @@
          <font>
             <Font size="13.0" />
          </font></Text>
-      <Pane layoutX="375.0" layoutY="167.0" prefHeight="190.0" prefWidth="566.0" styleClass="cardGestionFilm">
+      <Pane layoutX="375.0" layoutY="167.0" prefHeight="225.0" prefWidth="566.0" styleClass="cardGestionFilm">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -60,7 +60,13 @@
             <TextField fx:id="campoNombre" layoutX="162.0" layoutY="68.0" prefHeight="25.0" prefWidth="227.0" />
             <TextField fx:id="campoCantidad" layoutX="162.0" layoutY="119.0" prefHeight="25.0" prefWidth="227.0" />
             <Button fx:id="btnAñadir" layoutX="423.0" layoutY="68.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="84.0" styleClass="btnIniciaSesion" stylesheets="@../styles.css" text="Crear" />
-            <Text fx:id="textoInfo" fill="#8c0891" layoutX="156.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.27880859374994" />
+            <Text fx:id="textoInfo" fill="#8c0891" layoutX="162.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.27880859374994" />
+               <Text layoutX="108.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Precio:">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Text>
+               <TextField fx:id="campoPrecio" layoutX="162.0" layoutY="170.0" prefHeight="25.0" prefWidth="227.0" />
          </children>
       </Pane>
       <Pane fx:id="panePerfiles" layoutX="43.0" layoutY="167.0" prefHeight="508.0" prefWidth="313.0" styleClass="cardGestionUsers">
@@ -75,14 +81,14 @@
                   <Font size="21.0" />
                </font>
             </Text>
-            <ScrollPane fx:id="scrollPanePerfiles" layoutX="22.0" layoutY="70.0" prefHeight="405.0" prefWidth="270.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
+            <ScrollPane fx:id="scrollPanePerfiles" layoutX="22.0" layoutY="70.0" prefHeight="419.0" prefWidth="270.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
                <content>
                   <VBox fx:id="contenedorUsuarios" spacing="5" style="-fx-padding: 10;" />
                </content>
             </ScrollPane>
          </children>
       </Pane>
-      <Pane layoutX="375.0" layoutY="386.0" prefHeight="290.0" prefWidth="566.0" styleClass="cardGestionFilm">
+      <Pane layoutX="375.0" layoutY="415.0" prefHeight="261.0" prefWidth="566.0" styleClass="cardGestionFilm">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor>
@@ -98,7 +104,7 @@
                </font>
             </Text>
             <Text layoutX="117.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <ScrollPane fx:id="scrollPaneDispo" layoutX="59.0" layoutY="57.0" prefHeight="219.0" prefWidth="459.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
+            <ScrollPane fx:id="scrollPaneDispo" layoutX="59.0" layoutY="57.0" prefHeight="196.0" prefWidth="459.0" styleClass="scrollPaneAdmin" stylesheets="@../styles.css">
                <content>
                   <GridPane fx:id="gridPeliculas" hgap="20.0" style="-fx-padding: 10;" vgap="20.0" />
                </content>
