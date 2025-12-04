@@ -27,12 +27,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-// Asegúrate que el nombre de la clase coincida exactamente con el fx:controller de tu FXML
 public class vistaAlquiler {
 
     @FXML private Button btnVolver;
-    @FXML private ScrollPane scrollPeliculas; // Conexión al ScrollPane
-    @FXML private GridPane gridPeliculas; // Conexión al GridPane (donde inyectamos las tarjetas)
+    @FXML private ScrollPane scrollPeliculas;
+    @FXML private GridPane gridPeliculas;
 
     private AlquilerDao alquilerDao = new AlquilerDao();
     private PeliculaDao peliculaDao = new PeliculaDao();

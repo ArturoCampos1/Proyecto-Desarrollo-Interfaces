@@ -20,9 +20,14 @@
       </Label>
       <Text layoutX="428.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualización de pŕestamos" />
       <Text fill="#535353" layoutX="414.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestiona tus películas alquiladas" />
-      <Pane layoutX="153.0" layoutY="183.0" prefHeight="417.0" prefWidth="710.0" styleClass="cardGestionFilm">
+       <Pane layoutX="143.0" layoutY="173.0" prefHeight="417.0" prefWidth="710.0" styleClass="cardGestionFilm">
 
-      </Pane>
+           <ScrollPane fx:id="scrollPeliculas" fitToWidth="true" hbarPolicy="NEVER" layoutX="11.0" layoutY="8.0" pannable="true" prefHeight="401.0" prefWidth="689.0" style="-fx-background-color: white;                    -fx-background-insets: 0;                    -fx-background-radius: 15;                    -fx-border-radius: 15;                    -fx-border-color: lightgray;                    -fx-border-width: 1;" styleClass="input" vbarPolicy="AS_NEEDED">
+               <content>
+                   <GridPane fx:id="gridPeliculas" hgap="20.0" style="-fx-padding: 10;" vgap="20.0" />
+               </content>
+           </ScrollPane>
+       </Pane>
        <Button fx:id="btnVolver" layoutX="41.0" layoutY="699.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="btnVolver" text="← Volver">
            <cursor><Cursor fx:constant="HAND" /></cursor>
        </Button>
