@@ -2,6 +2,7 @@ package com.peliculas.proyecto.dao;
 
 import com.peliculas.proyecto.conexion.Conexion;
 import com.peliculas.proyecto.dto.Alquiler;
+import com.peliculas.proyecto.dto.Pelicula;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -123,4 +124,34 @@ public class AlquilerDao implements CRUD<Alquiler> {
             Conexion.cerrarConexion();
         }
     }
+
+    public ArrayList<Pelicula> obtenerPeliculasAlquiladasPorUsuario(int idUsuario) throws SQLException {
+        ArrayList<Pelicula> lista = new ArrayList<>();
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        try (CallableStatement cs = con.prepareCall("{CALL obtener_peliculas_alquiladas_por_usuario(?)}")) {
+            cs.setInt(1, idUsuario);
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+                Pelicula p = new Pelicula();
+                p.setIdPelicula(rs.getInt("id_pelicula"));
+                p.setTitulo(rs.getString("titulo"));
+                p.setDirector(rs.getString("director"));
+                p.setAnioSalida(rs.getString("anio_salida"));
+                p.setGenero(rs.getString("genero"));
+                p.setResumen(rs.getString("resumen"));
+                p.setValoracion(rs.getDouble("valoracion"));
+                p.setDisponible(rs.getInt("disponible"));
+                p.setPathBanner(rs.getString("url_photo")); // según tu nombre de columna
+                lista.add(p);
+            }
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return lista;
+    }
+
 }

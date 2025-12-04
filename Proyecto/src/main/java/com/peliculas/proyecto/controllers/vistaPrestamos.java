@@ -59,12 +59,18 @@ public class vistaPrestamos {
     }
 
     public void cargarPeliculasPrestadas() {
-        ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos();
-        ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
+        ArrayList<Pelicula> peliculasAlquiladas;
+        try {
+            peliculasAlquiladas = AlquilerDao.getInstance().obtenerPeliculasAlquiladasPorUsuario(usuarioActual.getIdUsuario());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        ArrayList<VBox> cards = crearTarjetasAlquiladas(peliculasAlquiladas);
         mostrarPeliculas(cards);
     }
 
-    public ArrayList<VBox> crearTarjetasAlquiler(ArrayList<Pelicula> p) {
+    public ArrayList<VBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
         for (Pelicula pelicula : p) {
@@ -131,18 +137,19 @@ public class vistaPrestamos {
                 star = new ImageView();
             }
 
-            ArrayList<Alquiler> alquileresUsuario = new ArrayList<>();
-            try {
-                alquileresUsuario = AlquilerDao.getInstance().obtenerPorUsuario(usuarioActual.getIdUsuario());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            Label alquiladaLabel = new Label("PELÍCULA ALQUILADA");
+            alquiladaLabel.setTextFill(Color.YELLOW);
+            alquiladaLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+            HBox starRow = new HBox(5);
+            starRow.getChildren().addAll(star, alquiladaLabel);
 
             Region spacer = new Region();
             VBox.setVgrow(spacer, Priority.ALWAYS); // Crece para llenar el espacio
 
-            box.getChildren().addAll(img, titulo, director, resumen, valoracion, spacer1, star, spacer);
+            box.getChildren().addAll(img, titulo, director, resumen, valoracion, spacer1, starRow, spacer);
             boxs.add(box);
+
         }
 
         return boxs;

@@ -102,7 +102,8 @@ CREATE PROCEDURE crear_pelicula (
     IN p_genero VARCHAR(100),
     IN p_url_photo VARCHAR(100),
     IN p_valoracion DECIMAL(3,1),
-    IN p_disponible INT
+    IN p_disponible INT,
+    IN p_precio DECIMAL(4,2)
 )
 BEGIN
     DECLARE v_id_pelicula INT;
@@ -121,7 +122,8 @@ BEGIN
         genero,
         url_photo,
         valoracion,
-        disponible
+        disponible,
+        precio
     )
     VALUES (
         p_titulo,
@@ -131,7 +133,8 @@ BEGIN
         p_genero,
         p_url_photo,
         p_valoracion,
-        p_disponible
+        p_disponible,
+        p_precio
     );
 
     SET v_id_pelicula = LAST_INSERT_ID();
@@ -336,11 +339,12 @@ DROP PROCEDURE IF EXISTS crear_alquiler$$
 CREATE PROCEDURE crear_alquiler (
     IN p_id_usuario INT,
     IN p_id_pelicula INT,
-    IN p_precio DECIMAL(6,2)
-)
+    IN p_fecha_alquiler VARCHAR(60),
+    IN p_fecha_devolucion VARCHAR(60)
+    )
 BEGIN
-    INSERT INTO alquiler (id_usuario, id_pelicula, precio)
-    VALUES (p_id_usuario, p_id_pelicula, p_precio);
+    INSERT INTO alquiler (id_usuario, id_pelicula, fecha_alquiler, fecha_devolucion)
+    VALUES (p_id_usuario, p_id_pelicula, p_fecha_alquiler, p_fecha_devolucion);
 END$$
 DELIMITER ;
 
@@ -387,6 +391,19 @@ BEGIN
     DELETE FROM alquiler
     WHERE id_usuario = p_id_usuario
       AND id_pelicula = p_id_pelicula;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_peliculas_alquiladas_por_usuario$$
+CREATE PROCEDURE obtener_peliculas_alquiladas_por_usuario (
+    IN p_id_usuario INT
+)
+BEGIN
+    SELECT p.*
+    FROM alquiler a
+    JOIN pelicula p ON a.id_pelicula = p.id_pelicula
+    WHERE a.id_usuario = p_id_usuario;
 END$$
 DELIMITER ;
 
@@ -440,12 +457,10 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS obtener_peliculas_disponibles$$
 CREATE PROCEDURE obtener_peliculas_disponibles()
 BEGIN
-    SELECT pd.id_pelicula, p.titulo, p.genero, p.disponible, p.url_photo
+    SELECT pd.id_pelicula, p.titulo, p.genero, p.disponible, p.valoracion, p.director, p.resumen, p.url_photo
     FROM peliculas_disponibles pd
     JOIN pelicula p ON p.id_pelicula = pd.id_pelicula;
 END$$
-
-
 
 /* ---------------------------------- PROCEDIMIENTOS CRUD PARA LISTAs-PUBLICAS ---------------------------------- */
 

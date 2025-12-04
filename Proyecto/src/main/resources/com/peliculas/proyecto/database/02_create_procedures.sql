@@ -394,6 +394,19 @@ BEGIN
 END$$
 DELIMITER ;
 
+DELIMITER $$
+DROP PROCEDURE IF EXISTS obtener_peliculas_alquiladas_por_usuario$$
+CREATE PROCEDURE obtener_peliculas_alquiladas_por_usuario (
+    IN p_id_usuario INT
+)
+BEGIN
+    SELECT p.*
+    FROM alquiler a
+    JOIN pelicula p ON a.id_pelicula = p.id_pelicula
+    WHERE a.id_usuario = p_id_usuario;
+END$$
+DELIMITER ;
+
 /* ---------------------------------- PROCEDIMIENTOS CRUD PARA LISTA_PELICULA ---------------------------------- */
 
 -- Agregar película a una lista
