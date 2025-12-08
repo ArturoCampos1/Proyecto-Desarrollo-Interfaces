@@ -57,7 +57,7 @@ public class vistaListaPeliculas {
                     }
                 }
             };
-            cell.setPrefHeight(40); // 🔹 cada celda ocupa más espacio que lo normal
+            cell.setPrefHeight(40);
             return cell;
         });
     }
@@ -114,7 +114,7 @@ public class vistaListaPeliculas {
     private void buscarYAgregarPelicula() {
         String nombre = campoBusqueda.getText();
         if (nombre == null || nombre.isEmpty()) {
-            mostrarAlerta("Error", "Escribe un nombre para buscar.", Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Escribe un nombre para buscar.");
             return;
         }
 
@@ -123,7 +123,7 @@ public class vistaListaPeliculas {
             ArrayList<Pelicula> coincidencias = tmdb.findByName(nombre);
 
             if (coincidencias.isEmpty()) {
-                mostrarAlerta("Sin resultados", "No se encontraron películas en TMDB.", Alert.AlertType.INFORMATION);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Sin resultados", "No se encontraron películas en TMDB.");
                 return;
             }
 
@@ -142,13 +142,13 @@ public class vistaListaPeliculas {
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    mostrarAlerta("Error", "No se pudo añadir la película.", Alert.AlertType.ERROR);
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo añadir la película.");
                 }
             });
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo buscar la película en TMDB.", Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo buscar la película en TMDB.");
         }
     }
 
@@ -156,7 +156,7 @@ public class vistaListaPeliculas {
     private void quitarPelicula() {
         int index = listaPeliculas.getSelectionModel().getSelectedIndex();
         if (index == -1) {
-            mostrarAlerta("Error", "Selecciona una película para quitar.", Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Selecciona una película para quitar.");
             return;
         }
         Pelicula pelicula = peliculasLista.get(index);
@@ -183,12 +183,28 @@ public class vistaListaPeliculas {
         }
     }
 
-    // 🔹 Mostrar alertas
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
-        alert.setHeaderText(null);
+        alert.setHeaderText(titulo);
         alert.setContentText(mensaje);
+
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles.css").toExternalForm()
+        );
+
+        switch (tipo) {
+            case ERROR:
+                alert.getDialogPane().getStyleClass().add("alert-error");
+                break;
+            case INFORMATION:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+            default:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+        }
+
         alert.showAndWait();
     }
 }

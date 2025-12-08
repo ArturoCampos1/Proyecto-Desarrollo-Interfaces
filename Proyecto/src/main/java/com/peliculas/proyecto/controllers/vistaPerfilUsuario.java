@@ -53,7 +53,7 @@ public class vistaPerfilUsuario {
     private void guardarCambios() {
 
         if (txtNombre.getText().isEmpty() || txtCorreo.getText().isEmpty()) {
-            mostrarAlerta("Error", "Nombre y correo son obligatorios.", Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Nombre y correo son obligatorios.");
             return;
         }
 
@@ -68,9 +68,9 @@ public class vistaPerfilUsuario {
         boolean actualizado = UsuarioDao.getInstance().actualizarUsuario(usuario);
 
         if (actualizado) {
-            mostrarAlerta("Éxito", "Datos actualizados correctamente.", Alert.AlertType.INFORMATION);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Datos actualizados correctamente.");
         } else {
-            mostrarAlerta("Error", "No se pudieron guardar los cambios.", Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron guardar los cambios.");
         }
     }
 
@@ -91,11 +91,28 @@ public class vistaPerfilUsuario {
         }
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
-        alert.setHeaderText(null);
+        alert.setHeaderText(titulo);
         alert.setContentText(mensaje);
+
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles.css").toExternalForm()
+        );
+
+        switch (tipo) {
+            case ERROR:
+                alert.getDialogPane().getStyleClass().add("alert-error");
+                break;
+            case INFORMATION:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+            default:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+        }
+
         alert.showAndWait();
     }
 }

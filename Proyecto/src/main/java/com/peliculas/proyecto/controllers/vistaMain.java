@@ -48,7 +48,7 @@ public class vistaMain {
             stage.show();
 
         } catch (IOException e) {
-            mostrarError("No se pudo abrir el buscador");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el buscador");
         }
     }
 
@@ -62,7 +62,7 @@ public class vistaMain {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            mostrarError("No se pudo abrir la vista de inicio de sesión");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista de inicio de sesión");
         }
     }
 
@@ -76,7 +76,7 @@ public class vistaMain {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            mostrarError("No se pudo abrir la vista de inicio de sesión admin");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista de inicio de sesión admin");
         }
     }
 
@@ -90,7 +90,7 @@ public class vistaMain {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            mostrarError("No se pudo abrir la vista de registro" + e.getMessage());
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista de registro " + e.getMessage());
         }
     }
 
@@ -101,13 +101,32 @@ public class vistaMain {
         }
     }
 
-    private void mostrarError(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(titulo);
         alert.setContentText(mensaje);
+
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles.css").toExternalForm()
+        );
+
+        switch (tipo) {
+            case ERROR:
+                alert.getDialogPane().getStyleClass().add("alert-error");
+                break;
+            case INFORMATION:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+            default:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+        }
+
         alert.showAndWait();
     }
-    
+
+
     public void abrirPanelUsuario(Usuario usuario) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
@@ -122,7 +141,7 @@ public class vistaMain {
             stage.show();
 
         } catch (IOException e) {
-            mostrarError("No se pudo abrir el panel de usuario");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de usuario");
         }
     }
 

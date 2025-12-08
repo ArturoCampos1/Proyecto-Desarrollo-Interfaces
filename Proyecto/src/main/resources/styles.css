@@ -206,3 +206,37 @@
     -fx-border-color: #e8ddfe;
     -fx-text-fill: #a174ff;
 }
+
+.alert.error {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14;
+    -fx-border-color: #FF0000;
+    -fx-border-width: 3;
+    -fx-border-radius: 17;
+}
+
+.alert-error .header-panel {
+    -fx-background-color: #E0E0E0;
+}
+
+.alert-error .header-panel .label {
+    -fx-text-fill: #000000;              /* morado CineVerse */
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.alert-error .content.label {
+    -fx-text-fill: #FF0000;
+    -fx-font-size: 13px;
+}
+
+.alert-error .button-bar .button {
+     -fx-background-color: #7A0FE4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+}
+
+.alert-error .button-bar .button:hover {
+    -fx-background-color: #6A0AD0;
+}

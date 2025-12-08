@@ -93,7 +93,7 @@ public class vistaListas {
     private void eliminarLista() {
         int index = listaListas.getSelectionModel().getSelectedIndex();
         if (index == -1) {
-            mostrarAlerta("Error", "Selecciona una lista para eliminar.", Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Selecciona una lista para eliminar.");
             return;
         }
         Lista lista = listasUsuario.get(index);
@@ -136,11 +136,28 @@ public class vistaListas {
         }
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
-        alert.setHeaderText(null);
+        alert.setHeaderText(titulo);
         alert.setContentText(mensaje);
+
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles.css").toExternalForm()
+        );
+
+        switch (tipo) {
+            case ERROR:
+                alert.getDialogPane().getStyleClass().add("alert-error");
+                break;
+            case INFORMATION:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+            default:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+        }
+
         alert.showAndWait();
     }
 }

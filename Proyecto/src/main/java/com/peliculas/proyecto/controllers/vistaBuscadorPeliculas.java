@@ -128,7 +128,7 @@ public class vistaBuscadorPeliculas {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            mostrarError("No se pudo abrir la vista principal");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista principal");
         }
     }
 
@@ -245,7 +245,7 @@ public class vistaBuscadorPeliculas {
 
     private void abrirCartaPelicula(Pelicula pelicula) {
         if (usuario == null) {
-            mostrarError("Debes registrarte/iniciar sesión para ver los detalles de la película.");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "Debes registrarte/iniciar sesión para ver los detalles de la película.");
             return;
         }
         Stage ventana = new Stage();
@@ -366,10 +366,28 @@ public class vistaBuscadorPeliculas {
         }
     }
 
-    private void mostrarError(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(titulo);
         alert.setContentText(mensaje);
+
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles.css").toExternalForm()
+        );
+
+        switch (tipo) {
+            case ERROR:
+                alert.getDialogPane().getStyleClass().add("alert-error");
+                break;
+            case INFORMATION:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+            default:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+        }
+
         alert.showAndWait();
     }
 
@@ -398,7 +416,7 @@ public class vistaBuscadorPeliculas {
             stage.show();
 
         } catch (IOException e) {
-            mostrarError("No se pudo volver a la pantalla anterior");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo volver a la pantalla anterior");
         }
     }
 }
