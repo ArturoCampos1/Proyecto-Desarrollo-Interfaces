@@ -201,12 +201,6 @@
     -fx-faint-focus-color: transparent;
 }
 
-.tag-blue {
-    -fx-background-color: #f5f0ff;
-    -fx-border-color: #e8ddfe;
-    -fx-text-fill: #a174ff;
-}
-
 /* -----------------------------------------------------------------------------------*/
 /* ESTILO DEL MENSAJE ALERT ERORR*/
 .alert-error {
