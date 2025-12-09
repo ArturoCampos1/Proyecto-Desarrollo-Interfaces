@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
 
-<VBox alignment="CENTER" spacing="20"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.peliculas.proyecto.controllers.PaymentController"
-      prefWidth="400" prefHeight="250">
+<VBox alignment="TOP_CENTER" spacing="15" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaPayment">
 
-    <Label fx:id="lblPrecio" text="Precio del alquiler: 3.99€" />
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
 
-    <Button text="Pagar ahora" onAction="#handlePagar"/>
+    <!-- Título -->
+    <Label style="-fx-text-fill: purple;" text="CineVerse">
+        <font>
+            <Font name="System Bold" size="28" />
+        </font>
+    </Label>
+
+    <Label style="-fx-text-fill: purple;" text="Datos de Pago">
+        <font>
+            <Font name="System Bold" size="20" />
+        </font>
+    </Label>
+
+    <!-- Información de la película -->
+    <VBox alignment="CENTER" prefHeight="184.0" prefWidth="700.0" spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;">
+        <Label fx:id="lblTitulo" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <Label fx:id="lblPrecio" style="-fx-font-size: 16px; -fx-text-fill: green;" />
+   
+       <!-- Botones -->
+       <HBox alignment="CENTER" spacing="15">
+           <Button fx:id="btnPagar" styleClass="btnSearchPelicula" stylesheets="@../styles.css" text="Pagar">
+        </Button>
+           <Button fx:id="btnVolver" styleClass="btnVolver" stylesheets="@../styles.css" text="Volver">
+        </Button>
+       </HBox>
+    </VBox>
+
+    <!-- WebView para Stripe Checkout -->
+    <WebView fx:id="webView" prefHeight="330.0" prefWidth="631.0" style="-fx-border-color: #cccccc; -fx-border-width: 1;" />
 
 </VBox>

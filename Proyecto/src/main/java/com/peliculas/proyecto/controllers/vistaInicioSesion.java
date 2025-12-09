@@ -51,7 +51,7 @@ public class vistaInicioSesion {
             Usuario usuario = usuarioDao.login(nombreUsuario, contrasena);
 
             if (usuario != null) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "Bienvenido " + usuario.getNombreUsuario());
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
                 abrirPanelUsuarioDesdeLogin(usuario);
             } else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario o contraseña incorrectos");

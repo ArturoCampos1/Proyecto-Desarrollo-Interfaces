@@ -212,6 +212,8 @@ public class PeliculaDao {
                 p.setGenero(rs.getString("genero"));
                 p.setDisponible(rs.getInt("disponible"));
                 p.setPathBanner(rs.getString("url_photo"));
+                p.setPrecio(rs.getDouble("precio"));
+                p.setValoracion(rs.getDouble("valoracion"));
 
                 lista.add(p);
             }

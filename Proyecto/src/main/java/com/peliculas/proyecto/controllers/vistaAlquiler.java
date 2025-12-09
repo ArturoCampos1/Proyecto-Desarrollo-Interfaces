@@ -3,7 +3,6 @@ package com.peliculas.proyecto.controllers;
 import com.peliculas.proyecto.dao.*;
 import com.peliculas.proyecto.dto.Alquiler;
 import com.peliculas.proyecto.dto.Pelicula;
-import com.peliculas.proyecto.dto.PeliculasDisponibles;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,8 +23,6 @@ import javafx.stage.Stage;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class vistaAlquiler {
@@ -113,6 +110,10 @@ public class vistaAlquiler {
             Label disponible = new Label("Disponible: " + pelicula.getDisponible());
             disponible.setTextFill(Color.WHITE);
 
+            Label precio = new Label("Precio: " + pelicula.getPrecio());
+            precio.setTextFill(Color.PINK);
+            precio.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
+
             Region spacer1 = new Region();
             VBox.setVgrow(spacer1, Priority.ALWAYS); // Crece para llenar el espacio
 
@@ -162,32 +163,22 @@ public class vistaAlquiler {
                 }
             }
             btnAlquilar.setOnAction(actionEvent -> {
-
-                            try {
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPayment.fxml"));
-                                Scene scene = new Scene(loader.load());
-                                PaymentController controller = loader.getController();
-                                controller.setUsuario(usuarioActual);
-                                Stage stage = (Stage) btnVolver.getScene().getWindow();
-                                stage.setScene(scene);
-                                stage.show();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                /*
-                Date fecha_alquiler = Date.valueOf(LocalDate.now());
-                String fechaParseada = fecha_alquiler.toString();
-
-                Alquiler alquiler = new Alquiler(usuarioActual.getIdUsuario(), pelicula.getIdPelicula(), fechaParseada);
                 try {
-                    alquilerDao.crear(alquiler);
-                    peliculaDao.actualizarDisponibilidad(pelicula, 1);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPayment.fxml"));
+                    Scene scene = new Scene(loader.load());
+                    vistaPayment controller = loader.getController();
+
+                    controller.setUsuario(usuarioActual);
+                    controller.setPelicula(pelicula);
+                    controller.cargarDatos();
+
+                    Stage stage = (Stage) btnVolver.getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.centerOnScreen();
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                btnAlquilar.setDisable(true);
-                cargarPeliculasParaAlquiler();
-                */
             }
             );
             btnAlquilar.setPrefWidth(180);
@@ -201,7 +192,7 @@ public class vistaAlquiler {
                     new BackgroundFill(btnGradient, new CornerRadii(8), Insets.EMPTY)
             ));
 
-            box.getChildren().addAll(img, titulo, director, resumen, valoracion, disponible, spacer1, star, spacer, btnAlquilar);
+            box.getChildren().addAll(img, titulo, director, resumen, valoracion, disponible, precio, spacer1, star, spacer, btnAlquilar);
             boxs.add(box);
 
             box.setOnMouseClicked(event -> {

@@ -28,6 +28,7 @@ public class PeliculasDisponiblesDao {
                     String director = rs.getString("director");
                     int disponible = rs.getInt("disponible");
                     String pathBanner = rs.getString("url_photo");
+                    double precio = rs.getDouble("precio");
 
                     Pelicula pelicula = new Pelicula();
                     pelicula.setIdPelicula(idPelicula);
@@ -38,6 +39,7 @@ public class PeliculasDisponiblesDao {
                     pelicula.setGenero(genero);
                     pelicula.setDisponible(disponible);
                     pelicula.setPathBanner(pathBanner);
+                    pelicula.setPrecio(precio);
 
                     peliculasDisponibles.add(pelicula);
                 }
