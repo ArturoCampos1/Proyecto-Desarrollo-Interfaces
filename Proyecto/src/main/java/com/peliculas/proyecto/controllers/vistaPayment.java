@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -39,6 +41,9 @@ public class vistaPayment {
     private Button btnPagar;
 
     @FXML
+    private ImageView imgBackdrop;
+
+    @FXML
     private Label lblPrecio;
 
     @FXML
@@ -48,15 +53,12 @@ public class vistaPayment {
 
     @FXML
     public void initialize() {
-        System.out.println("Inicializando vistaPayment...");
-        System.out.println("WebView es null? " + (webView == null));
 
         if (webView == null) {
             System.err.println("ERROR: WebView no se inyectó correctamente desde el FXML");
         }
 
         btnVolver.setOnAction(actionEvent -> volverAlquiler());
-        btnPagar.setOnAction(actionEvent -> handlePagar());
     }
 
     @FXML
@@ -152,14 +154,16 @@ public class vistaPayment {
     private void mostrarExito(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Éxito");
-        alert.setHeaderText("Pago completado");
+        alert.setHeaderText("Pago completado con éxito");
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
 
     public void cargarDatos() {
         lblTitulo.setText(pelicula.getTitulo());
+        imgBackdrop.setImage(new Image("https://image.tmdb.org/t/p/w500" + pelicula.getPathBanner(), true));
         lblPrecio.setText("Precio: " + pelicula.getPrecio() + " €");
+        handlePagar();
     }
 
     public void setPelicula(Pelicula pelicula) {

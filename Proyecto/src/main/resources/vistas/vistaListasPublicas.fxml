@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListasPublicas">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaListasPublicas">
 
     <children>
         <!-- TÍTULO PRINCIPAL -->
@@ -34,7 +34,7 @@
                 <Text fill="#7044ea" layoutX="132.0" layoutY="41.0" text="👥">
                     <font><Font size="18.0" /></font>
                 </Text>
-                <ListView fx:id="listaUsuarios" layoutX="28.0" layoutY="71.0" prefHeight="100.0" prefWidth="314.0" />
+                <ListView fx:id="listaUsuarios" layoutX="28.0" layoutY="71.0" prefHeight="141.0" prefWidth="314.0" />
             </children>
         </Pane>
 
@@ -48,7 +48,7 @@
                     <font><Font size="18.0" /></font>
                 </Text>
                 <!-- 🔹 CORREGIDO: ahora es listaListas -->
-                <ListView fx:id="listaListas" layoutX="28.0" layoutY="68.0" prefHeight="100.0" prefWidth="314.0" />
+                <ListView fx:id="listaListas" layoutX="28.0" layoutY="68.0" prefHeight="150.0" prefWidth="314.0" />
             </children>
         </Pane>
 

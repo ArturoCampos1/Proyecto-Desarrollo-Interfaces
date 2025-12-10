@@ -143,9 +143,17 @@
     -fx-text-fill: #fff;
 }
 
-.btnVolver{
+.btnVolver {
     -fx-text-fill: #370340;
     -fx-background-color: #fff;
+    -fx-border-color: #370340;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(55, 3, 64, 0.3), 8, 0, 0, 2);
 }
 
 .btnVolver:hover{

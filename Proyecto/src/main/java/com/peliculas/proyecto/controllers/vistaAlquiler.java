@@ -110,7 +110,7 @@ public class vistaAlquiler {
             Label disponible = new Label("Disponible: " + pelicula.getDisponible());
             disponible.setTextFill(Color.WHITE);
 
-            Label precio = new Label("Precio: " + pelicula.getPrecio());
+            Label precio = new Label("Precio: " + pelicula.getPrecio() + " €");
             precio.setTextFill(Color.PINK);
             precio.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
 
