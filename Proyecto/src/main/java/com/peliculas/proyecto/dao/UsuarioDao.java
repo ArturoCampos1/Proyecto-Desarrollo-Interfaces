@@ -11,6 +11,7 @@ import static com.peliculas.proyecto.conexion.Conexion.conexion;
 public class UsuarioDao {
 
     private static UsuarioDao instance;
+    private String ultimoErrorLogin;
 
     public UsuarioDao() {}
 
@@ -97,33 +98,55 @@ public class UsuarioDao {
     // Login
     public Usuario login(String nombreUsuario, String contrasena) throws SQLException {
         Usuario user = null;
+        ultimoErrorLogin = null;
 
         Conexion.abrirConexion();
         Connection con = conexion;
 
+        // 1) Buscar por usuario
         String sql = "SELECT id_usuario, nombre_usuario, correo, num_tel, contrasena " +
                 "FROM usuario WHERE nombre_usuario = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, nombreUsuario);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String passBD = rs.getString("contrasena");
 
-                    if (passBD != null && passBD.trim().equals(contrasena.trim())) {
-                        user = new Usuario(
-                                rs.getString("nombre_usuario"),
-                                rs.getString("correo"),
-                                rs.getString("num_tel"),
-                                passBD
-                        );
-                        user.setIdUsuario(rs.getInt("id_usuario"));
+            try (ResultSet rs = ps.executeQuery()) {
+
+                // Usuario NO existe
+                if (!rs.next()) {
+
+                    // Comprobamos si la contraseña coincide con alguna válida
+                    if (contrasenaCoincideConAlguna(con, contrasena)) {
+                        ultimoErrorLogin = "usuario"; // usuario mal, contraseña válida para otro
+                    } else {
+                        ultimoErrorLogin = "ambos";   // usuario mal y contraseña mal
                     }
+
+                    return null;
                 }
+
+                // Usuario existe → comprobamos contraseña
+                String passBD = rs.getString("contrasena");
+
+                if (!passBD.trim().equals(contrasena.trim())) {
+                    ultimoErrorLogin = "contrasena";
+                    return null;
+                }
+
+                // Login correcto
+                user = new Usuario(
+                        rs.getString("nombre_usuario"),
+                        rs.getString("correo"),
+                        rs.getString("num_tel"),
+                        passBD
+                );
+                user.setIdUsuario(rs.getInt("id_usuario"));
             }
+
         } finally {
             Conexion.cerrarConexion();
         }
+
         return user;
     }
 
@@ -179,7 +202,7 @@ public class UsuarioDao {
         return existe;
     }
 
-    // ✅ MÉTODO NUEVO: Actualizar usuario (para vistaPerfilUsuario)
+    // MÉTODO NUEVO: Actualizar usuario (para vistaPerfilUsuario)
     public boolean actualizarUsuario(Usuario u) {
         boolean actualizado = false;
 
@@ -229,5 +252,59 @@ public class UsuarioDao {
         }
 
         return usuarios;
+    }
+
+    public boolean existeCorreo(String correo) throws SQLException {
+        Conexion.abrirConexion();
+        Connection conn = conexion;
+
+        String sql = "SELECT COUNT(*) FROM usuario WHERE correo = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, correo);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean existe = false;
+
+        if (rs.next()) {
+            existe = rs.getInt(1) > 0;
+        }
+
+        Conexion.cerrarConexion();
+        return existe;
+    }
+
+    public boolean existeTelefono(String telefono) throws SQLException {
+        Conexion.abrirConexion();
+        Connection conn = conexion;
+
+        String sql = "SELECT COUNT(*) FROM usuario WHERE num_tel = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, telefono);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean existe = false;
+
+        if (rs.next()) {
+            existe = rs.getInt(1) > 0;
+        }
+
+        Conexion.cerrarConexion();
+        return existe;
+    }
+
+    // Comprueba si la contraseña coincide con la de algún usuario existente
+    private boolean contrasenaCoincideConAlguna(Connection con, String contrasena) throws SQLException {
+        String sql = "SELECT 1 FROM usuario WHERE TRIM(contrasena) = TRIM(?) LIMIT 1";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, contrasena);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public String getUltimoErrorLogin() {
+        return ultimoErrorLogin;
     }
 }

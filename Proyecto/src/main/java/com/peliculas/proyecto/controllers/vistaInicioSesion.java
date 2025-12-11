@@ -43,21 +43,69 @@ public class vistaInicioSesion {
 
     @FXML
     private void procesarLogin() {
-        String nombreUsuario = campoUsuario.getText();
-        String contrasena = campoContraseña.getText();
+        String nombreUsuario = campoUsuario.getText().trim();
+        String contrasena = campoContraseña.getText().trim();
+
+        // ✅ Validación de campos vacíos
+        if (nombreUsuario.isEmpty() && contrasena.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos",
+                    "Debes rellenar el usuario y la contraseña");
+            return;
+        }
+
+        if (nombreUsuario.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo vacío",
+                    "Debes rellenar el usuario");
+            return;
+        }
+
+        if (contrasena.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo vacío",
+                    "Debes rellenar la contraseña");
+            return;
+        }
 
         try {
             UsuarioDao usuarioDao = UsuarioDao.getInstance();
             Usuario usuario = usuarioDao.login(nombreUsuario, contrasena);
 
+            // ✅ Login correcto
             if (usuario != null) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto",
+                        "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
                 abrirPanelUsuarioDesdeLogin(usuario);
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario o contraseña incorrectos");
+                return;
             }
+
+            // ✅ Login incorrecto → analizamos el motivo
+            String error = usuarioDao.getUltimoErrorLogin();
+
+            switch (error) {
+
+                case "usuario":
+                    mostrarAlerta(Alert.AlertType.ERROR, "Login fallido",
+                            "Usuario incorrecto");
+                    break;
+
+                case "contrasena":
+                    mostrarAlerta(Alert.AlertType.ERROR, "Login fallido",
+                            "Contraseña incorrecta");
+                    break;
+
+                case "ambos":
+                    mostrarAlerta(Alert.AlertType.ERROR, "Login fallido",
+                            "Usuario y contraseña incorrectos");
+                    break;
+
+                default:
+                    mostrarAlerta(Alert.AlertType.ERROR, "Login fallido",
+                            "Credenciales incorrectos");
+                    break;
+            }
+
         } catch (SQLException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", "No se pudo verificar el usuario");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error BD",
+                    "No se pudo verificar el usuario");
         }
     }
 

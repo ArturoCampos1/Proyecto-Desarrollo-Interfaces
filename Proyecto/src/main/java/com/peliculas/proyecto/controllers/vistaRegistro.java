@@ -52,44 +52,86 @@ public class vistaRegistro {
         String telefono = campoTelefono.getText().trim();
         String contrasena = campoContraseña.getText().trim();
 
+        // ✅ Validación de campos vacíos
         if (nombreUsuario.isEmpty() || correo.isEmpty() || telefono.isEmpty() || contrasena.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Todos los campos son obligatorios");
             return;
         }
 
+        // ✅ Validación correo
         if (!correo.contains("@") || !correo.contains(".")) {
             mostrarAlerta(Alert.AlertType.WARNING, "Correo inválido", "Introduce un correo válido");
             return;
         }
 
-        // Validación: exactamente 9 dígitos
+        // ✅ Validación teléfono
         if (!telefono.matches("\\d{9}")) {
             mostrarAlerta(Alert.AlertType.WARNING, "Teléfono inválido",
                     "El teléfono debe contener exactamente 9 dígitos");
             return;
         }
 
+        // ✅ Validación contraseña
         if (contrasena.length() < 4) {
             mostrarAlerta(Alert.AlertType.WARNING, "Contraseña débil", "La contraseña debe tener al menos 4 caracteres");
             return;
         }
 
         try {
-            // Usar correctamente UsuarioDao y método crear()
             UsuarioDao usuarioDao = UsuarioDao.getInstance();
 
-            if (usuarioDao.existeUsuario(nombreUsuario)) {
-                mostrarAlerta(Alert.AlertType.WARNING, "Usuario existente", "Ese nombre de usuario ya está registrado");
+            boolean usuarioExiste = usuarioDao.existeUsuario(nombreUsuario);
+            boolean correoExiste = usuarioDao.existeCorreo(correo);
+            boolean telefonoExiste = usuarioDao.existeTelefono(telefono);
+
+            // ✅ Combinaciones de errores
+            if (usuarioExiste && correoExiste && telefonoExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Usuario, correo y teléfono ya están registrados");
                 return;
             }
 
-            Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
+            if (usuarioExiste && correoExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Usuario y correo ya están registrados");
+                return;
+            }
 
-            // Método correcto para insertar el usuario en la base de datos
+            if (usuarioExiste && telefonoExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Usuario y teléfono ya están registrados");
+                return;
+            }
+
+            if (correoExiste && telefonoExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Correo y teléfono ya están registrados");
+                return;
+            }
+
+            if (usuarioExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Ese nombre de usuario ya está registrado");
+                return;
+            }
+
+            if (correoExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Ese correo ya está registrado");
+                return;
+            }
+
+            if (telefonoExiste) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
+                        "Ese teléfono ya está registrado");
+                return;
+            }
+
+            // ✅ Si todo está bien → crear usuario
+            Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
             usuarioDao.crear(nuevoUsuario);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso", "Usuario creado correctamente");
-
             abrirVistaInicioSesion();
 
         } catch (SQLException e) {

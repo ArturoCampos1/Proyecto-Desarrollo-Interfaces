@@ -43,17 +43,48 @@ public class vistaInicioSesionAdmin {
         String nombreUsuario = campoAdmin.getText();
         String contrasena = campoContraseña.getText();
 
+        // Validación de campos vacíos
+        if (nombreUsuario.isBlank() && contrasena.isBlank()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Debes rellenar el usuario y la contraseña");
+            return;
+        }
+        if (nombreUsuario.isBlank()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo vacío", "Debes rellenar el usuario");
+            return;
+        }
+        if (contrasena.isBlank()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo vacío", "Debes rellenar la contraseña");
+            return;
+        }
+
         try {
             Administrador admin = administradorDao.login(nombreUsuario, contrasena);
 
             if (admin != null) {
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto", "Bienvenido " + admin.getUsuario());
                 abrirPanelAdminDesdeLogin(admin);
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario o contraseña incorrectos");
+                return;
             }
+
+            String error = administradorDao.getUltimoErrorLogin();
+
+            if ("usuario".equals(error)) {
+                // usuario mal, contraseña coincide con alguna válida
+                mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario incorrecto");
+            } else if ("contrasena".equals(error)) {
+                // usuario correcto, contraseña incorrecta
+                mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Contraseña incorrecta");
+            } else if ("ambos".equals(error)) {
+                // usuario mal y contraseña no coincide con ninguna válida
+                mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Usuario y contraseña incorrectos");
+            } else {
+                // Por si acaso
+                mostrarAlerta(Alert.AlertType.ERROR, "Login fallido", "Credenciales incorrectas");
+            }
+
         } catch (SQLException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", "No se pudo verificar el administrador. Error: " + e.getErrorCode());
+            mostrarAlerta(Alert.AlertType.ERROR, "Error BD",
+                    "No se pudo verificar el administrador. Error: " + e.getErrorCode());
         }
     }
 
