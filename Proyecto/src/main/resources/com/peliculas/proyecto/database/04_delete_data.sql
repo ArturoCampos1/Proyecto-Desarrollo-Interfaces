@@ -9,6 +9,7 @@ TRUNCATE TABLE lista;
 
 -- Tablas independientes
 TRUNCATE TABLE peliculas_disponibles;
+TRUNCATE TABLE peliculas_favoritas;
 TRUNCATE TABLE pelicula;
 TRUNCATE TABLE usuario;
 TRUNCATE TABLE administrador;

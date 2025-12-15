@@ -1,14 +1,19 @@
 package com.peliculas.proyecto.controllers;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import com.peliculas.proyecto.dao.AlquilerDao;
+import com.peliculas.proyecto.dao.PeliculaFavoritaDao;
 import com.peliculas.proyecto.dto.Pelicula;
+import com.peliculas.proyecto.dto.PeliculaFavorita;
 import com.peliculas.proyecto.dto.Usuario;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -21,15 +26,13 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 public class vistaPrestamos {
 
     @FXML private Button btnVolver;
     @FXML private ScrollPane scrollPeliculas;
     @FXML private GridPane gridPeliculas;
 
+    private PeliculaFavoritaDao peliculaFavoritaDao = new PeliculaFavoritaDao();
     private Usuario usuarioActual;
 
     public void setUsuario(Usuario usuario) {
@@ -72,11 +75,15 @@ public class vistaPrestamos {
     public ArrayList<HBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p) {
         ArrayList<HBox> boxs = new ArrayList<>();
 
+        // Cargar favoritos UNA sola vez
+        ArrayList<PeliculaFavorita> infoFavs = peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
+
         for (Pelicula pelicula : p) {
             HBox box = new HBox(15);
             box.setPadding(new Insets(15));
             box.setMaxWidth(Double.MAX_VALUE);
 
+            // ====== FONDO ======
             LinearGradient gradient = new LinearGradient(
                     0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.web("#a34fb0")),
@@ -87,11 +94,11 @@ public class vistaPrestamos {
             ));
             box.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 4);");
 
+            // ====== IMAGEN ======
             String baseUrl = "https://image.tmdb.org/t/p/w500";
-            String fullUrl = baseUrl + pelicula.getPathBanner();
             ImageView img;
             try {
-                img = new ImageView(new Image(fullUrl, true));
+                img = new ImageView(new Image(baseUrl + pelicula.getPathBanner(), true));
             } catch (IllegalArgumentException e) {
                 img = new ImageView();
             }
@@ -99,6 +106,7 @@ public class vistaPrestamos {
             img.setFitHeight(250);
             img.setPreserveRatio(true);
 
+            // ====== TEXTOS ======
             Label titulo = new Label(pelicula.getTitulo());
             titulo.setStyle("-fx-font-weight: bold;");
             titulo.setTextFill(Color.WHITE);
@@ -111,25 +119,58 @@ public class vistaPrestamos {
             resumen.setTextFill(Color.WHITE);
             resumen.setWrapText(true);
             resumen.setMaxWidth(250);
-            resumen.setMaxHeight(60);
 
             Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);
 
             VBox texto = new VBox(5, titulo, director, resumen, valoracion);
             texto.setAlignment(Pos.TOP_LEFT);
-            HBox.setHgrow(texto, Priority.ALWAYS); // ocupa todo el espacio disponible
+            HBox.setHgrow(texto, Priority.ALWAYS);
 
-            ImageView star;
-            try {
-                star = new ImageView(new Image(getClass().getResourceAsStream("/img/starVacia.png")));
-                star.setFitWidth(25);
-                star.setFitHeight(25);
-                star.setPreserveRatio(true);
-            } catch (IllegalArgumentException e) {
-                star = new ImageView();
+            // ====== ESTRELLA FAVORITO ======
+            boolean esFavorita = false;
+            for (PeliculaFavorita pFaf : infoFavs) {
+                if (pelicula.getIdPelicula() == pFaf.getId_pelicula()) {
+                    esFavorita = true;
+                    break;
+                }
             }
 
+            ImageView starIcon = new ImageView(new Image(
+                    getClass().getResource(
+                            esFavorita ? "/img/starRellena.png" : "/img/starVacia.png"
+                    ).toExternalForm()
+            ));
+            starIcon.setFitWidth(24);
+            starIcon.setFitHeight(24);
+            starIcon.setPreserveRatio(true);
+
+            Button star = new Button();
+            star.setGraphic(starIcon);
+            star.setStyle("-fx-background-color: transparent;");
+            star.setPrefSize(30, 30);
+
+            final boolean[] estadoFavorito = {esFavorita};
+
+            star.setOnMouseClicked(event -> {
+                event.consume();
+
+                if (estadoFavorito[0]) {
+                    peliculaFavoritaDao.eliminarPeliculaFav(usuarioActual, pelicula);
+                    starIcon.setImage(new Image(
+                            getClass().getResource("/img/starVacia.png").toExternalForm()
+                    ));
+                } else {
+                    peliculaFavoritaDao.añadirPeliculaFav(usuarioActual, pelicula);
+                    starIcon.setImage(new Image(
+                            getClass().getResource("/img/starRellena.png").toExternalForm()
+                    ));
+                }
+
+                estadoFavorito[0] = !estadoFavorito[0];
+            });
+
+            // ====== LABEL DE PELÍCULA ALQUILADA ======
             Label linea1 = new Label("PELÍCULA");
             linea1.setTextFill(Color.YELLOW);
             linea1.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
@@ -137,25 +178,25 @@ public class vistaPrestamos {
             linea2.setTextFill(Color.YELLOW);
             linea2.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-            VBox labelBox = new VBox(2);
+            VBox labelBox = new VBox(2, linea1, linea2);
             labelBox.setAlignment(Pos.CENTER);
-            labelBox.getChildren().addAll(linea1, linea2);
 
-            VBox starBox = new VBox(2, star);
-            starBox.setAlignment(Pos.TOP_RIGHT);
+            // ====== ESPACIADOR PARA QUE LA ESTRELLA QUDE AL EXTREMO ======
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            // HBox principal: imagen + texto + estrella al extremo
-            box.getChildren().addAll(img, texto, labelBox, starBox);
+            // ====== ARMAR HBOX ======
+            box.getChildren().addAll(img, texto, spacer, star, labelBox);
+
+            // ====== CLICK TARJETA ======
+            box.setOnMouseClicked(e -> abrirCartaPelicula(pelicula));
 
             boxs.add(box);
-
-            box.setOnMouseClicked(event -> {
-                abrirCartaPelicula(pelicula);
-            });
         }
 
         return boxs;
     }
+
 
     private void mostrarPeliculas(ArrayList<HBox> peliculas) {
         gridPeliculas.getChildren().clear();

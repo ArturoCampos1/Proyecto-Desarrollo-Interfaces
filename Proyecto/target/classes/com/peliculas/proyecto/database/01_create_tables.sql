@@ -85,3 +85,12 @@ CREATE TABLE IF NOT EXISTS peliculas_vistas (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_pelicula) REFERENCES pelicula(id_pelicula) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- TABLA PELICULAS VISTAS
+CREATE TABLE IF NOT EXISTS peliculas_favoritas (
+    id_usuario INT NOT NULL,
+    id_pelicula INT NOT NULL,
+    PRIMARY KEY (id_usuario, id_pelicula),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_pelicula) REFERENCES pelicula(id_pelicula) ON DELETE CASCADE
+) ENGINE=InnoDB;

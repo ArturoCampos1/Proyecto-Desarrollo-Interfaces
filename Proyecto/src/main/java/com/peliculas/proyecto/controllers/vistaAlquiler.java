@@ -3,6 +3,7 @@ package com.peliculas.proyecto.controllers;
 import com.peliculas.proyecto.dao.*;
 import com.peliculas.proyecto.dto.Alquiler;
 import com.peliculas.proyecto.dto.Pelicula;
+import com.peliculas.proyecto.dto.PeliculaFavorita;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,9 +22,12 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class vistaAlquiler {
 
@@ -31,6 +35,7 @@ public class vistaAlquiler {
     @FXML private ScrollPane scrollPeliculas;
     @FXML private GridPane gridPeliculas;
 
+    private PeliculaFavoritaDao peliculaFavoritaDao = new PeliculaFavoritaDao();
     private AlquilerDao alquilerDao = new AlquilerDao();
     private PeliculaDao peliculaDao = new PeliculaDao();
     private Usuario usuarioActual;
@@ -57,18 +62,20 @@ public class vistaAlquiler {
     }
 
     public ArrayList<VBox> crearTarjetasAlquiler(ArrayList<Pelicula> p) {
+
         ArrayList<VBox> boxs = new ArrayList<>();
 
+        // Cargar favoritos UNA sola vez
+        ArrayList<PeliculaFavorita> infoFavs = peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
+
         for (Pelicula pelicula : p) {
+
             VBox box = new VBox(5);
             box.setPrefWidth(180);
 
-            // Estilo de la tarjeta con degradado igual que en vistaBuscador
+            // ====== FONDO TARJETA ======
             LinearGradient gradient = new LinearGradient(
-                    0, 0,
-                    1, 1,
-                    true,
-                    CycleMethod.NO_CYCLE,
+                    0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.web("#a34fb0")),
                     new Stop(1, Color.web("#7b2cc9"))
             );
@@ -78,25 +85,24 @@ public class vistaAlquiler {
             box.setPadding(new Insets(10));
             box.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 4);");
 
-            String baseUrl = "https://image.tmdb.org/t/p/w500";
-            String fullUrl = baseUrl + pelicula.getPathBanner();
-
+            // ====== IMAGEN ======
             ImageView img;
             try {
-                img = new ImageView(new Image(fullUrl, true));
-            } catch (IllegalArgumentException e) {
+                img = new ImageView(new Image(
+                        "https://image.tmdb.org/t/p/w500" + pelicula.getPathBanner(), true
+                ));
+            } catch (Exception e) {
                 img = new ImageView();
             }
-
             img.setFitWidth(180);
             img.setFitHeight(250);
             img.setPreserveRatio(true);
 
+            // ====== TEXTOS ======
             Label titulo = new Label(pelicula.getTitulo());
-            titulo.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
-            titulo.setTextFill(Color.WHITE); // Blanco para contrastar con el fondo
+            titulo.setStyle("-fx-font-weight: bold;");
+            titulo.setTextFill(Color.WHITE);
             titulo.setWrapText(true);
-            titulo.setMaxWidth(180);
 
             Label director = new Label("Director: " + pelicula.getDirector());
             director.setTextFill(Color.WHITE);
@@ -112,76 +118,60 @@ public class vistaAlquiler {
 
             Label precio = new Label("Precio: " + pelicula.getPrecio() + " €");
             precio.setTextFill(Color.PINK);
-            precio.setStyle("-fx-font-weight: bold; -fx-alignment: center;");
+            precio.setStyle("-fx-font-weight: bold;");
 
             Region spacer1 = new Region();
-            VBox.setVgrow(spacer1, Priority.ALWAYS); // Crece para llenar el espacio
+            VBox.setVgrow(spacer1, Priority.ALWAYS);
 
-            ImageView star;
-            try {
-                star = new ImageView(new Image(getClass().getResourceAsStream("/img/starVacia.png")));
-                star.setFitWidth(25);
-                star.setFitHeight(25);
-                star.setPreserveRatio(true);
-                star.setSmooth(true);
-                star.setCache(true);
-            } catch (IllegalArgumentException e) {
-                System.err.println("No se pudo cargar starVacia.png: " + e.getMessage());
-                star = new ImageView();
+            // ====== ESTRELLA FAVORITO (VISIBLE) ======
+
+            boolean esFavorita = false;
+            for (PeliculaFavorita pFaf : infoFavs){
+                if (pelicula.getIdPelicula() == pFaf.getId_pelicula()) {
+                    esFavorita = true;
+                    break;
+                }
             }
 
-            ArrayList<Alquiler> alquileres = new ArrayList<>();
-            try {
-                alquileres = alquilerDao.obtenerTodos();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            ImageView starIcon = new ImageView(new Image(
+                    getClass().getResource(
+                            esFavorita ? "/img/starRellena.png" : "/img/starVacia.png"
+                    ).toExternalForm()
+            ));
+            starIcon.setFitWidth(24);
+            starIcon.setFitHeight(24);
+            starIcon.setPreserveRatio(true);
 
-            Region spacer = new Region();
-            VBox.setVgrow(spacer, Priority.ALWAYS); // Crece para llenar el espacio
+            Button star = new Button();
+            star.setGraphic(starIcon);
+            star.setStyle("-fx-background-color: transparent;");
+            star.setPrefSize(30, 30);
 
+            final boolean[] estadoFavorito = { esFavorita };
+
+            star.setOnMouseClicked(event -> {
+                event.consume();
+
+                if (estadoFavorito[0]) {
+                    peliculaFavoritaDao.eliminarPeliculaFav(usuarioActual, pelicula);
+                    starIcon.setImage(new Image(
+                            getClass().getResource("/img/starVacia.png").toExternalForm()
+                    ));
+                } else {
+                    peliculaFavoritaDao.añadirPeliculaFav(usuarioActual, pelicula);
+                    starIcon.setImage(new Image(
+                            getClass().getResource("/img/starRellena.png").toExternalForm()
+                    ));
+                }
+
+                estadoFavorito[0] = !estadoFavorito[0];
+            });
+
+
+            // ====== BOTÓN ALQUILAR ======
             Button btnAlquilar = new Button("Alquilar Película");
-            btnAlquilar.setStyle(
-                    "-fx-text-fill: #7B2CC9;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-font-size: 14px;" +
-                            "-fx-background-radius: 25;"
-            );
-
-            for (Alquiler a : alquileres){
-                if (a.getIdPelicula() == pelicula.getIdPelicula() && a.getIdUsuario() == usuarioActual.getIdUsuario()){
-                    btnAlquilar.setText("Ya alquilada");
-                    btnAlquilar.setStyle(
-                            "-fx-text-fill: #7B2CC9;" +
-                                    "-fx-font-weight: bold;" +
-                                    "-fx-font-size: 14px;" +
-                                    "-fx-background-radius: 25;" +
-                                    "-fx-cursor: default;"
-                    );
-                    btnAlquilar.setDisable(true);
-                    break; // Sale del bucle una vez encontrado
-                }
-            }
-            btnAlquilar.setOnAction(actionEvent -> {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPayment.fxml"));
-                    Scene scene = new Scene(loader.load());
-                    vistaPayment controller = loader.getController();
-
-                    controller.setUsuario(usuarioActual);
-                    controller.setPelicula(pelicula);
-                    controller.cargarDatos();
-
-                    Stage stage = (Stage) btnVolver.getScene().getWindow();
-                    stage.setScene(scene);
-                    stage.centerOnScreen();
-                    stage.show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            );
             btnAlquilar.setPrefWidth(180);
+            btnAlquilar.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
             LinearGradient btnGradient = new LinearGradient(
                     0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
@@ -192,16 +182,58 @@ public class vistaAlquiler {
                     new BackgroundFill(btnGradient, new CornerRadii(8), Insets.EMPTY)
             ));
 
-            box.getChildren().addAll(img, titulo, director, resumen, valoracion, disponible, precio, spacer1, star, spacer, btnAlquilar);
-            boxs.add(box);
+            try {
+                for (Alquiler a : alquilerDao.obtenerTodos()) {
+                    if (a.getIdPelicula() == pelicula.getIdPelicula()
+                            && a.getIdUsuario() == usuarioActual.getIdUsuario()) {
+                        btnAlquilar.setText("Ya alquilada");
+                        btnAlquilar.setDisable(true);
+                        break;
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-            box.setOnMouseClicked(event -> {
-                abrirCartaPelicula(pelicula);
+            btnAlquilar.setOnAction(e -> {
+                e.consume();
+                try {
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("/vistas/vistaPayment.fxml")
+                    );
+                    Scene scene = new Scene(loader.load());
+
+                    vistaPayment controller = loader.getController();
+                    controller.setUsuario(usuarioActual);
+                    controller.setPelicula(pelicula);
+                    controller.cargarDatos();
+
+                    Stage stage = (Stage) btnVolver.getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.centerOnScreen();
+                    stage.show();
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             });
+
+            // ====== CLICK TARJETA ======
+            box.setOnMouseClicked(e -> abrirCartaPelicula(pelicula));
+
+            // ====== AÑADIR A TARJETA ======
+            box.getChildren().addAll(
+                    img, titulo, director, resumen, valoracion,
+                    disponible, precio, spacer1, star, btnAlquilar
+            );
+
+            boxs.add(box);
         }
 
         return boxs;
     }
+
+
 
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
