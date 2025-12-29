@@ -53,4 +53,26 @@ public class PeliculasDisponiblesDao {
         return peliculasDisponibles;
     }
 
+    public static boolean eliminarPelicula(int idPelicula) {
+        boolean eliminado = false;
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        String sql = "DELETE FROM peliculas_disponibles WHERE id_pelicula = ?";
+
+        try (java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idPelicula); // pasamos el ID de la película
+
+            int filasAfectadas = ps.executeUpdate(); // ejecutamos la sentencia
+            eliminado = filasAfectadas > 0; // true si eliminó al menos una fila
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return eliminado;
+    }
+
+
 }

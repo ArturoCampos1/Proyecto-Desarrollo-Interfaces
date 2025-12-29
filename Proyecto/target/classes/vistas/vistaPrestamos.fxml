@@ -18,7 +18,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.paint.Color?>
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: white;" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaPrestamos">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: F0F0F0;" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaPrestamos">
    <children>
       <Label id="subTitle" layoutX="396.0" layoutY="62.0" text="✅ Tus alquileres activos">
          <styleClass>
@@ -61,15 +61,4 @@
          </font>
       </Text>
    </children>
-    <Text layoutX="66.0" layoutY="69.0" text="CineVerse">
-        <fill>
-            <LinearGradient endX="1.0" endY="1.0" startX="0.162">
-                <stops>
-                    <Stop><color><Color red="0.596" green="0.172" blue="0.717" /></color></Stop>
-                    <Stop offset="1.0"><color><Color red="1.0" green="0.286" blue="0.988" /></color></Stop>
-                </stops>
-            </LinearGradient>
-        </fill>
-        <font><Font size="23.0" /></font>
-    </Text>
 </AnchorPane>

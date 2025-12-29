@@ -6,12 +6,14 @@ import com.peliculas.proyecto.dto.Administrador;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -92,12 +94,16 @@ public class vistaInicioSesionAdmin {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaAdmin.fxml"));
             Scene scene = new Scene(loader.load());
-
             vistaAdmin controller = loader.getController();
 
             Stage stage = (Stage) paneLogin.getScene().getWindow();
             stage.setScene(scene);
-            stage.show();
+            stage.setTitle("CineVerse - Admin");
+
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            stage.setX((screenBounds.getWidth()  - stage.getWidth())  / 2);
+            stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+
 
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de admin");

@@ -1,10 +1,7 @@
 package com.peliculas.proyecto.controllers;
 
 import com.peliculas.proyecto.dao.*;
-import com.peliculas.proyecto.dto.Alquiler;
-import com.peliculas.proyecto.dto.Pelicula;
-import com.peliculas.proyecto.dto.PeliculaFavorita;
-import com.peliculas.proyecto.dto.Usuario;
+import com.peliculas.proyecto.dto.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -36,8 +33,9 @@ public class vistaAlquiler {
     @FXML private GridPane gridPeliculas;
 
     private PeliculaFavoritaDao peliculaFavoritaDao = new PeliculaFavoritaDao();
+    private ListaDao listaDao = new ListaDao();
+    private ListaPeliculaDao listaPeliculaDao = new ListaPeliculaDao();
     private AlquilerDao alquilerDao = new AlquilerDao();
-    private PeliculaDao peliculaDao = new PeliculaDao();
     private Usuario usuarioActual;
 
     // Recibe el usuario actual desde vistaPanelUsuario
@@ -151,6 +149,34 @@ public class vistaAlquiler {
 
             star.setOnMouseClicked(event -> {
                 event.consume();
+
+                ArrayList<Lista> listasUsuario = new ArrayList<>();
+                try {
+                    listasUsuario = listaDao.obtenerPorNombreUsuario(usuarioActual.getNombreUsuario());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                boolean creada = false;
+                for (Lista lista : listasUsuario){
+                    if (lista.getNombreLista()
+                            .equalsIgnoreCase("Películas Favoritas - " + usuarioActual.getNombreUsuario())){
+                        creada = true;
+                        break;
+                    }
+                }
+
+                Lista listaFav;
+                if (!creada){
+                    listaFav = new Lista("Películas Favoritas - " + usuarioActual.getNombreUsuario(), usuarioActual);
+                } else{
+                    Lista listaFavoritos;
+                    try {
+                        listaFavoritos = listaDao.encontrarPorNombre(usuarioActual.getIdUsuario(), "Películas Favoritas - " + usuarioActual.getNombreUsuario());
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 
                 if (estadoFavorito[0]) {
                     peliculaFavoritaDao.eliminarPeliculaFav(usuarioActual, pelicula);

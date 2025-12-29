@@ -18,6 +18,11 @@ public class Lista {
         this.usuario = usuario;
     }
 
+    public Lista(String nombreLista, Usuario usuario) {
+        this.nombreLista = nombreLista;
+        this.usuario = usuario;
+    }
+
     public Lista() {
         this.peliculas = new ArrayList<>();
     }

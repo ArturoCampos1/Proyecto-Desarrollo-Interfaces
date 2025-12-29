@@ -12,7 +12,7 @@ public class ListaPeliculaDao {
 
     private static ListaPeliculaDao instance;
 
-    private ListaPeliculaDao() {}
+    public ListaPeliculaDao() {}
 
     public static ListaPeliculaDao getInstance() {
         if (instance == null) {

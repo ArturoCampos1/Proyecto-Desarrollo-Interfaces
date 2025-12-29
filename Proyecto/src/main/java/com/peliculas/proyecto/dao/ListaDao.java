@@ -15,7 +15,7 @@ public class ListaDao implements CRUD<Lista> {
 
     private static ListaDao instance;
 
-    private ListaDao() {}
+    public ListaDao() {}
 
     public static ListaDao getInstance() {
         if (instance == null) {
@@ -98,4 +98,42 @@ public class ListaDao implements CRUD<Lista> {
             Conexion.cerrarConexion();
         }
     }
+
+    public Lista encontrarPorNombre(int idUsuario, String nombreLista) throws SQLException {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        String sql = "SELECT id_lista, id_usuario, nombre_lista " +
+                "FROM lista " +
+                "WHERE id_usuario = ? AND nombre_lista = ? " +
+                "LIMIT 1";
+
+        try (var ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            ps.setString(2, nombreLista);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Lista l = new Lista();
+                    l.setIdLista(rs.getInt("id_lista"));
+                    l.setNombreLista(rs.getString("nombre_lista"));
+
+                    Usuario u = new Usuario();
+                    u.setIdUsuario(rs.getInt("id_usuario"));
+                    l.setUsuario(u);
+
+                    l.setPeliculas(
+                            PeliculaDao.getInstance().obtenerPeliculasDeLista(l.getIdLista())
+                    );
+
+                    return l;
+                }
+            }
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return null; // no encontrada
+    }
+
 }

@@ -62,8 +62,8 @@ CREATE TABLE IF NOT EXISTS resena (
 
 -- TABLA PELICULAS DISPONIBLES
 CREATE TABLE IF NOT EXISTS peliculas_disponibles (
-   id_lista_peliculas_disponibles INT AUTO_INCREMENT PRIMARY KEY,
-   id_pelicula INT NOT NULL
+   id_lista_peliculas_disponibles INT AUTO_INCREMENT UNIQUE,
+   id_pelicula INT NOT NULL PRIMARY KEY
 );
 
 -- TABLA ALQUILER

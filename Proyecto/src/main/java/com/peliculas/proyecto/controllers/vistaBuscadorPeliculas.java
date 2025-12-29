@@ -116,7 +116,10 @@ public class vistaBuscadorPeliculas {
 
         search.setOnAction(e -> busqueda(labelText));
         btnVolver.setOnAction(e -> volver());
-        btnActualizar.setOnAction(e -> recarga());
+        btnActualizar.setOnAction(e -> {
+            labelText.setText("");
+            recarga();
+        });
     }
 
     @FXML

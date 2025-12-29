@@ -1,23 +1,19 @@
 package com.peliculas.proyecto.controllers;
 
-import com.peliculas.proyecto.dao.*;
+import com.peliculas.proyecto.dao.PeliculaDao;
+import com.peliculas.proyecto.dao.PeliculasDisponiblesDao;
+import com.peliculas.proyecto.dao.TMDBDao;
+import com.peliculas.proyecto.dao.UsuarioDao;
 import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -106,7 +102,7 @@ public class vistaAdmin {
             return;
         }
 
-        int cantidadInt = Integer.valueOf(cantidad);
+        int cantidadInt = Integer.valueOf(Math.round(Float.parseFloat(cantidad.replace(",", "."))));
         double precioDouble = Double.valueOf(precio.replace(",", "."));
 
         try {
@@ -126,9 +122,20 @@ public class vistaAdmin {
                 try {
                     pelicula.setDisponible(cantidadInt);
                     pelicula.setPrecio(precioDouble);
-                    peliculaDao.crear(pelicula);
-                    obtenerPeliculasDisponibles();
+                    Pelicula peliculaEncontrada = peliculaDao.buscarPorNombre(pelicula.getTitulo());
+
+                    if (peliculaEncontrada != null) {
+                        pelicula.setIdPelicula(peliculaEncontrada.getIdPelicula());
+                        peliculaDao.actualizar(pelicula);
+                        mostrarAlerta(Alert.AlertType.INFORMATION, "Actualización", "💡 Película actualizada");
+                    } else {
+                        peliculaDao.crear(pelicula);
+                        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Película añadida con éxito");
+                    }
+
+
                     obtenerTodasPeliculas();
+                    obtenerPeliculasDisponibles();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo añadir la película.");
@@ -146,7 +153,7 @@ public class vistaAdmin {
 
         for (Pelicula pelicula : p) {
             VBox box = new VBox(5);
-            box.setPrefWidth(400);
+            box.setPrefWidth(480);
 
             // Estilos CSS directamente en el VBox
             box.setStyle(
@@ -180,7 +187,7 @@ public class vistaAdmin {
         ArrayList<VBox> boxs = new ArrayList<>();
         for (Pelicula pelicula : p) {
             VBox box = new VBox(5);
-            box.setPrefWidth(350);
+            box.setPrefWidth(415);
             box.setStyle(
                     "-fx-background-radius: 8px;" +
                             "-fx-background-color: #ffffff;" +
@@ -197,9 +204,42 @@ public class vistaAdmin {
             generos.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
             Label disponible = new Label("Disponible: " + pelicula.getDisponible());
-            disponible.setStyle("-fx-font-size: 14px; -fx-text-fill: purple;");
+            if (pelicula.getDisponible() < 1){
+                disponible.setStyle("-fx-font-size: 14px; -fx-text-fill: red;");
+            } else disponible.setStyle("-fx-font-size: 14px; -fx-text-fill: purple;");
 
-            box.getChildren().addAll(titulo, generos, disponible);
+            Label precio = new Label("Precio: " + pelicula.getPrecio() + " €");
+            precio.setStyle("-fx-font-size: 14px; -fx-text-fill: grey;");
+
+            // === LÍNea 3: Btn Eliminar ==
+            Button btnEliminar = new Button("Eliminar");
+            btnEliminar.setStyle(
+                    "-fx-background-color: #ffffff;" +
+                            "-fx-text-fill: #8e44ad;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-padding: 6 16;" +
+                            "-fx-background-radius: 8;" +
+                            "-fx-border-radius: 8;" +
+                            "-fx-border-color: #8e44ad;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-cursor: hand;"
+            );
+
+            btnEliminar.setOnMouseClicked(event -> {
+                try {
+                    peliculaDao.eliminar(pelicula.getIdPelicula());
+                    if (pelicula.getDisponible() > 0) {
+                        PeliculasDisponiblesDao.eliminarPelicula(pelicula.getIdPelicula());
+                    }
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Película eliminada");
+                    obtenerTodasPeliculas();
+                    obtenerPeliculasDisponibles();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            box.getChildren().addAll(titulo, generos, disponible, precio, btnEliminar);
             box.setPadding(new Insets(10));
 
             boxs.add(box);
@@ -228,6 +268,7 @@ public class vistaAdmin {
 
     private HBox crearFilaUsuarioEstilizada(Usuario usuario, int index) {
         HBox fila = new HBox(10);
+        fila.setPrefWidth(240);
         fila.setPadding(new Insets(12, 15, 12, 15));
         fila.setStyle(
                 "-fx-background-color: " + (index % 2 == 0 ? "#f8f9fa" : "white") + ";" +
@@ -294,7 +335,8 @@ public class vistaAdmin {
         btnEliminar.setOnMouseClicked(event -> {
             try {
                 usuarioDao.eliminar(usuario.getIdUsuario());
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Usuario eliminado.");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ El usuario con nombre "+ usuario.getNombreUsuario() +
+                        " e id " + usuario.getIdUsuario() + " ha sido eliminado.");
                 cargarUsuarios();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -332,7 +374,6 @@ public class vistaAdmin {
         }
     }
 
-
     private void mostrarError() {
         Label lblError = new Label("❌ Error al cargar usuarios");
         lblError.setStyle(
@@ -352,6 +393,8 @@ public class vistaAdmin {
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) scrollPanePerfiles.getScene().getWindow();
             stage.setScene(scene);
+            stage.setTitle("Cineverse");
+            stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo volver a la pantalla principal");

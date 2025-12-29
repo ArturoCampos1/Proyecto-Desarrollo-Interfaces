@@ -72,7 +72,7 @@ public class vistaInicioSesion {
             // ✅ Login correcto
             if (usuario != null) {
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Login correcto",
-                        "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
+                        "¡Bienvenido/a, " + usuario.getNombreUsuario() + "!");
                 abrirPanelUsuarioDesdeLogin(usuario);
                 return;
             }

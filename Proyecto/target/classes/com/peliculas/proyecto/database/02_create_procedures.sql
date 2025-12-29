@@ -93,10 +93,11 @@ DELIMITER ;
 
 -- Crear película
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS crear_pelicula$$
 CREATE PROCEDURE crear_pelicula (
     IN p_titulo VARCHAR(255),
-    IN p_anio_salida VARCHAR(20),   -- 🔹 ahora coincide con la tabla
+    IN p_anio_salida VARCHAR(20),
     IN p_director VARCHAR(255),
     IN p_resumen TEXT,
     IN p_genero VARCHAR(100),
@@ -107,6 +108,7 @@ CREATE PROCEDURE crear_pelicula (
 )
 BEGIN
     DECLARE v_id_pelicula INT;
+    DECLARE v_existe_disponible INT DEFAULT 0;
 
     START TRANSACTION;
 
@@ -114,6 +116,7 @@ BEGIN
         SET p_disponible = 0;
     END IF;
 
+    -- 1️⃣ Insertar película
     INSERT INTO pelicula (
         titulo,
         anio_salida,
@@ -139,8 +142,21 @@ BEGIN
 
     SET v_id_pelicula = LAST_INSERT_ID();
 
-    IF p_disponible > 0 THEN
-        IF v_id_pelicula IS NOT NULL AND v_id_pelicula > 0 THEN
+    SELECT COUNT(*)
+    INTO v_existe_disponible
+    FROM peliculas_disponibles
+    WHERE id_pelicula = v_id_pelicula;
+
+    IF v_existe_disponible > 0 THEN
+
+        UPDATE pelicula
+        SET
+            disponible = disponible + p_disponible,
+            precio = p_precio
+        WHERE id_pelicula = v_id_pelicula;
+
+    ELSE
+        IF p_disponible > 0 THEN
             INSERT INTO peliculas_disponibles (id_pelicula)
             VALUES (v_id_pelicula);
         END IF;
@@ -151,6 +167,7 @@ BEGIN
     SELECT v_id_pelicula AS id_pelicula;
 END$$
 DELIMITER ;
+
 
 -- Buscar películas por nombre
 DELIMITER $$

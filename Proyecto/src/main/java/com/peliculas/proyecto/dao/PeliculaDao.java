@@ -26,37 +26,6 @@ public class PeliculaDao {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        try {
-            // Primero verificamos si la película ya existe por título y año
-            String sqlCheck = "SELECT id_pelicula FROM pelicula WHERE titulo = ? AND anio_salida = ?";
-            try (PreparedStatement ps = con.prepareStatement(sqlCheck)) {
-                ps.setString(1, p.getTitulo());
-                ps.setString(2, p.getAnioSalida());
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        // Película ya existe: actualizamos la disponibilidad
-                        int idExistente = rs.getInt("id_pelicula");
-                        p.setIdPelicula(idExistente);
-
-                        String sqlUpdate = "UPDATE pelicula SET disponible = ? WHERE id_pelicula = ?";
-                        try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdate)) {
-                            psUpdate.setInt(1, p.getDisponible());
-                            psUpdate.setInt(2, idExistente);
-                            psUpdate.executeUpdate();
-                        }
-
-                        // Aseguramos que solo haya un registro en peliculas_disponibles
-                        String sqlInsertDisponible = "INSERT IGNORE INTO peliculas_disponibles (id_pelicula) VALUES (?)";
-                        try (PreparedStatement psDisponible = con.prepareStatement(sqlInsertDisponible)) {
-                            psDisponible.setInt(1, idExistente);
-                            psDisponible.executeUpdate();
-                        }
-
-                        return; // Ya se actualizó, no necesitamos insertar de nuevo
-                    }
-                }
-            }
-
             // Si no existe, llamamos al procedimiento para crear la película
             try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?,?)}")) {
                 cs.setString(1, p.getTitulo());
@@ -80,8 +49,6 @@ public class PeliculaDao {
                         }
                     }
                 }
-            }
-
         } finally {
             Conexion.cerrarConexion();
         }
@@ -92,7 +59,7 @@ public class PeliculaDao {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
         String sql = "UPDATE pelicula SET titulo = ?, anio_salida = ?, director = ?, resumen = ?, " +
-                "genero = ?, disponible = ?, url_photo = ?, valoracion = ? " +
+                "genero = ?, disponible = ?, url_photo = ?, valoracion = ?, precio = ? " +
                 "WHERE id_pelicula = ?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -105,8 +72,9 @@ public class PeliculaDao {
             pst.setInt(6, p.getDisponible());
             pst.setString(7, p.getPathBanner());
             pst.setDouble(8, p.getValoracion());
+            pst.setDouble(9, p.getPrecio());
 
-            pst.setInt(9, p.getIdPelicula()); // WHERE
+            pst.setInt(10, p.getIdPelicula()); // WHERE
 
             int rows = pst.executeUpdate();
             con.close();
@@ -163,19 +131,19 @@ public class PeliculaDao {
         }
     }
 
-    public Pelicula buscarPorNombre(String nombre) throws SQLException {
-        Pelicula p = new Pelicula();
+    public Pelicula buscarPorId(int idPelicula) throws SQLException {
+        Pelicula p = null;
 
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        try (CallableStatement cs = con.prepareCall("{CALL buscar_peliculas_por_nombre(?)}")) {
+        String sql = "SELECT * FROM pelicula WHERE id_pelicula = ?";
 
-            cs.setString(1, nombre);
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idPelicula);
 
-            try (ResultSet rs = cs.executeQuery()) {
-
-                while (rs.next()) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
                     p = new Pelicula();
                     p.setIdPelicula(rs.getInt("id_pelicula"));
                     p.setTitulo(rs.getString("titulo"));
@@ -183,6 +151,46 @@ public class PeliculaDao {
                     p.setDirector(rs.getString("director"));
                     p.setResumen(rs.getString("resumen"));
                     p.setGenero(rs.getString("genero"));
+                    p.setDisponible(rs.getInt("disponible"));
+                    p.setPathBanner(rs.getString("url_photo"));
+                    p.setPrecio(rs.getDouble("precio"));
+                    p.setValoracion(rs.getDouble("valoracion"));
+                }
+            }
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return p;
+    }
+
+    public Pelicula buscarPorNombre(String nombre) throws SQLException {
+        Pelicula p = null;
+
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        String sql = "SELECT id_pelicula, titulo, anio_salida, director, resumen, genero, disponible, url_photo, valoracion, precio " +
+                "FROM pelicula WHERE titulo = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+                    p = new Pelicula();
+                    p.setIdPelicula(rs.getInt("id_pelicula"));
+                    p.setTitulo(rs.getString("titulo"));
+                    p.setAnioSalida(rs.getString("anio_salida"));
+                    p.setDirector(rs.getString("director"));
+                    p.setResumen(rs.getString("resumen"));
+                    p.setGenero(rs.getString("genero"));
+                    p.setDisponible((rs.getInt("disponible")));
+                    p.setPathBanner((rs.getString("url_photo")));
+                    p.setValoracion((rs.getDouble("valoracion")));
+                    p.setPrecio((rs.getDouble("precio")));
                 }
             }
 
@@ -192,6 +200,7 @@ public class PeliculaDao {
 
         return p;
     }
+
 
     public ArrayList<Pelicula> obtenerPeliculas() {
         Conexion.abrirConexion();

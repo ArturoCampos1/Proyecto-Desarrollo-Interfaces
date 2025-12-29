@@ -68,16 +68,4 @@
       </Text>
 
     </children>
-    <Text layoutX="66.0" layoutY="69.0" text="CineVerse">
-        <fill>
-            <LinearGradient endX="1.0" endY="1.0" startX="0.162">
-                <stops>
-                    <Stop><color><Color red="0.596" green="0.172" blue="0.717" /></color></Stop>
-                    <Stop offset="1.0"><color><Color red="1.0" green="0.286" blue="0.988" /></color></Stop>
-                </stops>
-            </LinearGradient>
-        </fill>
-        <font><Font size="23.0" /></font>
-    </Text>
-
 </AnchorPane>

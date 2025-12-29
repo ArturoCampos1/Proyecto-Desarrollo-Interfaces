@@ -62,48 +62,13 @@ public class vistaListaPeliculas {
         });
     }
 
-    // 🔹 Auxiliar: extraer solo el año
-    private String extraerAnio(String fechaCompleta) {
-        if (fechaCompleta == null || fechaCompleta.isEmpty()) return "2000";
-        if (fechaCompleta.length() >= 4) return fechaCompleta.substring(0, 4);
-        return "2000";
-    }
-
-    // 🔹 Auxiliar: mapear género TMDB → ENUM BD
-    private String mapearGenero(String generoTMDB) {
-        if (generoTMDB == null || generoTMDB.isEmpty()) return "ACCION";
-        generoTMDB = generoTMDB.toUpperCase();
-        switch (generoTMDB) {
-            case "ACTION": return "ACCION";
-            case "ADVENTURE": return "AVENTURA";
-            case "ANIMATION": return "ANIMACION";
-            case "COMEDY": return "COMEDIA";
-            case "CRIME": return "CRIMEN";
-            case "DOCUMENTARY": return "DOCUMENTAL";
-            case "DRAMA": return "DRAMA";
-            case "FAMILY": return "FAMILIAR";
-            case "FANTASY": return "FANTASIA";
-            case "HISTORY": return "HISTORIA";
-            case "HORROR": return "TERROR";
-            case "MUSIC": return "MUSICA";
-            case "MYSTERY": return "MISTERIO";
-            case "ROMANCE": return "ROMANCE";
-            case "SCIENCE FICTION": return "CIENCIA_FICCION";
-            case "TV MOVIE": return "PELICULA_DE_TV";
-            case "THRILLER": return "SUSPENSO";
-            case "WAR": return "BELICA";
-            case "WESTERN": return "OESTE";
-            default: return "ACCION";
-        }
-    }
-
     // 🔹 Cargar películas de la lista desde BD
     private void cargarPeliculas() {
         try {
             peliculasLista = PeliculaDao.getInstance().obtenerPeliculasDeLista(lista.getIdLista());
             listaPeliculas.getItems().clear();
             for (Pelicula p : peliculasLista) {
-                listaPeliculas.getItems().add(p.getTitulo());
+                listaPeliculas.getItems().add(p.getTitulo() + " | Director: " + p.getDirector());
             }
         } catch (Exception e) {
             e.printStackTrace();
