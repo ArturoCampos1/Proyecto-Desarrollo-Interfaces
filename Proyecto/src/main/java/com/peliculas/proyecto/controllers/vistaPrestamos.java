@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -80,6 +81,7 @@ public class vistaPrestamos {
 
         for (Pelicula pelicula : p) {
             HBox box = new HBox(15);
+            box.setCursor(Cursor.HAND);
             box.setPadding(new Insets(15));
             box.setMaxWidth(Double.MAX_VALUE);
 
@@ -115,10 +117,16 @@ public class vistaPrestamos {
             Label director = new Label("Director: " + pelicula.getDirector());
             director.setTextFill(Color.WHITE);
 
-            Label resumen = new Label("Resumen: " + pelicula.getResumen());
-            resumen.setTextFill(Color.WHITE);
+            Label resumen = new Label(pelicula.getResumen());
+            resumen.setTextFill(Color.web("#F0F0F0"));
             resumen.setWrapText(true);
-            resumen.setMaxWidth(250);
+            resumen.setMaxWidth(260);
+            resumen.setMaxHeight(60);
+            resumen.setStyle("""
+            -fx-font-size: 13px;
+            -fx-text-overrun: ellipsis;
+               """);
+
 
             Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);

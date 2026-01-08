@@ -21,6 +21,7 @@ public class PeliculasDisponiblesDao {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     int idPelicula = rs.getInt("id_pelicula");
+                    String fecha = rs.getString("anio_salida");
                     String titulo = rs.getString("titulo");
                     double valoracion = rs.getDouble("valoracion");
                     String genero = rs.getString("genero");
@@ -33,6 +34,7 @@ public class PeliculasDisponiblesDao {
                     Pelicula pelicula = new Pelicula();
                     pelicula.setIdPelicula(idPelicula);
                     pelicula.setTitulo(titulo);
+                    pelicula.setAnioSalida(fecha);
                     pelicula.setDirector(director);
                     pelicula.setResumen(resumen);
                     pelicula.setValoracion(valoracion);

@@ -40,19 +40,51 @@ BEGIN
 END //
 DELIMITER ;
 
--- TRIGGERS PARA LISTA DE DISPONIBLES
+ALTER TABLE peliculas_disponibles
+ADD CONSTRAINT pk_peliculas_disponibles PRIMARY KEY (id_pelicula);
 
--- Trigger que elimina de peliculas_disponibles si la película deja de estar disponible
 DELIMITER $$
 
-CREATE TRIGGER trg_quitar_pelicula_disponible
+CREATE TRIGGER trg_pelicula_no_negativo_ins
+BEFORE INSERT ON pelicula
+FOR EACH ROW
+BEGIN
+    IF NEW.disponible < 0 THEN
+        SET NEW.disponible = 0;
+    END IF;
+END$$
+
+CREATE TRIGGER trg_pelicula_no_negativo_upd
+BEFORE UPDATE ON pelicula
+FOR EACH ROW
+BEGIN
+    IF NEW.disponible < 0 THEN
+        SET NEW.disponible = 0;
+    END IF;
+END$$
+
+CREATE TRIGGER trg_pelicula_sync_disp_ins
+AFTER INSERT ON pelicula
+FOR EACH ROW
+BEGIN
+    IF NEW.disponible > 0 THEN
+        INSERT IGNORE INTO peliculas_disponibles (id_pelicula)
+        VALUES (NEW.id_pelicula);
+    END IF;
+END$$
+
+CREATE TRIGGER trg_pelicula_sync_disp_upd
 AFTER UPDATE ON pelicula
 FOR EACH ROW
 BEGIN
-    -- Si antes estaba disponible y ahora no lo está, eliminar de la lista
-    IF OLD.disponible > 0 AND NEW.disponible = 0 THEN
+    IF NEW.disponible = 0 THEN
         DELETE FROM peliculas_disponibles
         WHERE id_pelicula = NEW.id_pelicula;
+    END IF;
+
+    IF NEW.disponible > 0 THEN
+        INSERT IGNORE INTO peliculas_disponibles (id_pelicula)
+        VALUES (NEW.id_pelicula);
     END IF;
 END$$
 

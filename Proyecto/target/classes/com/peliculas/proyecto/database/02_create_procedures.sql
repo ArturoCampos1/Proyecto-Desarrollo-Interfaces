@@ -474,7 +474,7 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS obtener_peliculas_disponibles$$
 CREATE PROCEDURE obtener_peliculas_disponibles()
 BEGIN
-    SELECT pd.id_pelicula, p.titulo, p.genero, p.disponible, p.valoracion, p.director, p.resumen, p.url_photo, p.precio
+    SELECT pd.id_pelicula, p.titulo, p.anio_salida, p.genero, p.disponible, p.valoracion, p.director, p.resumen, p.url_photo, p.precio
     FROM peliculas_disponibles pd
     JOIN pelicula p ON p.id_pelicula = pd.id_pelicula;
 END$$
