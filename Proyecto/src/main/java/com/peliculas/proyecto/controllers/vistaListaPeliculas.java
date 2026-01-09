@@ -8,6 +8,7 @@ import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.Usuario;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
@@ -28,11 +29,15 @@ public class vistaListaPeliculas {
     private Usuario usuario;
     private ArrayList<Pelicula> peliculasLista;
 
+    PeliculaDao peliculaDao = new PeliculaDao();
+
     // Recibe datos desde vistaListas
     public void setData(Usuario usuario, Lista lista) {
         this.usuario = usuario;
         this.lista = lista;
-        txtTituloLista.setText("Películas de: " + lista.getNombreLista());
+        txtTituloLista.setText("Lista : " + lista.getNombreLista());
+        txtTituloLista.setStyle("-fx-alignment: center; -fx-font-size: 28px;");
+
         cargarPeliculas();
     }
 
@@ -100,7 +105,13 @@ public class vistaListaPeliculas {
             selector.showAndWait().ifPresent(pelicula -> {
                 try {
                     // Insertar en BD
-                    PeliculaDao.getInstance().crear(pelicula);
+                    Pelicula pEncontrada = peliculaDao.buscarPorNombre(pelicula.getTitulo());
+                    if (pEncontrada == null){
+                        PeliculaDao.getInstance().crear(pelicula);
+                    } else{
+                        ListaPeliculaDao.getInstance().agregarPelicula(lista, pEncontrada);
+                    }
+
                     ListaPeliculaDao.getInstance().agregarPelicula(lista, pelicula);
 
                     cargarPeliculas();

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class vistaAdmin {
 
@@ -226,18 +227,25 @@ public class vistaAdmin {
             );
 
             btnEliminar.setOnMouseClicked(event -> {
-                try {
-                    peliculaDao.eliminar(pelicula.getIdPelicula());
-                    if (pelicula.getDisponible() > 0) {
-                        PeliculasDisponiblesDao.eliminarPelicula(pelicula.getIdPelicula());
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmación");
+                alert.setContentText("Esto podría eliminar la película de alguna lista de usuarios. ¿Estás seguro?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    try {
+                        peliculaDao.eliminar(pelicula.getIdPelicula());
+                        if (pelicula.getDisponible() > 0) {
+                            PeliculasDisponiblesDao.eliminarPelicula(pelicula.getIdPelicula());
+                        }
+                        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Película eliminada");
+                        obtenerTodasPeliculas();
+                        obtenerPeliculasDisponibles();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
                     }
-                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ Película eliminada");
-                    obtenerTodasPeliculas();
-                    obtenerPeliculasDisponibles();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
                 }
             });
+
 
             box.getChildren().addAll(titulo, generos, disponible, precio, btnEliminar);
             box.setPadding(new Insets(10));
@@ -333,16 +341,22 @@ public class vistaAdmin {
         );
 
         btnEliminar.setOnMouseClicked(event -> {
-            try {
-                usuarioDao.eliminar(usuario.getIdUsuario());
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ El usuario con nombre "+ usuario.getNombreUsuario() +
-                        " e id " + usuario.getIdUsuario() + " ha sido eliminado.");
-                cargarUsuarios();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmación");
+            alert.setHeaderText(null);
+            alert.setContentText("¿Estás seguro de que quieres eliminar al usuario " + usuario.getNombreUsuario() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    usuarioDao.eliminar(usuario.getIdUsuario());
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "✅ El usuario " + usuario.getNombreUsuario() +
+                            " e id " + usuario.getIdUsuario() + " ha sido eliminado.");
+                    cargarUsuarios();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
-
 
         vboxInfo.getChildren().addAll(lineaNombre, lblCorreo, lblTelefono, btnEliminar);
 

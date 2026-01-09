@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -33,6 +34,7 @@ public class vistaPrestamos {
     @FXML private Button btnVolver;
     @FXML private ScrollPane scrollPeliculas;
     @FXML private GridPane gridPeliculas;
+    @FXML private Text textoInfo;
 
     private PeliculaFavoritaDao peliculaFavoritaDao = new PeliculaFavoritaDao();
     private Usuario usuarioActual;
@@ -70,8 +72,13 @@ public class vistaPrestamos {
             throw new RuntimeException(e);
         }
 
-        ArrayList<HBox> cards = crearTarjetasAlquiladas(peliculasAlquiladas);
-        mostrarPeliculas(cards);
+        if (peliculasAlquiladas.isEmpty()){
+            textoInfo.setText("NO TIENES PELICULAS ALQUILADAS");
+            textoInfo.setUnderline(true);
+        } else{
+            ArrayList<HBox> cards = crearTarjetasAlquiladas(peliculasAlquiladas);
+            mostrarPeliculas(cards);
+        }
     }
 
     public ArrayList<HBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p) {

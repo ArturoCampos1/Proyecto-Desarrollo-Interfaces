@@ -14,10 +14,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.paint.Color?>
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: F0F0F0;" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.peliculas.proyecto.controllers.vistaPrestamos">
    <children>
       <Label id="subTitle" layoutX="396.0" layoutY="62.0" text="✅ Tus alquileres activos">
@@ -26,7 +22,7 @@
             <String fx:value="tag-blue" />
          </styleClass>
       </Label>
-      <Text layoutX="428.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualización de pŕestamos" />
+      <Text layoutX="417.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualización de pŕestamos" />
       <Text fill="#535353" layoutX="414.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestiona tus películas alquiladas" />
        <Pane layoutX="143.0" layoutY="173.0" prefHeight="417.0" prefWidth="710.0" styleClass="cardGestionFilm">
 
@@ -60,5 +56,6 @@
             <Font size="23.0" />
          </font>
       </Text>
+      <Text fx:id="textoInfo" fill="#973c99" layoutX="382.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="213.6000366210938" />
    </children>
 </AnchorPane>
