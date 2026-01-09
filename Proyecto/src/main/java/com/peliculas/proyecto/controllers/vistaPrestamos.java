@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class vistaPrestamos {
@@ -120,8 +121,8 @@ public class vistaPrestamos {
             Label resumen = new Label(pelicula.getResumen());
             resumen.setTextFill(Color.web("#F0F0F0"));
             resumen.setWrapText(true);
-            resumen.setMaxWidth(260);
-            resumen.setMaxHeight(60);
+            resumen.setMaxWidth(200);
+            resumen.setMaxHeight(75);
             resumen.setStyle("""
             -fx-font-size: 13px;
             -fx-text-overrun: ellipsis;
@@ -179,22 +180,29 @@ public class vistaPrestamos {
             });
 
             // ====== LABEL DE PELÍCULA ALQUILADA ======
-            Label linea1 = new Label("PELÍCULA");
-            linea1.setTextFill(Color.YELLOW);
-            linea1.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            Label linea2 = new Label("ALQUILADA");
-            linea2.setTextFill(Color.YELLOW);
-            linea2.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+            Label alq = new Label("PELÍCULA\nALQUILADA");
+            alq.setTextAlignment(TextAlignment.CENTER);
+            alq.setTextFill(Color.YELLOW);
+            alq.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-            VBox labelBox = new VBox(2, linea1, linea2);
+            Region spacer1 = new Region();
+            spacer1.setPrefHeight(10);
+
+            Button btnGestion = new Button("Gestionar\nalquiler");
+            btnGestion.setTextAlignment(TextAlignment.CENTER);
+            btnGestion.setStyle("-fx-background-color: white; -fx-text-fill: #7b2cc9; -fx-font-weight: bold;");
+
+
+
+            VBox labelBox = new VBox(2, alq, spacer1, btnGestion);
             labelBox.setAlignment(Pos.CENTER);
 
             // ====== ESPACIADOR PARA QUE LA ESTRELLA QUDE AL EXTREMO ======
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
+            Region spacer2 = new Region();
+            HBox.setHgrow(spacer2, Priority.ALWAYS);
 
             // ====== ARMAR HBOX ======
-            box.getChildren().addAll(img, texto, spacer, star, labelBox);
+            box.getChildren().addAll(img, texto, spacer2, labelBox, star);
 
             // ====== CLICK TARJETA ======
             box.setOnMouseClicked(e -> abrirCartaPelicula(pelicula));
