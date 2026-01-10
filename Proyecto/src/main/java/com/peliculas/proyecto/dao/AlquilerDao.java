@@ -30,11 +30,10 @@ public class AlquilerDao implements CRUD<Alquiler> {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        try (CallableStatement cs = con.prepareCall("{CALL crear_alquiler(?,?,?,?)}")) {
+        try (CallableStatement cs = con.prepareCall("{CALL crear_alquiler(?,?,?)}")) {
             cs.setInt(1, a.getIdUsuario());
             cs.setInt(2, a.getIdPelicula());
-            cs.setString(3, a.getFechaAlquiler());
-            cs.setString(4, a.getFechaDevolucion());
+            cs.setTimestamp(3, a.getFechaAlquiler());
 
             cs.executeUpdate();
         } finally {
@@ -56,8 +55,8 @@ public class AlquilerDao implements CRUD<Alquiler> {
                 Alquiler a = new Alquiler();
                 a.setIdUsuario(rs.getInt("id_usuario"));
                 a.setIdPelicula(rs.getInt("id_pelicula"));
-                a.setFechaAlquiler(rs.getString("fecha_alquiler"));
-                a.setFechaDevolucion(rs.getString("fecha_devolucion"));
+                a.setFechaAlquiler(rs.getTimestamp("fecha_alquiler"));
+                a.setFechaDevolucion(rs.getTimestamp("fecha_devolucion"));
 
                 lista.add(a);
             }
@@ -81,8 +80,8 @@ public class AlquilerDao implements CRUD<Alquiler> {
                 Alquiler a = new Alquiler();
                 a.setIdUsuario(rs.getInt("id_usuario"));
                 a.setIdPelicula(rs.getInt("id_pelicula"));
-                a.setFechaAlquiler(rs.getString("fecha_alquiler"));
-                a.setFechaDevolucion(rs.getString("fecha_devolucion"));
+                a.setFechaAlquiler(rs.getTimestamp("fecha_alquiler"));
+                a.setFechaDevolucion(rs.getTimestamp("fecha_devolucion"));
 
                 lista.add(a);
             }

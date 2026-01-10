@@ -19,6 +19,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.sql.Timestamp;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -103,10 +104,15 @@ public class vistaPayment {
     }
 
     private void redirigirPrestamos() {
-        java.sql.Date fecha_alquiler = Date.valueOf(LocalDate.now());
-        String fechaParseada = fecha_alquiler.toString();
+        // Fecha y hora EXACTAS del alquiler
+        Timestamp fechaAlquiler = new Timestamp(System.currentTimeMillis());
 
-        Alquiler alquiler = new Alquiler(usuarioActual.getIdUsuario(), pelicula.getIdPelicula(), fechaParseada);
+        Alquiler alquiler = new Alquiler(
+                usuarioActual.getIdUsuario(),
+                pelicula.getIdPelicula(),
+                fechaAlquiler
+        );
+
         try {
             alquilerDao.crear(alquiler);
             peliculaDao.actualizarDisponibilidad(pelicula, 1);
@@ -127,6 +133,7 @@ public class vistaPayment {
             e.printStackTrace();
         }
     }
+
 
     private void volverAlquiler() {
         try {

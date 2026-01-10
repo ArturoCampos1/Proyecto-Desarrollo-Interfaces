@@ -353,15 +353,14 @@ PROCEDIMIENTOS CRUD PARA ALQUILERES
 -- Crear alquiler
 DELIMITER $$
 DROP PROCEDURE IF EXISTS crear_alquiler$$
-CREATE PROCEDURE crear_alquiler (
+CREATE PROCEDURE crear_alquiler(
     IN p_id_usuario INT,
     IN p_id_pelicula INT,
-    IN p_fecha_alquiler VARCHAR(60),
-    IN p_fecha_devolucion VARCHAR(60)
-    )
+    IN p_fecha_alquiler DATETIME
+)
 BEGIN
-    INSERT INTO alquiler (id_usuario, id_pelicula, fecha_alquiler, fecha_devolucion)
-    VALUES (p_id_usuario, p_id_pelicula, p_fecha_alquiler, p_fecha_devolucion);
+    INSERT INTO alquiler (id_usuario, id_pelicula, fecha_alquiler)
+    VALUES (p_id_usuario, p_id_pelicula, p_fecha_alquiler);
 END$$
 DELIMITER ;
 

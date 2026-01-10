@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS peliculas_disponibles (
 CREATE TABLE IF NOT EXISTS alquiler (
     id_usuario INT NOT NULL,
     id_pelicula INT NOT NULL,
-    fecha_alquiler VARCHAR(50) NOT NULL,
-    fecha_devolucion VARCHAR(50) NOT NULL,
+    fecha_alquiler DATETIME NOT NULL,
+    fecha_devolucion DATETIME NOT NULL,
     PRIMARY KEY (id_usuario, id_pelicula),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_pelicula) REFERENCES pelicula(id_pelicula) ON DELETE CASCADE

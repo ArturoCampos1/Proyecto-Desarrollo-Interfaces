@@ -89,3 +89,19 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+DELIMITER //
+
+-- Trigger para calcular automaticamente la fecha de devolucion
+DELIMITER //
+
+CREATE TRIGGER calcular_fecha_devolucion
+BEFORE INSERT ON alquiler
+FOR EACH ROW
+BEGIN
+    SET NEW.fecha_devolucion =
+        DATE_ADD(NEW.fecha_alquiler, INTERVAL 72 HOUR);
+END//
+
+DELIMITER ;
