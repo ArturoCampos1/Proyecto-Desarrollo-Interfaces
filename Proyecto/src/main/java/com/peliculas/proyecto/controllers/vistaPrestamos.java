@@ -19,9 +19,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -47,6 +45,7 @@ public class vistaPrestamos {
 
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
+        eliminarAlquileresCaducados();
         cargarPeliculasPrestadas();
     }
 
@@ -216,12 +215,45 @@ public class vistaPrestamos {
             Region spacer1 = new Region();
             spacer1.setPrefHeight(10);
 
-            Button btnGestion = new Button("Gestionar\nalquiler");
-            btnGestion.setTextAlignment(TextAlignment.CENTER);
-            btnGestion.setStyle("-fx-background-color: white; -fx-text-fill: #7b2cc9; -fx-font-weight: bold;");
+            // Obtener el alquiler correspondiente
+            final Alquiler alquiler = alquilerPorPelicula.get(pelicula.getIdPelicula());
 
-            // Obtener el alquiler correspondiente para mostrar el tiempo restante
-            Alquiler alquiler = alquilerPorPelicula.get(pelicula.getIdPelicula());
+            Button btnGestion = new Button("Eliminar\nalquiler");
+            btnGestion.setTextAlignment(TextAlignment.CENTER);
+            btnGestion.setStyle("-fx-background-color: white; -fx-text-fill: #ff6045; -fx-font-weight: bold;");
+            btnGestion.setOnAction(e -> {
+                e.consume();
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmar eliminación");
+                alert.setHeaderText("¿Eliminar alquiler?");
+                alert.setContentText(
+                        "Estás a punto de eliminar el alquiler de:\n\n" +
+                                pelicula.getTitulo() +
+                                "\n\n¿Deseas continuar?"
+                );
+
+                // Aplicar estilos
+                alert.getDialogPane().getStylesheets().add(
+                        getClass().getResource("/styles.css").toExternalForm()
+                );
+                alert.getDialogPane().getStyleClass().add("alert-info");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        try {
+                            // Eliminar alquiler
+                            AlquilerDao.getInstance().eliminar(alquiler);
+
+                            // Recargar vista
+                            cargarPeliculasPrestadas();
+
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            });
 
             Label lblTiempo = new Label();
             if (alquiler != null && alquiler.getFechaDevolucion() != null) {
@@ -230,10 +262,12 @@ public class vistaPrestamos {
                 lblTiempo.setText("");
             }
             lblTiempo.setTextFill(Color.web("#FFD700"));
-            lblTiempo.setPadding(new Insets(7, 0, -25, 0)); // 50px de margen arriba
+            lblTiempo.setWrapText(true);
+            lblTiempo.setPadding(new Insets(7, 10, -25, 0));
 
-            VBox labelBox = new VBox(2, alq, spacer1, btnGestion, lblTiempo);
+            VBox labelBox = new VBox(3, alq, spacer1, btnGestion, lblTiempo);
             labelBox.setAlignment(Pos.CENTER);
+            labelBox.setPrefWidth(150);
 
             // ====== ESPACIADOR PARA QUE LA ESTRELLA QUDE AL EXTREMO ======
             Region spacer2 = new Region();
@@ -387,10 +421,6 @@ public class vistaPrestamos {
 
         long dif = fin - ahora;
 
-        if (dif <= 0) {
-            return "⛔ Alquiler caducado";
-        }
-
         long minutos = dif / (1000 * 60);
         long horas = minutos / 60;
         long dias = horas / 24;
@@ -404,6 +434,23 @@ public class vistaPrestamos {
             return "⏳ Quedan " + horas + " h " + minutos + " min";
         } else {
             return "⏳ Quedan " + minutos + " min";
+        }
+    }
+
+    private void eliminarAlquileresCaducados() {
+        try {
+            ArrayList<Alquiler> alquileres = AlquilerDao.getInstance()
+                    .obtenerPorUsuario(usuarioActual.getIdUsuario());
+
+            for (Alquiler a : alquileres) {
+                Timestamp ahora = new Timestamp(System.currentTimeMillis());
+                if (a.getFechaDevolucion() != null && ahora.after(a.getFechaDevolucion())) {
+                    // El alquiler ya ha caducado, se elimina
+                    AlquilerDao.getInstance().eliminar(a);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

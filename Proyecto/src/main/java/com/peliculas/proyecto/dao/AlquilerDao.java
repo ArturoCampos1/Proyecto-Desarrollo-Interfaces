@@ -152,5 +152,4 @@ public class AlquilerDao implements CRUD<Alquiler> {
 
         return lista;
     }
-
 }

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -193,7 +194,6 @@ public class vistaAlquiler {
                 estadoFavorito[0] = !estadoFavorito[0];
             });
 
-
             // ====== BOTÓN ALQUILAR ======
             Button btnAlquilar = new Button("Alquilar Película");
             btnAlquilar.setPrefWidth(180);
@@ -223,7 +223,22 @@ public class vistaAlquiler {
 
             btnAlquilar.setOnAction(e -> {
                 e.consume();
+
                 try {
+                    ArrayList<Alquiler> alquileresUsuario = alquilerDao.obtenerPorUsuario(usuarioActual.getIdUsuario());
+
+                    long ahora = System.currentTimeMillis();
+                    alquileresUsuario.removeIf(a -> a.getFechaDevolucion() != null && a.getFechaDevolucion().getTime() <= ahora);
+
+                    if (alquileresUsuario.size() >= 3) {
+                        mostrarAlerta(
+                                Alert.AlertType.ERROR,
+                                "Alquiler máximo alcanzado",
+                                "Elimina una de tus préstamos para alquilar otra."
+                        );
+                        return;
+                    }
+
                     FXMLLoader loader = new FXMLLoader(
                             getClass().getResource("/vistas/vistaPayment.fxml")
                     );
@@ -239,7 +254,7 @@ public class vistaAlquiler {
                     stage.centerOnScreen();
                     stage.show();
 
-                } catch (IOException ex) {
+                } catch (IOException | SQLException ex) {
                     ex.printStackTrace();
                 }
             });
@@ -252,14 +267,11 @@ public class vistaAlquiler {
                     img, titulo, director, resumen, valoracion,
                     disponible, precio, spacer1, star, btnAlquilar
             );
-
             boxs.add(box);
         }
 
         return boxs;
     }
-
-
 
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
@@ -396,5 +408,27 @@ public class vistaAlquiler {
         ventana.setScene(scene);
         ventana.show();
     }
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(titulo);
+        alert.setContentText(mensaje);
 
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles.css").toExternalForm()
+        );
+
+        switch (tipo) {
+            case ERROR:
+                alert.getDialogPane().getStyleClass().add("alert-error");
+                break;
+            case INFORMATION:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+            default:
+                alert.getDialogPane().getStyleClass().add("alert-info");
+                break;
+        }
+        alert.showAndWait();
+    }
 }
