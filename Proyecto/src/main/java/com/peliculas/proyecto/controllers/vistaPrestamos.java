@@ -1,10 +1,14 @@
 package com.peliculas.proyecto.controllers;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.peliculas.proyecto.dao.AlquilerDao;
 import com.peliculas.proyecto.dao.PeliculaFavoritaDao;
+import com.peliculas.proyecto.dto.Alquiler;
 import com.peliculas.proyecto.dto.Pelicula;
 import com.peliculas.proyecto.dto.PeliculaFavorita;
 import com.peliculas.proyecto.dto.Usuario;
@@ -39,6 +43,8 @@ public class vistaPrestamos {
     private PeliculaFavoritaDao peliculaFavoritaDao = new PeliculaFavoritaDao();
     private Usuario usuarioActual;
 
+    private ArrayList<Alquiler> alquileresUsuario;
+
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
         cargarPeliculasPrestadas();
@@ -72,17 +78,32 @@ public class vistaPrestamos {
             throw new RuntimeException(e);
         }
 
+        ArrayList<Alquiler> alquileres;
+        try {
+            alquileres = AlquilerDao.getInstance().obtenerPorUsuario(usuarioActual.getIdUsuario());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
         if (peliculasAlquiladas.isEmpty()){
             textoInfo.setText("NO TIENES PELICULAS ALQUILADAS");
             textoInfo.setUnderline(true);
         } else{
-            ArrayList<HBox> cards = crearTarjetasAlquiladas(peliculasAlquiladas);
+            ArrayList<HBox> cards = crearTarjetasAlquiladas(peliculasAlquiladas, alquileres);
             mostrarPeliculas(cards);
         }
     }
 
-    public ArrayList<HBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p) {
+    public ArrayList<HBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p, ArrayList<Alquiler> alquileres)
+    {
         ArrayList<HBox> boxs = new ArrayList<>();
+
+        Map<Integer, Alquiler> alquilerPorPelicula = new HashMap<>();
+
+        for (Alquiler a : alquileres) {
+            alquilerPorPelicula.put(a.getIdPelicula(), a);
+        }
 
         // Cargar favoritos UNA sola vez
         ArrayList<PeliculaFavorita> infoFavs = peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
@@ -199,9 +220,19 @@ public class vistaPrestamos {
             btnGestion.setTextAlignment(TextAlignment.CENTER);
             btnGestion.setStyle("-fx-background-color: white; -fx-text-fill: #7b2cc9; -fx-font-weight: bold;");
 
+            // Obtener el alquiler correspondiente para mostrar el tiempo restante
+            Alquiler alquiler = alquilerPorPelicula.get(pelicula.getIdPelicula());
 
+            Label lblTiempo = new Label();
+            if (alquiler != null && alquiler.getFechaDevolucion() != null) {
+                lblTiempo.setText(tiempoRestante(alquiler.getFechaDevolucion()));
+            } else {
+                lblTiempo.setText("");
+            }
+            lblTiempo.setTextFill(Color.web("#FFD700"));
+            lblTiempo.setPadding(new Insets(7, 0, -25, 0)); // 50px de margen arriba
 
-            VBox labelBox = new VBox(2, alq, spacer1, btnGestion);
+            VBox labelBox = new VBox(2, alq, spacer1, btnGestion, lblTiempo);
             labelBox.setAlignment(Pos.CENTER);
 
             // ====== ESPACIADOR PARA QUE LA ESTRELLA QUDE AL EXTREMO ======
@@ -347,5 +378,32 @@ public class vistaPrestamos {
         Scene scene = new Scene(root, 450, 720);
         ventana.setScene(scene);
         ventana.show();
+    }
+
+    private String tiempoRestante(Timestamp fechaDevolucion) {
+
+        long ahora = System.currentTimeMillis();
+        long fin = fechaDevolucion.getTime();
+
+        long dif = fin - ahora;
+
+        if (dif <= 0) {
+            return "⛔ Alquiler caducado";
+        }
+
+        long minutos = dif / (1000 * 60);
+        long horas = minutos / 60;
+        long dias = horas / 24;
+
+        horas %= 24;
+        minutos %= 60;
+
+        if (dias > 0) {
+            return "⏳ Quedan " + dias + " días " + horas + " h";
+        } else if (horas > 0) {
+            return "⏳ Quedan " + horas + " h " + minutos + " min";
+        } else {
+            return "⏳ Quedan " + minutos + " min";
+        }
     }
 }
