@@ -221,4 +221,22 @@ public class PeliculaDao {
             Conexion.cerrarConexion();
         }
     }
+
+    public boolean devolverPelicula(int idPelicula) {
+        Conexion.abrirConexion();
+        Connection con = Conexion.conexion;
+
+        String sql = "UPDATE pelicula SET disponible = disponible + 1 WHERE id_pelicula = ?";
+
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, idPelicula);
+            int rows = pst.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            Conexion.cerrarConexion();
+        }
+    }
 }

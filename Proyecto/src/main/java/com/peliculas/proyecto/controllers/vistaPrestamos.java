@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.peliculas.proyecto.dao.AlquilerDao;
+import com.peliculas.proyecto.dao.PeliculaDao;
 import com.peliculas.proyecto.dao.PeliculaFavoritaDao;
 import com.peliculas.proyecto.dto.Alquiler;
 import com.peliculas.proyecto.dto.Pelicula;
@@ -245,8 +246,13 @@ public class vistaPrestamos {
                             // Eliminar alquiler
                             AlquilerDao.getInstance().eliminar(alquiler);
 
+                            // Volver a sumar película al stock
+                            PeliculaDao.getInstance().devolverPelicula(alquiler.getIdPelicula());
+
                             // Recargar vista
+                            gridPeliculas.getChildren().remove(box);                            cargarPeliculasPrestadas();
                             cargarPeliculasPrestadas();
+
 
                         } catch (SQLException ex) {
                             ex.printStackTrace();
@@ -284,7 +290,6 @@ public class vistaPrestamos {
 
         return boxs;
     }
-
 
     private void mostrarPeliculas(ArrayList<HBox> peliculas) {
         gridPeliculas.getChildren().clear();
@@ -445,6 +450,9 @@ public class vistaPrestamos {
             for (Alquiler a : alquileres) {
                 Timestamp ahora = new Timestamp(System.currentTimeMillis());
                 if (a.getFechaDevolucion() != null && ahora.after(a.getFechaDevolucion())) {
+
+                    // Volver a sumar película al stock
+                    PeliculaDao.getInstance().devolverPelicula(a.getIdPelicula());
                     // El alquiler ya ha caducado, se elimina
                     AlquilerDao.getInstance().eliminar(a);
                 }
