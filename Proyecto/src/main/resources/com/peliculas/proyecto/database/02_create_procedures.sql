@@ -108,64 +108,26 @@ CREATE PROCEDURE crear_pelicula (
 )
 BEGIN
     DECLARE v_id_pelicula INT;
-    DECLARE v_existe_disponible INT DEFAULT 0;
-
-    START TRANSACTION;
 
     IF p_disponible IS NULL THEN
         SET p_disponible = 0;
     END IF;
 
-    -- 1️⃣ Insertar película
     INSERT INTO pelicula (
-        titulo,
-        anio_salida,
-        director,
-        resumen,
-        genero,
-        url_photo,
-        valoracion,
-        disponible,
-        precio
+        titulo, anio_salida, director, resumen,
+        genero, url_photo, valoracion, disponible, precio
     )
     VALUES (
-        p_titulo,
-        p_anio_salida,
-        p_director,
-        p_resumen,
-        p_genero,
-        p_url_photo,
-        p_valoracion,
-        p_disponible,
-        p_precio
+        p_titulo, p_anio_salida, p_director, p_resumen,
+        p_genero, p_url_photo, p_valoracion, p_disponible, p_precio
     );
 
     SET v_id_pelicula = LAST_INSERT_ID();
 
-    SELECT COUNT(*)
-    INTO v_existe_disponible
-    FROM peliculas_disponibles
-    WHERE id_pelicula = v_id_pelicula;
-
-    IF v_existe_disponible > 0 THEN
-
-        UPDATE pelicula
-        SET
-            disponible = disponible + p_disponible,
-            precio = p_precio
-        WHERE id_pelicula = v_id_pelicula;
-
-    ELSE
-        IF p_disponible > 0 THEN
-            INSERT INTO peliculas_disponibles (id_pelicula)
-            VALUES (v_id_pelicula);
-        END IF;
-    END IF;
-
-    COMMIT;
-
+    -- devolver id
     SELECT v_id_pelicula AS id_pelicula;
-END$$
+END;
+
 DELIMITER ;
 
 

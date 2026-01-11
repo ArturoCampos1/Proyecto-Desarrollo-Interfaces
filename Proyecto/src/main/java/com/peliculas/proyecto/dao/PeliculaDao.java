@@ -108,62 +108,6 @@ public class PeliculaDao {
         }
     }
 
-    // Crear películas disponibles
-    public void crearPeliculaDisponible(Pelicula p) throws SQLException {
-        Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
-
-        try (CallableStatement cs = con.prepareCall("{CALL crear_pelicula(?,?,?,?,?,?,?,?)}")) {
-
-            cs.setString(1, p.getTitulo());
-            cs.setString(2, p.getAnioSalida());
-            cs.setString(3, p.getDirector());
-            cs.setString(4, p.getResumen());
-            cs.setString(5, p.getGenero());
-            cs.setString(6, p.getPathBanner());
-            cs.setDouble(7, p.getValoracion());
-            cs.setInt(8, p.getDisponible());
-
-            cs.executeQuery();
-
-        } finally {
-            Conexion.cerrarConexion();
-        }
-    }
-
-    public Pelicula buscarPorId(int idPelicula) throws SQLException {
-        Pelicula p = null;
-
-        Conexion.abrirConexion();
-        Connection con = Conexion.conexion;
-
-        String sql = "SELECT * FROM pelicula WHERE id_pelicula = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, idPelicula);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    p = new Pelicula();
-                    p.setIdPelicula(rs.getInt("id_pelicula"));
-                    p.setTitulo(rs.getString("titulo"));
-                    p.setAnioSalida(rs.getString("anio_salida"));
-                    p.setDirector(rs.getString("director"));
-                    p.setResumen(rs.getString("resumen"));
-                    p.setGenero(rs.getString("genero"));
-                    p.setDisponible(rs.getInt("disponible"));
-                    p.setPathBanner(rs.getString("url_photo"));
-                    p.setPrecio(rs.getDouble("precio"));
-                    p.setValoracion(rs.getDouble("valoracion"));
-                }
-            }
-        } finally {
-            Conexion.cerrarConexion();
-        }
-
-        return p;
-    }
-
     public Pelicula buscarPorNombre(String nombre) throws SQLException {
         Pelicula p = null;
 
