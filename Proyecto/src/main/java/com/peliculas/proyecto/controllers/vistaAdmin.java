@@ -66,6 +66,11 @@ public class vistaAdmin {
 
     TMDBDao tmdbDao = new TMDBDao();
 
+    /**
+     * @author Arturo Campos
+     * Método de inicialización que carga usuarios, peliculas disponibles y todas las peliculas en general
+     * Se declaran los eventos para que los botones pasen los parametros a los métodos
+     */
     @FXML
     public void initialize() {
 
@@ -80,18 +85,33 @@ public class vistaAdmin {
 
     }
 
+    /**
+     * @author Arturo Campos
+     * Método que activa todos las peliculas de la bd en el grid
+     */
     public void obtenerTodasPeliculas() {
         ArrayList<Pelicula> peliculas = peliculaDao.obtenerPeliculas();
         ArrayList<VBox> boxs = returnPeliculaConFormatoArrayTodas(peliculas);
         mostrarPeliculasTodas(boxs);
     }
-
+    /**
+     * @author Arturo Campos
+     * Método que activa todos las peliculas disponibles en el grid
+     */
     public void obtenerPeliculasDisponibles(){
         ArrayList<Pelicula> peliculas = peliculasDisponiblesDao.obtenerPeliculasDispos();
         ArrayList<VBox> boxs = returnPeliculaConFormatoArrayDispos(peliculas);
         mostrarPeliculas(boxs);
     }
 
+    /**
+     * @author Arturo Campos
+     * Método que agrega pelicula dispobible mediante un buscador de coincidencias y asigna cantidad y precio.
+     * Si la pelicula existe la actualizará
+     * @param campoNombre
+     * @param campoCantidad
+     * @param campoPrecio
+     */
     //Método copiado de vistaListaPeliculas (Iker)
     public void buscarYAgregarPelicula(TextField campoNombre, TextField campoCantidad, TextField campoPrecio) {
         String nombre = campoNombre.getText();
@@ -149,6 +169,12 @@ public class vistaAdmin {
         }
     }
 
+    /**
+     * @author Arturo Campos
+     * Método que crea un arraylist de vbox y va recorriendo el arraylist de peliculas para crear cartas con formato
+     * @param p (arrayList de peliculas que se obtendra con el método de obtenerPeliculasDisponibles)
+     * @return ArrayList de VBOX que se imprime en el gridPane
+     */
     public ArrayList<VBox> returnPeliculaConFormatoArrayDispos(ArrayList<Pelicula> p) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
@@ -183,7 +209,13 @@ public class vistaAdmin {
 
         return boxs;
     }
-
+    /**
+     * @author Arturo Campos
+     * Método que crea un arraylist de vbox y va recorriendo el arraylist de peliculas para crear cartas con formato. La diferencia
+     * con el anterior es que este metodo devuelve los vbox de todas las peliculas que se encuentren en la bd sean dispobibles o no
+     * @param p (arrayList de peliculas que se obtendra con el método de obtenerTodas)
+     * @return ArrayList de VBOX que se imprime en el gridPane
+     */
     public ArrayList<VBox> returnPeliculaConFormatoArrayTodas(ArrayList<Pelicula> p) {
         ArrayList<VBox> boxs = new ArrayList<>();
         for (Pelicula pelicula : p) {
@@ -255,13 +287,16 @@ public class vistaAdmin {
         return boxs;
     }
 
+    /**
+     * @author Arturo Campos
+     * Método que simplemente consulta los usuarios en bd y creamos con un metodo filas
+     */
     public void cargarUsuarios() {
         try {
             List<Usuario> usuarios = usuarioDao.consultarUsuarios();
 
             contenedorUsuarios.getChildren().clear();
 
-            // Añadir cada usuario con estilo mejorado
             for (int i = 0; i < usuarios.size(); i++) {
                 Usuario usuario = usuarios.get(i);
                 HBox fila = crearFilaUsuarioEstilizada(usuario, i);
@@ -274,6 +309,13 @@ public class vistaAdmin {
         }
     }
 
+    /**
+     * @author Arturo Campos
+     * Método que inserta los usuarios en un HBOX
+     * @param usuario
+     * @param index
+     * @return un HBox que muestra los usuarios en las lista estilizada
+     */
     private HBox crearFilaUsuarioEstilizada(Usuario usuario, int index) {
         HBox fila = new HBox(10);
         fila.setPrefWidth(240);
@@ -365,6 +407,11 @@ public class vistaAdmin {
         return fila;
     }
 
+    /**
+     * @author Arturo Campos
+     * Método que organiza las películas
+     * @param peliculas
+     */
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
         int row = 0;
@@ -373,7 +420,11 @@ public class vistaAdmin {
             row++;
         }
     }
-
+    /**
+     * @author Arturo Campos
+     * Método que organiza las películas
+     * @param peliculas
+     */
     private void mostrarPeliculasTodas(ArrayList<VBox> peliculas) {
         gridTodasPeliculas.getChildren().clear();
         int col = 0;
@@ -387,7 +438,10 @@ public class vistaAdmin {
             }
         }
     }
-
+    /**
+     * @author Arturo Campos
+     * Error en caso de que no carguen los usuarios
+     */
     private void mostrarError() {
         Label lblError = new Label("❌ Error al cargar usuarios");
         lblError.setStyle(
@@ -401,6 +455,10 @@ public class vistaAdmin {
         contenedorUsuarios.getChildren().add(lblError);
     }
 
+    /**
+     * @author Arturo Campos
+     * Volver al inicio
+     */
     private void volverAMain() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
@@ -414,7 +472,12 @@ public class vistaAdmin {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo volver a la pantalla principal");
         }
     }
-
+    /**
+     * Método para mostrar alertas personalizadas
+     * @param tipo
+     * @param titulo
+     * @param mensaje
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
