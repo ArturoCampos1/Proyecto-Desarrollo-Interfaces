@@ -9,18 +9,39 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DAO encargado de la gestión de administradores.
+ * Permite autenticar administradores y controlar
+ * los errores producidos durante el inicio de sesión.
+ *
+ * @author Arturo Campos y Iker Sillero
+ */
 public class AdministradorDao {
 
+    /**
+     * Almacena el último error producido durante el proceso de login.
+     * Puede indicar error de usuario, contraseña o ambos.
+     */
     private String ultimoErrorLogin;
 
+    /**
+     * Realiza el inicio de sesión de un administrador.
+     * Comprueba si el usuario existe, si la contraseña es correcta
+     * y establece el tipo de error en caso de fallo.
+     *
+     * @param nombreUsuario Nombre de usuario introducido
+     * @param contrasena Contraseña introducida
+     * @return Administrador autenticado o null si el login falla
+     * @throws SQLException Si ocurre un error de acceso a la base de datos
+     * @author Arturo Campos
+     */
     public Administrador login(String nombreUsuario, String contrasena) throws SQLException {
         Administrador admin = null;
-        ultimoErrorLogin = null; // limpiar error anterior
+        ultimoErrorLogin = null;
 
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        // 1) Buscar por usuario
         String sql = "SELECT id_admin, usuario, contrasena FROM administrador WHERE usuario = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -29,24 +50,21 @@ public class AdministradorDao {
             try (ResultSet rs = ps.executeQuery()) {
 
                 if (!rs.next()) {
-                    // Usuario no existe → miramos si la contraseña coincide con alguna
                     if (contrasenaCoincideConAlguna(con, contrasena)) {
-                        ultimoErrorLogin = "usuario";      // usuario mal, contraseña válida para otro
+                        ultimoErrorLogin = "usuario";
                     } else {
-                        ultimoErrorLogin = "ambos";        // usuario mal y contraseña no coincide con ninguna
+                        ultimoErrorLogin = "ambos";
                     }
                     return null;
                 }
 
                 String passBD = rs.getString("contrasena");
 
-                // Usuario existe pero contraseña incorrecta
                 if (!passBD.trim().equals(contrasena.trim())) {
                     ultimoErrorLogin = "contrasena";
                     return null;
                 }
 
-                // Login correcto
                 admin = new Administrador(
                         rs.getInt("id_admin"),
                         rs.getString("usuario"),
@@ -62,7 +80,16 @@ public class AdministradorDao {
         return admin;
     }
 
-    // Comprueba si la contraseña introducida coincide con la de algún admin existente
+    /**
+     * Comprueba si la contraseña introducida coincide
+     * con la de algún administrador registrado.
+     *
+     * @param con Conexión activa a la base de datos
+     * @param contrasena Contraseña introducida
+     * @return true si coincide con alguna contraseña existente, false en caso contrario
+     * @throws SQLException Si ocurre un error en la consulta
+     * @author Iker Sillero
+     */
     private boolean contrasenaCoincideConAlguna(Connection con, String contrasena) throws SQLException {
         String sql = "SELECT 1 FROM administrador WHERE TRIM(contrasena) = TRIM(?) LIMIT 1";
 
@@ -74,6 +101,12 @@ public class AdministradorDao {
         }
     }
 
+    /**
+     * Devuelve el último error producido durante el login.
+     *
+     * @return Tipo de error ("usuario", "contrasena", "ambos") o null si no hubo error
+     * @author Iker Sillero
+     */
     public String getUltimoErrorLogin() {
         return ultimoErrorLogin;
     }

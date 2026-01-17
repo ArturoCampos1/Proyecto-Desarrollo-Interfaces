@@ -477,6 +477,8 @@ public class vistaAdmin {
      * @param tipo
      * @param titulo
      * @param mensaje
+     *
+     * @author Kevin Mejías
      */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);

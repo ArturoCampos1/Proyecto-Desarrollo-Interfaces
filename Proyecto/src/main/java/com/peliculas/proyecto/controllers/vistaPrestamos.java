@@ -32,6 +32,13 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * Controlador de la vista de préstamos.
+ * Gestiona la visualización de las películas alquiladas por el usuario,
+ * permitiendo consultar información, eliminar alquileres y gestionar favoritos.
+ *
+ * @author Kevin Mejías y Arturo Campos
+ */
 public class vistaPrestamos {
 
     @FXML private Button btnVolver;
@@ -44,18 +51,36 @@ public class vistaPrestamos {
 
     private ArrayList<Alquiler> alquileresUsuario;
 
+    /**
+     * Recibe el usuario actual y carga sus películas prestadas.
+     * También elimina automáticamente los alquileres caducados.
+     *
+     * @param usuario Usuario que ha iniciado sesión
+     * @author Kevin Mejías
+     */
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
         eliminarAlquileresCaducados();
         cargarPeliculasPrestadas();
     }
 
+    /**
+     * Inicializa la vista y asigna los eventos iniciales
+     * a los componentes gráficos.
+     *
+     * @author Kevin Mejías
+     */
     @FXML
     public void initialize() {
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
         gridPeliculas.setMaxWidth(Double.MAX_VALUE);
     }
 
+    /**
+     * Vuelve al panel principal del usuario manteniendo su sesión activa.
+     *
+     * @author Kevin Mejías
+     */
     private void volverAlPanelUsuario() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
@@ -70,33 +95,48 @@ public class vistaPrestamos {
         }
     }
 
+    /**
+     * Carga las películas alquiladas por el usuario desde la base de datos
+     * y las muestra en la interfaz.
+     *
+     * @author Kevin Mejías
+     */
     public void cargarPeliculasPrestadas() {
         ArrayList<Pelicula> peliculasAlquiladas;
         try {
-            peliculasAlquiladas = AlquilerDao.getInstance().obtenerPeliculasAlquiladasPorUsuario(usuarioActual.getIdUsuario());
+            peliculasAlquiladas = AlquilerDao.getInstance()
+                    .obtenerPeliculasAlquiladasPorUsuario(usuarioActual.getIdUsuario());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         ArrayList<Alquiler> alquileres;
         try {
-            alquileres = AlquilerDao.getInstance().obtenerPorUsuario(usuarioActual.getIdUsuario());
+            alquileres = AlquilerDao.getInstance()
+                    .obtenerPorUsuario(usuarioActual.getIdUsuario());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-
-        if (peliculasAlquiladas.isEmpty()){
+        if (peliculasAlquiladas.isEmpty()) {
             textoInfo.setText("NO TIENES PELICULAS ALQUILADAS");
             textoInfo.setUnderline(true);
-        } else{
+        } else {
             ArrayList<HBox> cards = crearTarjetasAlquiladas(peliculasAlquiladas, alquileres);
             mostrarPeliculas(cards);
         }
     }
 
-    public ArrayList<HBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p, ArrayList<Alquiler> alquileres)
-    {
+    /**
+     * Crea las tarjetas gráficas de las películas alquiladas,
+     * incluyendo información del alquiler y estado de favorito.
+     *
+     * @param p Lista de películas alquiladas
+     * @param alquileres Lista de alquileres del usuario
+     * @return Lista de contenedores HBox con las tarjetas
+     * @author Kevin Mejías
+     */
+    public ArrayList<HBox> crearTarjetasAlquiladas(ArrayList<Pelicula> p, ArrayList<Alquiler> alquileres) {
         ArrayList<HBox> boxs = new ArrayList<>();
 
         Map<Integer, Alquiler> alquilerPorPelicula = new HashMap<>();
@@ -105,8 +145,8 @@ public class vistaPrestamos {
             alquilerPorPelicula.put(a.getIdPelicula(), a);
         }
 
-        // Cargar favoritos UNA sola vez
-        ArrayList<PeliculaFavorita> infoFavs = peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
+        ArrayList<PeliculaFavorita> infoFavs =
+                peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
 
         for (Pelicula pelicula : p) {
             HBox box = new HBox(15);
@@ -114,7 +154,6 @@ public class vistaPrestamos {
             box.setPadding(new Insets(15));
             box.setMaxWidth(Double.MAX_VALUE);
 
-            // ====== FONDO ======
             LinearGradient gradient = new LinearGradient(
                     0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.web("#a34fb0")),
@@ -125,7 +164,6 @@ public class vistaPrestamos {
             ));
             box.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 4);");
 
-            // ====== IMAGEN ======
             String baseUrl = "https://image.tmdb.org/t/p/w500";
             ImageView img;
             try {
@@ -137,7 +175,6 @@ public class vistaPrestamos {
             img.setFitHeight(250);
             img.setPreserveRatio(true);
 
-            // ====== TEXTOS ======
             Label titulo = new Label(pelicula.getTitulo());
             titulo.setStyle("-fx-font-weight: bold;");
             titulo.setTextFill(Color.WHITE);
@@ -156,7 +193,6 @@ public class vistaPrestamos {
             -fx-text-overrun: ellipsis;
                """);
 
-
             Label valoracion = new Label("Valoración: " + pelicula.getValoracion());
             valoracion.setTextFill(Color.WHITE);
 
@@ -164,7 +200,6 @@ public class vistaPrestamos {
             texto.setAlignment(Pos.TOP_LEFT);
             HBox.setHgrow(texto, Priority.ALWAYS);
 
-            // ====== ESTRELLA FAVORITO ======
             boolean esFavorita = false;
             for (PeliculaFavorita pFaf : infoFavs) {
                 if (pelicula.getIdPelicula() == pFaf.getId_pelicula()) {
@@ -207,7 +242,6 @@ public class vistaPrestamos {
                 estadoFavorito[0] = !estadoFavorito[0];
             });
 
-            // ====== LABEL DE PELÍCULA ALQUILADA ======
             Label alq = new Label("PELÍCULA\nALQUILADA");
             alq.setTextAlignment(TextAlignment.CENTER);
             alq.setTextFill(Color.YELLOW);
@@ -216,7 +250,6 @@ public class vistaPrestamos {
             Region spacer1 = new Region();
             spacer1.setPrefHeight(10);
 
-            // Obtener el alquiler correspondiente
             final Alquiler alquiler = alquilerPorPelicula.get(pelicula.getIdPelicula());
 
             Button btnGestion = new Button("Eliminar\nalquiler");
@@ -234,7 +267,6 @@ public class vistaPrestamos {
                                 "\n\n¿Deseas continuar?"
                 );
 
-                // Aplicar estilos
                 alert.getDialogPane().getStylesheets().add(
                         getClass().getResource("/styles.css").toExternalForm()
                 );
@@ -243,17 +275,10 @@ public class vistaPrestamos {
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         try {
-                            // Eliminar alquiler
                             AlquilerDao.getInstance().eliminar(alquiler);
-
-                            // Volver a sumar película al stock
                             PeliculaDao.getInstance().devolverPelicula(alquiler.getIdPelicula());
-
-                            // Recargar vista
-                            gridPeliculas.getChildren().remove(box);                            cargarPeliculasPrestadas();
+                            gridPeliculas.getChildren().remove(box);
                             cargarPeliculasPrestadas();
-
-
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
@@ -275,14 +300,10 @@ public class vistaPrestamos {
             labelBox.setAlignment(Pos.CENTER);
             labelBox.setPrefWidth(150);
 
-            // ====== ESPACIADOR PARA QUE LA ESTRELLA QUDE AL EXTREMO ======
             Region spacer2 = new Region();
             HBox.setHgrow(spacer2, Priority.ALWAYS);
 
-            // ====== ARMAR HBOX ======
             box.getChildren().addAll(img, texto, spacer2, labelBox, star);
-
-            // ====== CLICK TARJETA ======
             box.setOnMouseClicked(e -> abrirCartaPelicula(pelicula));
 
             boxs.add(box);
@@ -291,6 +312,12 @@ public class vistaPrestamos {
         return boxs;
     }
 
+    /**
+     * Muestra las tarjetas de películas dentro del GridPane.
+     *
+     * @param peliculas Lista de tarjetas de películas
+     * @author Kevin Mejías
+     */
     private void mostrarPeliculas(ArrayList<HBox> peliculas) {
         gridPeliculas.getChildren().clear();
         ColumnConstraints cc = new ColumnConstraints();
@@ -300,7 +327,6 @@ public class vistaPrestamos {
 
         int col = 0;
         int row = 0;
-
         final int COLUMNAS_POR_FILA = 1;
 
         for (HBox p : peliculas) {
@@ -314,6 +340,13 @@ public class vistaPrestamos {
         }
     }
 
+    /**
+     * Abre una ventana emergente con la información detallada de la película.
+     *
+     *
+     * @param pelicula Película seleccionada
+     * @author Kevin Mejías
+     */
     private void abrirCartaPelicula(Pelicula pelicula) {
         Stage ventana = new Stage();
         ventana.setTitle(pelicula.getTitulo());
@@ -419,8 +452,15 @@ public class vistaPrestamos {
         ventana.show();
     }
 
+    /**
+     * Calcula el tiempo restante hasta la fecha de devolución
+     * de un alquiler.
+     *
+     * @param fechaDevolucion Fecha límite del alquiler
+     * @return Texto con el tiempo restante
+     * @author Kevin Mejías
+     */
     private String tiempoRestante(Timestamp fechaDevolucion) {
-
         long ahora = System.currentTimeMillis();
         long fin = fechaDevolucion.getTime();
 
@@ -442,6 +482,12 @@ public class vistaPrestamos {
         }
     }
 
+    /**
+     * Elimina automáticamente los alquileres caducados del usuario
+     * y devuelve las películas al stock.
+     *
+     * @author Kevin Mejías
+     */
     private void eliminarAlquileresCaducados() {
         try {
             ArrayList<Alquiler> alquileres = AlquilerDao.getInstance()

@@ -159,6 +159,15 @@ public class vistaListaPeliculas {
         }
     }
 
+    /**
+     * Muestra una alerta personalizada con estilos CSS según el tipo de mensaje.
+     * Se utiliza para informar al usuario de errores, avisos o mensajes informativos.
+     *
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, etc.)
+     * @param titulo Título que se mostrará en la ventana
+     * @param mensaje Mensaje principal de la alerta
+     * @author Kevin Mejías
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

@@ -16,6 +16,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Controlador de la vista de registro de usuarios.
+ * Permite crear nuevas cuentas validando los datos introducidos
+ * y comprobando duplicados en la base de datos.
+ *
+ * @author Iker Sillero y Kevin Mejías
+ */
 public class vistaRegistro {
 
     @FXML
@@ -33,6 +40,13 @@ public class vistaRegistro {
     @FXML
     private Button botonVolver;
 
+    /**
+     * Inicializa la vista de registro.
+     * Asigna eventos a los botones, configura el cursor
+     * y aplica estilos visuales.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void initialize() {
         botonRegistro.setOnMouseClicked(event -> procesarRegistro());
@@ -44,6 +58,13 @@ public class vistaRegistro {
         botonRegistro.getStyleClass().add("btnMorado");
     }
 
+    /**
+     * Procesa el registro de un nuevo usuario.
+     * Realiza validaciones de los campos, comprueba
+     * la existencia de datos duplicados y crea el usuario.
+     *
+     * @author Iker Sillero
+     */
     private void procesarRegistro() {
         System.out.println("Click en Crear Cuenta");
 
@@ -52,28 +73,25 @@ public class vistaRegistro {
         String telefono = campoTelefono.getText().trim();
         String contrasena = campoContraseña.getText().trim();
 
-        // ✅ Validación de campos vacíos
         if (nombreUsuario.isEmpty() || correo.isEmpty() || telefono.isEmpty() || contrasena.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Todos los campos son obligatorios");
             return;
         }
 
-        // ✅ Validación correo
         if (!correo.contains("@") || !correo.contains(".")) {
             mostrarAlerta(Alert.AlertType.WARNING, "Correo inválido", "Introduce un correo válido");
             return;
         }
 
-        // ✅ Validación teléfono
         if (!telefono.matches("\\d{9}")) {
             mostrarAlerta(Alert.AlertType.WARNING, "Teléfono inválido",
                     "El teléfono debe contener exactamente 9 dígitos");
             return;
         }
 
-        // ✅ Validación contraseña
         if (contrasena.length() < 4) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Contraseña débil", "La contraseña debe tener al menos 4 caracteres");
+            mostrarAlerta(Alert.AlertType.WARNING, "Contraseña débil",
+                    "La contraseña debe tener al menos 4 caracteres");
             return;
         }
 
@@ -84,7 +102,6 @@ public class vistaRegistro {
             boolean correoExiste = usuarioDao.existeCorreo(correo);
             boolean telefonoExiste = usuarioDao.existeTelefono(telefono);
 
-            // ✅ Combinaciones de errores
             if (usuarioExiste && correoExiste && telefonoExiste) {
                 mostrarAlerta(Alert.AlertType.ERROR, "Registro inválido",
                         "Usuario, correo y teléfono ya están registrados");
@@ -127,19 +144,26 @@ public class vistaRegistro {
                 return;
             }
 
-            // ✅ Si todo está bien → crear usuario
             Usuario nuevoUsuario = new Usuario(nombreUsuario, correo, telefono, contrasena);
             usuarioDao.crear(nuevoUsuario);
 
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso", "Usuario creado correctamente");
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso",
+                    "Usuario creado correctamente");
             abrirVistaInicioSesion();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error BD", "No se pudo registrar el usuario:\n" + e.getMessage());
+            mostrarAlerta(Alert.AlertType.ERROR, "Error BD",
+                    "No se pudo registrar el usuario:\n" + e.getMessage());
         }
     }
 
+    /**
+     * Abre la vista de inicio de sesión tras completar
+     * correctamente el registro.
+     *
+     * @author Iker Sillero
+     */
     private void abrirVistaInicioSesion() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaInicioSesion.fxml"));
@@ -148,10 +172,16 @@ public class vistaRegistro {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la pantalla de inicio de sesión");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error",
+                    "No se pudo abrir la pantalla de inicio de sesión");
         }
     }
 
+    /**
+     * Vuelve a la pantalla principal de la aplicación.
+     *
+     * @author Iker Sillero
+     */
     private void volverAMain() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaMain.fxml"));
@@ -160,10 +190,20 @@ public class vistaRegistro {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo volver a la pantalla principal");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error",
+                    "No se pudo volver a la pantalla principal");
         }
     }
 
+    /**
+     * Muestra una alerta personalizada con estilos CSS según el tipo de mensaje.
+     * Se utiliza para informar al usuario de errores, avisos o mensajes informativos.
+     *
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, etc.)
+     * @param titulo Título que se mostrará en la ventana
+     * @param mensaje Mensaje principal de la alerta
+     * @author Kevin Mejías
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

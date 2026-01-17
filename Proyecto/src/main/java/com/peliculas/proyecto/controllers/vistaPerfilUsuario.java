@@ -9,6 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+/**
+ * Controlador de la vista de perfil del usuario.
+ * Permite visualizar y modificar los datos personales del usuario,
+ * como nombre, correo, teléfono y contraseña.
+ *
+ * @author Iker Sillero y Kevin Mejías
+ */
 public class vistaPerfilUsuario {
 
     @FXML private TextField txtNombre;
@@ -20,11 +27,22 @@ public class vistaPerfilUsuario {
 
     private Usuario usuario;
 
+    /**
+     * Recibe el usuario actual y carga sus datos en la vista.
+     *
+     * @param usuario Usuario que ha iniciado sesión
+     * @author Iker Sillero
+     */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
         cargarDatos();
     }
 
+    /**
+     * Carga los datos del usuario en los campos del formulario.
+     *
+     * @author Iker Sillero
+     */
     private void cargarDatos() {
         if (usuario != null) {
             txtNombre.setText(usuario.getNombreUsuario());
@@ -33,23 +51,32 @@ public class vistaPerfilUsuario {
         }
     }
 
+    /**
+     * Inicializa la vista del perfil asignando eventos,
+     * estilos y cursores a los componentes.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void initialize() {
 
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
         btnGuardar.setOnAction(e -> guardarCambios());
 
-        // ✅ Cursor HAND en botones
         btnVolver.setCursor(Cursor.HAND);
         btnGuardar.setCursor(Cursor.HAND);
 
-        // ✅ Botón Guardar morado
         btnGuardar.getStyleClass().add("btnMorado");
-
-        // ✅ Botón Volver también morado (para mantener coherencia visual)
-        btnVolver.getStyleClass().add("btnMorado"); // ✅ CAMBIO
+        btnVolver.getStyleClass().add("btnMorado");
     }
 
+    /**
+     * Guarda los cambios realizados en el perfil del usuario.
+     * Valida los campos obligatorios y actualiza los datos
+     * en la base de datos.
+     *
+     * @author Iker Sillero
+     */
     private void guardarCambios() {
 
         if (txtNombre.getText().isEmpty() || txtCorreo.getText().isEmpty()) {
@@ -74,6 +101,11 @@ public class vistaPerfilUsuario {
         }
     }
 
+    /**
+     * Vuelve al panel principal del usuario manteniendo su sesión activa.
+     *
+     * @author Iker Sillero
+     */
     private void volverAlPanelUsuario() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
@@ -91,6 +123,15 @@ public class vistaPerfilUsuario {
         }
     }
 
+    /**
+     * Muestra una alerta personalizada con estilos CSS según el tipo de mensaje.
+     * Se utiliza para informar al usuario de errores, avisos o mensajes informativos.
+     *
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, etc.)
+     * @param titulo Título que se mostrará en la ventana
+     * @param mensaje Mensaje principal de la alerta
+     * @author Kevin Mejías
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

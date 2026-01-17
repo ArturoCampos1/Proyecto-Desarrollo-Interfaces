@@ -27,6 +27,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controlador de la vista de alquiler de películas.
+ * Permite al usuario visualizar las películas disponibles,
+ * marcarlas como favoritas y realizar el proceso de alquiler.
+ *
+ * @author Kevin Mejías
+ */
 public class vistaAlquiler {
 
     @FXML private Button btnVolver;
@@ -39,40 +46,62 @@ public class vistaAlquiler {
     private AlquilerDao alquilerDao = new AlquilerDao();
     private Usuario usuarioActual;
 
-    // Recibe el usuario actual desde vistaPanelUsuario
+    /**
+     * Recibe el usuario actual desde la vista del panel de usuario
+     * y carga las películas disponibles para alquiler.
+     *
+     * @param usuario Usuario que ha iniciado sesión
+     * @author Kevin Mejías
+     */
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
         cargarPeliculasParaAlquiler();
     }
 
-    // 2. INICIALIZACIÓN
+    /**
+     * Método de inicialización de la vista.
+     * Asigna la acción al botón de volver.
+     *
+     * @author Kevin Mejías
+     */
     @FXML
     public void initialize() {
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
-        //cargarPeliculasParaAlquiler();
     }
 
-
-
+    /**
+     * Carga las películas disponibles para alquiler desde la base de datos
+     * y las muestra en la vista.
+     *
+     * @author Kevin Mejías
+     */
     public void cargarPeliculasParaAlquiler() {
         ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos();
         ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
         mostrarPeliculas(cards);
     }
 
+    /**
+     * Crea tarjetas gráficas para las películas disponibles para alquiler.
+     * Cada tarjeta contiene información, control de favoritos y opción de alquiler.
+     *
+     * @param p Lista de películas disponibles
+     * @return ArrayList de VBox con las tarjetas formateadas
+     * @author Kevin Mejías
+     */
+    //Método original de Arturo pero modificado
     public ArrayList<VBox> crearTarjetasAlquiler(ArrayList<Pelicula> p) {
 
         ArrayList<VBox> boxs = new ArrayList<>();
 
-        // Cargar favoritos UNA sola vez
-        ArrayList<PeliculaFavorita> infoFavs = peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
+        ArrayList<PeliculaFavorita> infoFavs =
+                peliculaFavoritaDao.mostrarFavoritosPorUsuario(usuarioActual.getIdUsuario());
 
         for (Pelicula pelicula : p) {
 
             VBox box = new VBox(5);
             box.setPrefWidth(180);
 
-            // ====== FONDO TARJETA ======
             LinearGradient gradient = new LinearGradient(
                     0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.web("#a34fb0")),
@@ -84,7 +113,6 @@ public class vistaAlquiler {
             box.setPadding(new Insets(10));
             box.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 4);");
 
-            // ====== IMAGEN ======
             ImageView img;
             try {
                 img = new ImageView(new Image(
@@ -97,7 +125,6 @@ public class vistaAlquiler {
             img.setFitHeight(250);
             img.setPreserveRatio(true);
 
-            // ====== TEXTOS ======
             Label titulo = new Label(pelicula.getTitulo());
             titulo.setStyle("-fx-font-weight: bold;");
             titulo.setTextFill(Color.WHITE);
@@ -121,8 +148,6 @@ public class vistaAlquiler {
 
             Region spacer1 = new Region();
             VBox.setVgrow(spacer1, Priority.ALWAYS);
-
-            // ====== ESTRELLA FAVORITO (VISIBLE) ======
 
             boolean esFavorita = false;
             for (PeliculaFavorita pFaf : infoFavs){
@@ -173,7 +198,10 @@ public class vistaAlquiler {
                 } else{
                     Lista listaFavoritos;
                     try {
-                        listaFavoritos = listaDao.encontrarPorNombre(usuarioActual.getIdUsuario(), "Películas Favoritas - " + usuarioActual.getNombreUsuario());
+                        listaFavoritos = listaDao.encontrarPorNombre(
+                                usuarioActual.getIdUsuario(),
+                                "Películas Favoritas - " + usuarioActual.getNombreUsuario()
+                        );
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -194,7 +222,6 @@ public class vistaAlquiler {
                 estadoFavorito[0] = !estadoFavorito[0];
             });
 
-            // ====== BOTÓN ALQUILAR ======
             Button btnAlquilar = new Button("Alquilar Película");
             btnAlquilar.setPrefWidth(180);
             btnAlquilar.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
@@ -225,10 +252,14 @@ public class vistaAlquiler {
                 e.consume();
 
                 try {
-                    ArrayList<Alquiler> alquileresUsuario = alquilerDao.obtenerPorUsuario(usuarioActual.getIdUsuario());
+                    ArrayList<Alquiler> alquileresUsuario =
+                            alquilerDao.obtenerPorUsuario(usuarioActual.getIdUsuario());
 
                     long ahora = System.currentTimeMillis();
-                    alquileresUsuario.removeIf(a -> a.getFechaDevolucion() != null && a.getFechaDevolucion().getTime() <= ahora);
+                    alquileresUsuario.removeIf(a ->
+                            a.getFechaDevolucion() != null &&
+                                    a.getFechaDevolucion().getTime() <= ahora
+                    );
 
                     if (alquileresUsuario.size() >= 3) {
                         mostrarAlerta(
@@ -259,10 +290,8 @@ public class vistaAlquiler {
                 }
             });
 
-            // ====== CLICK TARJETA ======
             box.setOnMouseClicked(e -> abrirCartaPelicula(pelicula));
 
-            // ====== AÑADIR A TARJETA ======
             box.getChildren().addAll(
                     img, titulo, director, resumen, valoracion,
                     disponible, precio, spacer1, star, btnAlquilar
@@ -273,6 +302,12 @@ public class vistaAlquiler {
         return boxs;
     }
 
+    /**
+     * Organiza las tarjetas de películas dentro del GridPane.
+     *
+     * @param peliculas Lista de tarjetas a mostrar
+     * @author Kevin Mejías
+     */
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
         int col = 0;
@@ -290,6 +325,11 @@ public class vistaAlquiler {
         }
     }
 
+    /**
+     * Vuelve al panel principal del usuario manteniendo su sesión.
+     *
+     * @author Kevin Mejías
+     */
     private void volverAlPanelUsuario() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
@@ -304,6 +344,12 @@ public class vistaAlquiler {
         }
     }
 
+    /**
+     * Abre una ventana emergente con la información detallada de la película.
+     *
+     * @param pelicula Película seleccionada
+     * @author Kevin Mejías
+     */
     private void abrirCartaPelicula(Pelicula pelicula) {
         Stage ventana = new Stage();
         ventana.setTitle(pelicula.getTitulo());
@@ -408,6 +454,16 @@ public class vistaAlquiler {
         ventana.setScene(scene);
         ventana.show();
     }
+
+    /**
+     * Muestra una alerta personalizada con estilos CSS según el tipo de mensaje.
+     * Se utiliza para informar al usuario de errores, avisos o mensajes informativos.
+     *
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, etc.)
+     * @param titulo Título que se mostrará en la ventana
+     * @param mensaje Mensaje principal de la alerta
+     * @author Kevin Mejías
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
