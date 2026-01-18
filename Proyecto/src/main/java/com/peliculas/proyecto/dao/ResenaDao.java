@@ -11,12 +11,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * DAO encargado de la gestión de reseñas en la base de datos.
+ *
+ * Implementa las operaciones CRUD básicas sobre el objeto {@link Resena}
+ * utilizando procedimientos almacenados.
+ *
+ * Aplica el patrón Singleton para garantizar una única instancia.
+ *
+ * @author Kevin Mejías
+ */
 public class ResenaDao implements CRUD<Resena> {
 
     private static ResenaDao instance;
 
+    /**
+     * Constructor privado para implementar el patrón Singleton.
+     */
     private ResenaDao() {}
 
+    /**
+     * Devuelve la instancia única de {@link ResenaDao}.
+     *
+     * @return instancia única de ResenaDao
+     *
+     * @author Kevin Mejías
+     */
     public static ResenaDao getInstance() {
         if (instance == null) {
             instance = new ResenaDao();
@@ -24,6 +44,14 @@ public class ResenaDao implements CRUD<Resena> {
         return instance;
     }
 
+    /**
+     * Inserta una nueva reseña en la base de datos.
+     *
+     * @param r Objeto {@link Resena} con los datos a insertar
+     * @throws SQLException si ocurre un error en la operación SQL
+     *
+     * @author Kevin Mejías
+     */
     @Override
     public void crear(Resena r) throws SQLException {
         Conexion.abrirConexion();
@@ -41,6 +69,15 @@ public class ResenaDao implements CRUD<Resena> {
         }
     }
 
+    /**
+     * Obtiene todas las reseñas asociadas a una película concreta.
+     *
+     * @param idPelicula Identificador de la película
+     * @return Array de {@link Resena} asociadas a la película
+     * @throws SQLException si ocurre un error durante la consulta
+     *
+     * @author Kevin Mejías
+     */
     public Resena[] buscarPorPelicula(int idPelicula) throws SQLException {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
@@ -64,7 +101,7 @@ public class ResenaDao implements CRUD<Resena> {
                 r.setTexto(rs.getString("texto"));
                 r.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
 
-                // Creamos objetos Usuario y Pelicula con solo el ID (podrías cargar más si quieres)
+                // Creamos objetos Usuario y Pelicula con solo el ID
                 Usuario u = new Usuario();
                 u.setIdUsuario(rs.getInt("id_usuario"));
                 r.setUsuario(u);
@@ -82,6 +119,14 @@ public class ResenaDao implements CRUD<Resena> {
         }
     }
 
+    /**
+     * Modifica una reseña existente.
+     *
+     * @param r Objeto {@link Resena} con los nuevos datos
+     * @throws SQLException si ocurre un error durante la actualización
+     *
+     * @author Kevin Mejías
+     */
     @Override
     public void modificar(Resena r) throws SQLException {
         Conexion.abrirConexion();
@@ -98,6 +143,14 @@ public class ResenaDao implements CRUD<Resena> {
         }
     }
 
+    /**
+     * Elimina una reseña de la base de datos.
+     *
+     * @param r Objeto {@link Resena} a eliminar
+     * @throws SQLException si ocurre un error durante el borrado
+     *
+     * @author Kevin Mejías
+     */
     @Override
     public void eliminar(Resena r) throws SQLException {
         Conexion.abrirConexion();

@@ -33,6 +33,7 @@ public class AdministradorDao {
      * @param contrasena Contraseña introducida
      * @return Administrador autenticado o null si el login falla
      * @throws SQLException Si ocurre un error de acceso a la base de datos
+     *
      * @author Arturo Campos
      */
     public Administrador login(String nombreUsuario, String contrasena) throws SQLException {
@@ -88,6 +89,7 @@ public class AdministradorDao {
      * @param contrasena Contraseña introducida
      * @return true si coincide con alguna contraseña existente, false en caso contrario
      * @throws SQLException Si ocurre un error en la consulta
+     *
      * @author Iker Sillero
      */
     private boolean contrasenaCoincideConAlguna(Connection con, String contrasena) throws SQLException {
@@ -105,6 +107,7 @@ public class AdministradorDao {
      * Devuelve el último error producido durante el login.
      *
      * @return Tipo de error ("usuario", "contrasena", "ambos") o null si no hubo error
+     *
      * @author Iker Sillero
      */
     public String getUltimoErrorLogin() {

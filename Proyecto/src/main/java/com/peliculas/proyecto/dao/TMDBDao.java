@@ -13,12 +13,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * DAO encargado de la comunicación con la API externa TMDB (The Movie Database).
+ * Permite buscar películas por nombre, autor (director), género y obtener
+ * películas populares.
+ *
+ * Esta clase NO interactúa con la base de datos local, únicamente consume la API.
+ *
+ * @author Arturo Campos
+ */
 public class TMDBDao {
 
-    // Claves para el acceso a la API
+    /**
+     * Clave privada para el acceso a la API de TMDB.
+     */
     private static final String API_KEY = "490d5fcf9a1de19d8f7ba4c3bb2df832";
 
-    // Método findByName
+    /**
+     * Busca películas en TMDB a partir de su nombre.
+     *
+     * @param nombre Nombre de la película a buscar
+     * @return Lista de películas que coinciden con el nombre indicado
+     * @throws RuntimeException si ocurre un error durante la conexión o lectura de datos
+     * @author Arturo Campos
+     */
     public ArrayList<Pelicula> findByName(String nombre) {
         ArrayList<Pelicula> arrayPeliculas = new ArrayList<>();
         try {
@@ -32,14 +50,13 @@ public class TMDBDao {
             JsonObject jsonObject = gson.fromJson(br, JsonObject.class);
 
             JsonArray results = jsonObject.getAsJsonArray("results");
-            for (JsonElement resultado : results){
+            for (JsonElement resultado : results) {
                 JsonObject result = resultado.getAsJsonObject();
                 Pelicula p = getPelicula(result);
 
-                if (!revisarPelicula(p)){
+                if (!revisarPelicula(p)) {
                     arrayPeliculas.add(p);
                 }
-
             }
         } catch (Exception e) {
             throw new RuntimeException(e + ": Película NO encontrada");
@@ -47,11 +64,17 @@ public class TMDBDao {
         return arrayPeliculas;
     }
 
-    // Buscar películas por director (autor)
+    /**
+     * Busca películas dirigidas por un autor (director) concreto.
+     *
+     * @param autor Nombre del director
+     * @return Lista de películas dirigidas por el autor indicado
+     * @throws RuntimeException si ocurre un error durante la consulta a la API
+     * @author Arturo Campos
+     */
     public ArrayList<Pelicula> findByAutor(String autor) {
         ArrayList<Pelicula> arrayPelis = new ArrayList<>();
         try {
-            // Buscar el ID del director/persona
             URL urlAutor = new URL("https://api.themoviedb.org/3/search/person?api_key=" + API_KEY + "&query=" + autor + "&language=es-ES");
             HttpURLConnection con = (HttpURLConnection) urlAutor.openConnection();
             con.setRequestMethod("GET");
@@ -66,7 +89,6 @@ public class TMDBDao {
                 JsonObject persona = results.get(0).getAsJsonObject();
                 int personId = persona.get("id").getAsInt();
 
-                // Buscar películas donde la persona haya sido director
                 URL urlCredits = new URL("https://api.themoviedb.org/3/person/" + personId + "/movie_credits?api_key=" + API_KEY + "&language=es-ES");
                 HttpURLConnection creditsCon = (HttpURLConnection) urlCredits.openConnection();
                 creditsCon.setRequestMethod("GET");
@@ -79,7 +101,7 @@ public class TMDBDao {
                     JsonObject crew = elem.getAsJsonObject();
                     if (crew.get("job").getAsString().equalsIgnoreCase("Director")) {
                         Pelicula p = getPelicula(crew);
-                        if (!revisarPelicula(p)){
+                        if (!revisarPelicula(p)) {
                             arrayPelis.add(p);
                         }
                     }
@@ -92,10 +114,17 @@ public class TMDBDao {
         return arrayPelis;
     }
 
-    // Buscar películas por género
+    /**
+     * Busca películas en TMDB filtrando por género.
+     *
+     * @param genero Nombre del género a buscar
+     * @return Lista de películas pertenecientes al género indicado
+     * @throws RuntimeException si ocurre un error durante la consulta
+     * @author Arturo Campos
+     */
     public ArrayList<Pelicula> findByGenre(String genero) {
         ArrayList<Pelicula> arrayPelis = new ArrayList<>();
-        int numero = (int)(Math.random() * 300) + 1;
+        int numero = (int) (Math.random() * 300) + 1;
 
         try {
             URL urlIdGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?api_key=" + API_KEY + "&language=es-ES");
@@ -110,7 +139,7 @@ public class TMDBDao {
 
             JsonArray generos = jsonObject.getAsJsonArray("genres");
             HashMap<Integer, String> datosGeneros = new HashMap<>();
-            for (JsonElement genres : generos){
+            for (JsonElement genres : generos) {
                 JsonObject aux = genres.getAsJsonObject();
                 int id = aux.get("id").getAsInt();
                 String name = aux.get("name").getAsString();
@@ -120,13 +149,12 @@ public class TMDBDao {
             int idEquivalenteParametro = 0;
 
             for (Map.Entry<Integer, String> dGenero : datosGeneros.entrySet()) {
-                if (dGenero.getValue().equalsIgnoreCase(genero)){
+                if (dGenero.getValue().equalsIgnoreCase(genero)) {
                     idEquivalenteParametro = dGenero.getKey();
                     break;
                 }
             }
 
-            // Buscar películas por género
             URL urlPeliculasConGen = new URL("https://api.themoviedb.org/3/discover/movie?with_genres=" + idEquivalenteParametro + "&api_key=" + API_KEY + "&language=es-ES&page=" + numero);
             HttpURLConnection conexFinal = (HttpURLConnection) urlPeliculasConGen.openConnection();
             conexFinal.setRequestMethod("GET");
@@ -137,11 +165,11 @@ public class TMDBDao {
             }
 
             JsonArray results = jsonObjectArray.getAsJsonArray("results");
-            for (JsonElement resultado : results){
+            for (JsonElement resultado : results) {
                 JsonObject result = resultado.getAsJsonObject();
                 Pelicula p = getPelicula(result);
 
-                if (!revisarPelicula(p)){
+                if (!revisarPelicula(p)) {
                     arrayPelis.add(p);
                 }
             }
@@ -151,9 +179,17 @@ public class TMDBDao {
         return arrayPelis;
     }
 
+    /**
+     * Obtiene una lista de películas populares (trending) desde TMDB.
+     *
+     * @return Lista de películas populares
+     * @throws RuntimeException si ocurre un error durante la conexión
+     *
+     * @author Arturo Campos
+     */
     public ArrayList<Pelicula> findTrendingFilms() {
         ArrayList<Pelicula> peliculasPopulares = new ArrayList<>();
-        int numero = (int)(Math.random() * 500) + 1;
+        int numero = (int) (Math.random() * 500) + 1;
 
         URL url = null;
         try {
@@ -185,7 +221,7 @@ public class TMDBDao {
         jsonObject = gson.fromJson(br, JsonObject.class);
 
         JsonArray results = jsonObject.get("results").getAsJsonArray();
-        for (JsonElement element : results){
+        for (JsonElement element : results) {
             JsonObject resultado = element.getAsJsonObject();
             Pelicula p = null;
             try {
@@ -194,20 +230,32 @@ public class TMDBDao {
                 throw new RuntimeException(e);
             }
 
-            if (!revisarPelicula(p)){
+            if (!revisarPelicula(p)) {
                 peliculasPopulares.add(p);
             }
         }
         return peliculasPopulares;
     }
 
-    //METODO PARA PANEL ADMIN
+    /**
+     * Busca una película concreta por su nombre exacto.
+     * Método utilizado desde el panel de administración.
+     *
+     * Realiza una llamada a la API de TMDB y devuelve la última coincidencia
+     * encontrada con el nombre proporcionado.
+     *
+     * @param nombre Nombre de la película a buscar
+     * @return Película encontrada o null si no se encuentra ninguna
+     * @throws IOException si ocurre un error de entrada/salida durante la conexión
+     *
+     * @author Arturo Campos
+     */
     public Pelicula findBySpecificName(String nombre) throws IOException {
         Pelicula p = null;
 
         URL url = new URL("https://api.themoviedb.org/3/search/movie?api_key=" + API_KEY
-                    + "&query=" + URLEncoder.encode(nombre, StandardCharsets.UTF_8)
-                    + "&language=es-ES");
+                + "&query=" + URLEncoder.encode(nombre, StandardCharsets.UTF_8)
+                + "&language=es-ES");
         HttpURLConnection con = null;
         con = (HttpURLConnection) url.openConnection();
 
@@ -226,31 +274,49 @@ public class TMDBDao {
         return p;
     }
 
-    // Usado para la búsqueda por director, usando JsonObject ya parseado de créditos
+    /**
+     * Construye un objeto {@link Pelicula} a partir de un {@link JsonObject}
+     * obtenido desde la API de TMDB.
+     *
+     * Se encarga de:
+     *
+     * Asignar datos básicos de la película
+     * Consultar el director
+     * Resolver los géneros a partir de sus IDs
+     *
+     *
+     * Este método es utilizado internamente por otras búsquedas.
+     *
+     * @param result Objeto JSON con los datos de la película
+     * @return Objeto {@link Pelicula} completamente construido
+     * @throws IOException si ocurre un error durante las llamadas a la API
+     *
+     * @author Arturo Campos
+     */
     private static Pelicula getPelicula(JsonObject result) throws IOException {
         Pelicula p = new Pelicula();
 
-       p.setIdPelicula(result.get("id").getAsInt());
-       p.setTitulo(result.get("original_title").getAsString());
-       p.setResumen(result.has("overview") && !result.get("overview").isJsonNull()
+        p.setIdPelicula(result.get("id").getAsInt());
+        p.setTitulo(result.get("original_title").getAsString());
+        p.setResumen(result.has("overview") && !result.get("overview").isJsonNull()
                 ? result.get("overview").getAsString()
                 : "");
-       p.setPathBanner(result.has("backdrop_path") && !result.get("backdrop_path").isJsonNull()
+        p.setPathBanner(result.has("backdrop_path") && !result.get("backdrop_path").isJsonNull()
                 ? result.get("backdrop_path").getAsString()
                 : "src/main/resources/img/noavailable.jpg");
-       p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
+        p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
                 ? result.get("release_date").getAsString()
                 : "");
-       p.setValoracion(result.has("vote_average") && !result.get("vote_average").isJsonNull()
+        p.setValoracion(result.has("vote_average") && !result.get("vote_average").isJsonNull()
                 ? result.get("vote_average").getAsDouble() / 2
                 : 0.0);
-       p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
-               ? result.get("release_date").getAsString()
-               : "");
-       URL urlDirector = new URL("https://api.themoviedb.org/3/movie/" + p.getIdPelicula() + "/credits?api_key=" + API_KEY + "&language=es-ES");
-       URL urlGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?language=es-ES&api_key=" + API_KEY);
+        p.setAnioSalida(result.has("release_date") && !result.get("release_date").isJsonNull()
+                ? result.get("release_date").getAsString()
+                : "");
+        URL urlDirector = new URL("https://api.themoviedb.org/3/movie/" + p.getIdPelicula() + "/credits?api_key=" + API_KEY + "&language=es-ES");
+        URL urlGenres = new URL("https://api.themoviedb.org/3/genre/movie/list?language=es-ES&api_key=" + API_KEY);
 
-       //Conexión Directores
+        //Conexión Directores
         HttpURLConnection con = (HttpURLConnection) urlDirector.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Content-Type", "application/json");
@@ -274,7 +340,7 @@ public class TMDBDao {
         JsonArray genres = result.getAsJsonArray("genre_ids");
         ArrayList<Integer> genresInt = new ArrayList<>();
         ArrayList<String> genresString = new ArrayList<>();
-        for (JsonElement g : genres){
+        for (JsonElement g : genres) {
             genresInt.add(g.getAsInt());
         }
 
@@ -309,22 +375,30 @@ public class TMDBDao {
         return p;
     }
 
+    /**
+     * Comprueba si una película contiene todos los datos necesarios.
+     *
+     * @param pelicula Objeto {@link Pelicula} a validar
+     * @return true si faltan datos obligatorios, false si la película es válida
+     *
+     * @author Arturo Campos
+     */
     public boolean revisarPelicula(Pelicula pelicula) {
 
         boolean faltanDatos = false;
 
-            if (pelicula.getTitulo() == null || pelicula.getTitulo().isEmpty()
-                    || pelicula.getResumen() == null || pelicula.getResumen().isEmpty()
-                    || pelicula.getPathBanner() == null || pelicula.getPathBanner().isEmpty()
-                    || pelicula.getAnioSalida() == null || pelicula.getAnioSalida().isEmpty()
-                    || pelicula.getDirector() == null || pelicula.getDirector().isEmpty()
-                    || pelicula.getGenero() == null || pelicula.getGenero().isEmpty()
-                    || pelicula.getIdPelicula() == 0
-                    || pelicula.getValoracion() == 0.0) {
-                faltanDatos = true;
-            };
+        if (pelicula.getTitulo() == null || pelicula.getTitulo().isEmpty()
+                || pelicula.getResumen() == null || pelicula.getResumen().isEmpty()
+                || pelicula.getPathBanner() == null || pelicula.getPathBanner().isEmpty()
+                || pelicula.getAnioSalida() == null || pelicula.getAnioSalida().isEmpty()
+                || pelicula.getDirector() == null || pelicula.getDirector().isEmpty()
+                || pelicula.getGenero() == null || pelicula.getGenero().isEmpty()
+                || pelicula.getIdPelicula() == 0
+                || pelicula.getValoracion() == 0.0) {
+            faltanDatos = true;
+        }
+        ;
 
         return faltanDatos;
     }
-
 }

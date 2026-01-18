@@ -1,67 +1,99 @@
 @startuml
-title Diagrama de clases - CineVerse 🎬
+hide circle
+skinparam linetype ortho
 
-class administrador {
-  + id_admin : INT
-  + usuario : VARCHAR(100)
-  + contrasena : VARCHAR(255)
+entity Administrador {
+  +id_admin : INT <<PK>>
+  --
+  usuario : VARCHAR(100) <<UNIQUE>>
+  contrasena : VARCHAR(255)
 }
 
-class usuario {
-  + id_usuario : INT
-  + nombre_usuario : VARCHAR(100)
-  + correo : VARCHAR(150)
-  + num_tel : VARCHAR(20)
-  + contrasena : VARCHAR(255)
+entity Usuario {
+  +id_usuario : INT <<PK>>
+  --
+  nombre_usuario : VARCHAR(100) <<UNIQUE>>
+  correo : VARCHAR(150) <<UNIQUE>>
+  num_tel : VARCHAR(20)
+  contrasena : VARCHAR(255)
 }
 
-class pelicula {
-  + id_pelicula : INT
-  + titulo : VARCHAR(255)
-  + anio_salida : YEAR
-  + director : VARCHAR(255)
-  + resumen : TEXT
-  + genero : ENUM
-  + disponible : BOOLEAN
-  + valoracion : DECIMAL(3,1)
+entity Pelicula {
+  +id_pelicula : INT <<PK>>
+  --
+  titulo : VARCHAR(155)
+  anio_salida : VARCHAR(20)
+  director : VARCHAR(95)
+  resumen : TEXT
+  genero : VARCHAR(100)
+  disponible : INT
+  url_photo : VARCHAR(100)
+  valoracion : DECIMAL(3,1)
+  precio : DECIMAL(4,2)
 }
 
-class resena {
-  + id_resena : INT
-  + valoracion : DECIMAL(3,1)
-  + texto : TEXT
-  + fecha : TIMESTAMP
+entity Lista {
+  +id_lista : INT <<PK>>
+  --
+  nombre_lista : VARCHAR(100)
+  id_usuario : INT <<FK>>
 }
 
-class lista {
-  + id_lista : INT
-  + nombre_lista : VARCHAR(100)
+entity Lista_Pelicula {
+  +id_lista : INT <<PK, FK>>
+  +id_pelicula : INT <<PK, FK>>
 }
 
-class lista_pelicula {
-  + id_lista : INT
-  + id_pelicula : INT
+entity Resena {
+  +id_resena : INT <<PK>>
+  --
+  texto : TEXT
+  valoracion : DECIMAL(3,1)
+  fecha : DATETIME
+  id_usuario : INT <<FK>>
+  id_pelicula : INT <<FK>>
 }
 
-class alquiler {
-  + id_usuario : INT
-  + id_pelicula : INT
-  + fecha_alquiler : TIMESTAMP
-  + fecha_devolucion : TIMESTAMP
-  + precio : DECIMAL(6,2)
+entity Peliculas_Disponibles {
+  +id_pelicula : INT <<PK, FK>>
+  --
+  id_lista_peliculas_disponibles : INT <<UNIQUE>>
 }
 
-' ========================
-' RELACIONES
-' ========================
-usuario "1" -- "0..*" resena : escribe >
-pelicula "1" -- "0..*" resena : recibe >
+entity Alquiler {
+  +id_usuario : INT <<PK, FK>>
+  +id_pelicula : INT <<PK, FK>>
+  --
+  fecha_alquiler : DATETIME
+  fecha_devolucion : DATETIME
+}
 
-usuario "1" -- "0..*" lista : posee >
-lista "1" -- "0..*" lista_pelicula : contiene >
-pelicula "1" -- "0..*" lista_pelicula : aparece_en >
+entity Peliculas_Vistas {
+  +id_usuario : INT <<PK, FK>>
+  +id_pelicula : INT <<PK, FK>>
+}
 
-usuario "1" -- "0..*" alquiler : realiza >
-pelicula "1" -- "0..*" alquiler : es_alquilada_en >
+entity Peliculas_Favoritas {
+  +id_usuario : INT <<PK, FK>>
+  +id_pelicula : INT <<PK, FK>>
+}
+
+Usuario ||--o{ Lista : tiene
+Lista ||--o{ Lista_Pelicula
+Pelicula ||--o{ Lista_Pelicula
+
+Usuario ||--o{ Resena
+Pelicula ||--o{ Resena
+
+Usuario ||--o{ Alquiler
+Pelicula ||--o{ Alquiler
+
+Usuario ||--o{ Peliculas_Vistas
+Pelicula ||--o{ Peliculas_Vistas
+
+Usuario ||--o{ Peliculas_Favoritas
+Pelicula ||--o{ Peliculas_Favoritas
+
+Pelicula ||--|| Peliculas_Disponibles
 
 @enduml

@@ -9,13 +9,30 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * DAO encargado de gestionar las películas favoritas de los usuarios.
+ *
+ * Permite añadir y eliminar películas favoritas, así como consultar
+ * las películas favoritas de todos los usuarios o de uno en concreto.
+ *
+ * @author Arturo Campos
+ */
 public class PeliculaFavoritaDao {
 
+    /**
+     * Añade una película a la lista de favoritas de un usuario.
+     *
+     * @param u Usuario que marca la película como favorita
+     * @param p Película que se añade a favoritos
+     *
+     * @author Arturo Campos
+     */
     public void añadirPeliculaFav(Usuario u, Pelicula p){
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
-        try (PreparedStatement ps = con.prepareCall("INSERT INTO peliculas_favoritas (id_usuario, id_pelicula) VALUES (?, ?)")) {
+        try (PreparedStatement ps = con.prepareCall(
+                "INSERT INTO peliculas_favoritas (id_usuario, id_pelicula) VALUES (?, ?)")) {
             ps.setInt(1, u.getIdUsuario());
             ps.setInt(2, p.getIdPelicula());
             ps.executeUpdate();
@@ -26,6 +43,14 @@ public class PeliculaFavoritaDao {
         }
     }
 
+    /**
+     * Elimina una película de la lista de favoritas de un usuario.
+     *
+     * @param u Usuario al que se le elimina la película favorita
+     * @param p Película que se elimina de favoritos
+     *
+     * @author Arturo Campos
+     */
     public void eliminarPeliculaFav(Usuario u, Pelicula p){
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
@@ -43,8 +68,15 @@ public class PeliculaFavoritaDao {
         }
     }
 
+    /**
+     * Obtiene todas las películas favoritas registradas en el sistema.
+     *
+     * @return Lista de películas favoritas
+     *
+     * @author Arturo Campos
+     */
     public ArrayList<PeliculaFavorita> mostrarFavoritos(){
-    	ArrayList<PeliculaFavorita> favoritos = new ArrayList<PeliculaFavorita>();
+        ArrayList<PeliculaFavorita> favoritos = new ArrayList<PeliculaFavorita>();
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
 
@@ -70,6 +102,14 @@ public class PeliculaFavoritaDao {
         return favoritos;
     }
 
+    /**
+     * Obtiene las películas favoritas de un usuario concreto.
+     *
+     * @param idUsuario Identificador del usuario
+     * @return Lista de películas favoritas del usuario
+     *
+     * @author Arturo Campos
+     */
     public ArrayList<PeliculaFavorita> mostrarFavoritosPorUsuario(int idUsuario) {
 
         ArrayList<PeliculaFavorita> favoritos = new ArrayList<>();
@@ -103,7 +143,4 @@ public class PeliculaFavoritaDao {
 
         return favoritos;
     }
-
-
-
 }

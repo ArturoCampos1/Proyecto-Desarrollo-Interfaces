@@ -9,8 +9,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * DAO encargado de gestionar las películas disponibles en la base de datos.
+ *
+ * Proporciona métodos para obtener todas las películas disponibles
+ * y eliminar una película concreta.
+ *
+ * @author Arturo Campos
+ */
 public class PeliculasDisponiblesDao {
 
+    /**
+     * Obtiene todas las películas disponibles almacenadas en la base de datos.
+     *
+     * Ejecuta un procedimiento almacenado que devuelve las películas
+     * marcadas como disponibles y las transforma en objetos {@link Pelicula}.
+     *
+     * @return Lista de películas disponibles
+     *
+     * @author Arturo Campos
+     */
     public static ArrayList<Pelicula> obtenerPeliculasDispos(){
         ArrayList<Pelicula> peliculasDisponibles = new ArrayList<>();
         Conexion.abrirConexion();
@@ -55,6 +73,14 @@ public class PeliculasDisponiblesDao {
         return peliculasDisponibles;
     }
 
+    /**
+     * Elimina una película disponible de la base de datos a partir de su ID.
+     *
+     * @param idPelicula Identificador de la película a eliminar
+     * @return true si la película fue eliminada correctamente, false en caso contrario
+     *
+     * @author Arturo Campos
+     */
     public static boolean eliminarPelicula(int idPelicula) {
         boolean eliminado = false;
         Conexion.abrirConexion();
@@ -75,6 +101,4 @@ public class PeliculasDisponiblesDao {
 
         return eliminado;
     }
-
-
 }
