@@ -52,6 +52,14 @@ public class vistaPayment {
 
     private final PaymentService paymentService = new PaymentService();
 
+    /**
+     * Inicializa la vista de pago.
+     * Configura los eventos de los botones y verifica que el WebView
+     * esté correctamente inyectado desde el FXML.
+     * Este método se ejecuta automáticamente al cargar la vista.
+     *
+     * @author Arturo Campos
+     */
     @FXML
     public void initialize() {
 
@@ -61,7 +69,15 @@ public class vistaPayment {
 
         btnVolver.setOnAction(actionEvent -> volverAlquiler());
     }
-
+    /**
+     * Maneja el proceso de pago de la película seleccionada.
+     * Inicia la sesión de pago mediante PaymentService, carga
+     * la URL de Stripe Checkout en el WebView y detecta cambios
+     * en la URL para determinar si el pago fue exitoso o cancelado.
+     * Muestra alertas de éxito o error según corresponda.
+     *
+     * @author Arturo Campos
+     */
     @FXML
     private void handlePagar() {
         try {
@@ -102,7 +118,14 @@ public class vistaPayment {
             mostrarError("Error procesando el pago: " + e.getMessage());
         }
     }
-
+    /**
+     * Redirige al usuario a la vista de préstamos después de un pago exitoso
+     * Crea un registro de alquiler en la base de datos, actualiza la
+     * disponibilidad de la película y carga la vista de alquiler con
+     * la información del usuario actual.
+     *
+     * @author Arturo Campos
+     */
     private void redirigirPrestamos() {
         // Fecha y hora EXACTAS del alquiler
         Timestamp fechaAlquiler = new Timestamp(System.currentTimeMillis());
@@ -134,7 +157,13 @@ public class vistaPayment {
         }
     }
 
-
+    /**
+     * Vuelve a la vista de alquiler sin procesar un pago.
+     * Carga la vista de alquiler y mantiene la información
+     * del usuario actual.
+     *
+     * @author Arturo Campos
+     */
     private void volverAlquiler() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaAlquiler.fxml"));
@@ -149,7 +178,15 @@ public class vistaPayment {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Muestra una alerta de error con un mensaje personalizado.
+     * Se utiliza para notificar al usuario sobre fallos durante
+     * el proceso de pago.
+     *
+     * @param mensaje Mensaje de error a mostrar en la alerta
+     *
+     * @author Arturo Campos
+     */
     private void mostrarError(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -157,7 +194,15 @@ public class vistaPayment {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-
+    /**
+     * Muestra una alerta de éxito con un mensaje personalizado.
+     * Se utiliza para notificar al usuario que el pago se completó
+     * correctamente.
+     *
+     * @param mensaje Mensaje de éxito a mostrar en la alerta
+     *
+     * @author Arturo Campos
+     */
     private void mostrarExito(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Éxito");
@@ -165,18 +210,37 @@ public class vistaPayment {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-
+    /**
+     * Carga los datos de la película en la vista.
+     * <p>
+     * Muestra el título, la imagen de fondo y el precio de la película.
+     * También inicia el proceso de pago llamando a handlePagar().
+     *
+     * @author Arturo Campos
+     */
     public void cargarDatos() {
         lblTitulo.setText(pelicula.getTitulo());
         imgBackdrop.setImage(new Image("https://image.tmdb.org/t/p/w500" + pelicula.getPathBanner(), true));
         lblPrecio.setText("Precio: " + pelicula.getPrecio() + " €");
         handlePagar();
     }
-
+    /**
+     * Establece la película que se va a pagar.
+     *
+     * @param pelicula Película seleccionada para el pago
+     *
+     * @author Arturo Campos
+     */
     public void setPelicula(Pelicula pelicula) {
         this.pelicula = pelicula;
     }
-
+    /**
+     * Establece el usuario que está realizando el pago.
+     *
+     * @param usuario Usuario que va a alquilar la película
+     *
+     * @author Arturo Campos
+     */
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
     }

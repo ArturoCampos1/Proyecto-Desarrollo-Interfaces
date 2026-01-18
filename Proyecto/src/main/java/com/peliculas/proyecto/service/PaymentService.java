@@ -5,12 +5,45 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 
+/**
+ * Servicio encargado de gestionar los pagos mediante Stripe.
+ * <p>
+ * Esta clase permite crear sesiones de pago para el alquiler de películas,
+ * configurando los datos necesarios como precio, moneda y URL de éxito o cancelación.
+ * <p>
+ * Contiene también ejemplos de tarjetas de prueba para escenarios de éxito y error.
+ *
+ * @author Arturo Campos
+ */
 public class PaymentService {
 
+    /**
+     * Constructor del servicio de pago.
+     * <p>
+     * Inicializa la API key de Stripe para permitir la creación de sesiones de pago.
+     * Esta API key es de prueba y debe ser reemplazada por una key de producción
+     * en un entorno real.
+     *
+     * @author Arturo Campos
+     */
     public PaymentService() {
         Stripe.apiKey = "sk_test_51SaBP7GtONsWMoMfNOI7z2uLR7CWWHeN6rkmE3qL2Fyknje2t8012XPPM6EAbZUjDVFbCP21u5Wp3Lxl62iA5u4b00VQEv1Skl";
     }
-
+    /**
+     * Inicia una sesión de pago mediante Stripe Checkout.
+     * <p>
+     * Convierte el precio de euros a céntimos, configura los parámetros de la sesión
+     * incluyendo moneda, descripción, cantidad y URLs de éxito y cancelación.
+     * Crea la sesión y devuelve la URL de Stripe Checkout.
+     * <p>
+     * En caso de error en la creación de la sesión, devuelve null y muestra
+     * un mensaje de error en consola.
+     *
+     * @param precioEuros Precio del alquiler de la película en euros
+     * @return URL de la sesión de pago de Stripe o null si ocurrió un error
+     *
+     * @author Arturo Campos
+     */
     public String iniciarPago(double precioEuros) {
         try {
             long precioCentimos = (long) (precioEuros * 100);

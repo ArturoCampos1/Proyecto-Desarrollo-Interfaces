@@ -62,6 +62,14 @@ public class vistaBuscadorPeliculas {
 
     private Usuario usuario;
 
+    /**
+     * Establece el usuario actual que ha iniciado sesión.
+     * Se utiliza para controlar el acceso a ciertas funcionalidades
+     * como la visualización de los detalles de una película.
+     *
+     * @param usuario Usuario autenticado
+     * @author Iker Sillero
+     */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
@@ -70,6 +78,12 @@ public class vistaBuscadorPeliculas {
             "Nombre", "Autor", "Género"
     );
 
+    /**
+     * Método que se ejecuta automáticamente al cargar la vista FXML.
+     * Inicializa los componentes gráficos, configura los eventos
+     * y carga películas aleatorias al inicio.
+     * @author Arturo Campos
+     */
     @FXML
     public void initialize() {
         boxFiltros.setItems(opciones);
@@ -121,7 +135,11 @@ public class vistaBuscadorPeliculas {
             recarga();
         });
     }
-
+    /**
+     * Abre la vista principal (landing page) de la aplicación.
+     * Se utiliza normalmente al navegar desde el buscador.
+     * @author Arturo Campos
+     */
     @FXML
     private void abrirLanding() {
         try {
@@ -134,7 +152,13 @@ public class vistaBuscadorPeliculas {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista principal");
         }
     }
-
+    /**
+     * Realiza una búsqueda de películas según el filtro seleccionado
+     * (Nombre, Autor o Género) y muestra los resultados en pantalla.
+     *
+     * @param labelText Campo de texto donde el usuario introduce el criterio de búsqueda
+     * @author Arturo Campos
+     */
     public void busqueda(TextField labelText){
         gridPeliculas.getChildren().clear();
         String texto = labelText.getText();
@@ -157,14 +181,26 @@ public class vistaBuscadorPeliculas {
             mostrarPeliculas(boxs);
         }
     }
-
+    /**
+     * Recarga la vista mostrando películas en tendencia obtenidas desde la API.
+     *
+     * @return Lista de películas en tendencia
+     * @author Arturo Campos
+     */
     public ArrayList<Pelicula> recarga() {
         ArrayList<Pelicula> peliculasTendring = tmdbDao.findTrendingFilms();
         ArrayList<VBox> boxs = returnPeliculaConFormatoArray(peliculasTendring);
         mostrarPeliculas(boxs);
         return peliculasTendring;
     }
-
+    /**
+     * Convierte una lista de películas en una lista de contenedores VBox
+     * con formato visual para ser mostrados en el GridPane.
+     *
+     * @param peliculas Lista de películas a mostrar
+     * @return Lista de VBox con el formato gráfico de cada película
+     * @author Arturo Campos
+     */
     public ArrayList<VBox> returnPeliculaConFormatoArray(ArrayList<Pelicula> peliculas) {
         ArrayList<VBox> boxs = new ArrayList<>();
 
@@ -245,7 +281,13 @@ public class vistaBuscadorPeliculas {
 
         return boxs;
     }
-
+    /**
+     * Abre una ventana emergente con la información detallada de una película.
+     * Requiere que el usuario esté autenticado.
+     *
+     * @param pelicula Película seleccionada
+     * @author Kevin Mejias
+     */
     private void abrirCartaPelicula(Pelicula pelicula) {
         if (usuario == null) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "Debes registrarte/iniciar sesión para ver los detalles de la película.");
@@ -354,7 +396,11 @@ public class vistaBuscadorPeliculas {
         ventana.setScene(scene);
         ventana.show();
     }
-    
+    /**
+     * Muestra las películas en el GridPane organizándolas en filas y columnas.
+     *
+     * @param peliculas Lista de contenedores VBox que representan películas
+     */
     private void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
         int col = 0;
@@ -368,8 +414,6 @@ public class vistaBuscadorPeliculas {
             }
         }
     }
-
-
     /**
      * Muestra una alerta personalizada con estilos CSS según el tipo de mensaje.
      * Se utiliza para informar al usuario de errores, avisos o mensajes informativos.
@@ -403,7 +447,13 @@ public class vistaBuscadorPeliculas {
 
         alert.showAndWait();
     }
-
+    /**
+     * Vuelve a la vista anterior dependiendo de si el usuario
+     * está autenticado o no.
+     * - Usuario autenticado: panel de usuario
+     * - Usuario no autenticado: vista principal
+     * @author ARturo Campos
+     */
     @FXML
     private void volver() {
         try {

@@ -89,7 +89,15 @@ public class vistaInicioSesionAdmin {
                     "No se pudo verificar el administrador. Error: " + e.getErrorCode());
         }
     }
-
+    /**
+     * Abre el panel de administración una vez que el login del administrador
+     * ha sido validado correctamente.
+     * Carga la vista de administración, cambia la escena actual y centra
+     * la ventana en la pantalla.
+     *
+     * @param admin Administrador autenticado que ha iniciado sesión
+     * @author Arturo Campos
+     */
     private void abrirPanelAdminDesdeLogin(Administrador admin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaAdmin.fxml"));
@@ -109,8 +117,12 @@ public class vistaInicioSesionAdmin {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de admin");
         }
     }
-
-
+    /**
+     * Vuelve a la vista principal de la aplicación desde la pantalla
+     * de inicio de sesión del administrador.
+     * Se utiliza cuando el usuario pulsa el botón de volver.
+     * @author Arturo Campos
+     */
     @FXML
     private void volverAMain() {
         try {
@@ -123,7 +135,6 @@ public class vistaInicioSesionAdmin {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo volver a la pantalla principal");
         }
     }
-
     /**
      * Muestra una alerta personalizada con estilos CSS según el tipo de mensaje.
      * Se utiliza para informar al usuario de errores, avisos o mensajes informativos.

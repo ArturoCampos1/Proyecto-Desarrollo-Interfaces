@@ -21,15 +21,14 @@ public class vistaMain {
     @FXML
     private Label lblBienvenida;
 
-    @FXML
-    private Button inicioSesion;
-    @FXML
-    private Button crearCuenta;
-    @FXML
-    private Button darkLight;
-
     private Usuario usuario;
 
+    /**
+     * Inicializa la vista principal.
+     * Configura el evento de clic en la tarjeta de búsqueda para abrir
+     * el buscador de películas.
+     * @author Arturo Campos
+     */
     @FXML
     private void initialize() {
         // Click en la tarjeta de búsqueda abre el buscador
@@ -37,7 +36,12 @@ public class vistaMain {
             paneBusqueda.setOnMouseClicked(event -> abrirVentana());
         }
     }
-
+    /**
+     * Abre la ventana del buscador de películas.
+     * Carga la vista FXML del buscador y reemplaza la escena actual.
+     * Muestra una alerta si ocurre un error al cargar la vista.
+     * @author Arturo Campos
+     */
     private void abrirVentana() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaBuscadorPeliculas.fxml"));
@@ -51,7 +55,12 @@ public class vistaMain {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el buscador");
         }
     }
-
+    /**
+     * Abre la ventana de inicio de sesión de usuarios.
+     * Carga la vista FXML correspondiente y reemplaza la escena actual.
+     * Muestra una alerta si ocurre un error al cargar la vista.
+     * @author Arturo Campos
+     */
     @FXML
     private void abrirVistaInicioSesion() {
         try {
@@ -65,7 +74,12 @@ public class vistaMain {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista de inicio de sesión");
         }
     }
-
+    /**
+     * Abre la ventana de inicio de sesión para administradores.
+     * Carga la vista FXML correspondiente y reemplaza la escena actual.
+     * Muestra una alerta si ocurre un error al cargar la vista.
+     * @author Arturo Campos
+     */
     @FXML
     private void abrirAccesoAdmin() {
         try {
@@ -79,7 +93,12 @@ public class vistaMain {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista de inicio de sesión admin");
         }
     }
-
+    /**
+     * Abre la ventana de registro de nuevos usuarios.
+     * Carga la vista FXML correspondiente y reemplaza la escena actual.
+     * Muestra una alerta si ocurre un error al cargar la vista.
+     * @author Arturo Campos
+     */
     @FXML
     private void abrirVistaRegistro() {
         try {
@@ -93,7 +112,13 @@ public class vistaMain {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la vista de registro " + e.getMessage());
         }
     }
-
+    /**
+     * Establece el usuario actual que ha iniciado sesión.
+     * Actualiza la etiqueta de bienvenida si el usuario no es nulo.
+     *
+     * @param usuario Usuario autenticado
+     * @author Iker Sillero
+     */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
         if (lblBienvenida != null && usuario != null) {
@@ -134,24 +159,4 @@ public class vistaMain {
 
         alert.showAndWait();
     }
-
-
-    public void abrirPanelUsuario(Usuario usuario) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
-            Parent root = loader.load();
-
-            // Pasar usuario al panel si luego lo usas
-            vistaPanelUsuario controller = loader.getController();
-            // controller.setUsuario(usuario);  // si quieres enviarle el usuario después
-
-            Stage stage = (Stage) paneBusqueda.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el panel de usuario");
-        }
-    }
-
 }
