@@ -16,6 +16,13 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * Controlador de la vista que gestiona las películas de una lista concreta.
+ * Permite buscar películas en TMDB, añadirlas o quitarlas de la lista,
+ * y volver a la vista de listas del usuario.
+ *
+ * @author Iker Sillero
+ */
 public class vistaListaPeliculas {
 
     @FXML private ListView<String> listaPeliculas;
@@ -31,6 +38,15 @@ public class vistaListaPeliculas {
 
     PeliculaDao peliculaDao = new PeliculaDao();
 
+    /**
+     * Recibe los datos enviados desde la vista de listas.
+     * Inicializa el usuario, la lista seleccionada y carga
+     * las películas asociadas a dicha lista.
+     *
+     * @param usuario Usuario autenticado
+     * @param lista Lista seleccionada
+     * @author Iker Sillero
+     */
     // Recibe datos desde vistaListas
     public void setData(Usuario usuario, Lista lista) {
         this.usuario = usuario;
@@ -41,6 +57,13 @@ public class vistaListaPeliculas {
         cargarPeliculas();
     }
 
+    /**
+     * Inicializa la vista.
+     * Configura los eventos de los botones y personaliza
+     * el aspecto visual de la lista de películas.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void initialize() {
         btnVolver.setOnAction(e -> volverAListas());
@@ -67,6 +90,12 @@ public class vistaListaPeliculas {
         });
     }
 
+    /**
+     * Carga las películas asociadas a la lista desde la base de datos
+     * y las muestra en el ListView.
+     *
+     * @author Iker Sillero
+     */
     // 🔹 Cargar películas de la lista desde BD
     private void cargarPeliculas() {
         try {
@@ -80,6 +109,12 @@ public class vistaListaPeliculas {
         }
     }
 
+    /**
+     * Busca una película en TMDB según el texto introducido
+     * y permite añadirla a la base de datos y a la lista actual.
+     *
+     * @author Iker Sillero
+     */
     // 🔹 Buscar en TMDB y añadir a BD + lista
     private void buscarYAgregarPelicula() {
         String nombre = campoBusqueda.getText();
@@ -128,6 +163,11 @@ public class vistaListaPeliculas {
         }
     }
 
+    /**
+     * Quita la película seleccionada de la lista actual.
+     *
+     * @author Iker Sillero
+     */
     // 🔹 Quitar película de la lista
     private void quitarPelicula() {
         int index = listaPeliculas.getSelectionModel().getSelectedIndex();
@@ -144,6 +184,11 @@ public class vistaListaPeliculas {
         }
     }
 
+    /**
+     * Vuelve a la vista de listas del usuario.
+     *
+     * @author Iker Sillero
+     */
     // 🔹 Volver a la vista de listas
     private void volverAListas() {
         try {

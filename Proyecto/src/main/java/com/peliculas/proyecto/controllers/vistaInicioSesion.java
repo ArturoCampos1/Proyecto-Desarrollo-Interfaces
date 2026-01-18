@@ -16,6 +16,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Controlador de la vista de inicio de sesión.
+ * Gestiona la autenticación del usuario, la validación
+ * de credenciales y la navegación a otras vistas.
+ *
+ * @author Iker Sillero
+ */
 public class vistaInicioSesion {
 
     @FXML
@@ -29,6 +36,13 @@ public class vistaInicioSesion {
     @FXML
     private Button botonVolver;
 
+    /**
+     * Inicializa la vista de inicio de sesión.
+     * Configura los eventos de los botones,
+     * el cursor y los estilos visuales.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void initialize() {
 
@@ -41,6 +55,13 @@ public class vistaInicioSesion {
         botonLogin.getStyleClass().add("btnMorado");
     }
 
+    /**
+     * Procesa el inicio de sesión del usuario.
+     * Valida los campos introducidos y comprueba
+     * las credenciales en la base de datos.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void procesarLogin() {
         String nombreUsuario = campoUsuario.getText().trim();
@@ -109,6 +130,13 @@ public class vistaInicioSesion {
         }
     }
 
+    /**
+     * Abre el panel de usuario tras un inicio de sesión correcto.
+     * Carga la vista correspondiente y pasa el usuario autenticado.
+     *
+     * @param usuario Usuario autenticado
+     * @author Iker Sillero
+     */
     private void abrirPanelUsuarioDesdeLogin(Usuario usuario) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
@@ -126,6 +154,11 @@ public class vistaInicioSesion {
         }
     }
 
+    /**
+     * Vuelve a la pantalla principal de la aplicación.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void volverAMain() {
         try {

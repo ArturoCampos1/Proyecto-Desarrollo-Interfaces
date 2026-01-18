@@ -13,6 +13,11 @@ public class UsuarioDao {
     private static UsuarioDao instance;
     private String ultimoErrorLogin;
 
+    /**
+     * Constructor vacío del DAO.
+     *
+     * @author Iker Sillero
+     */
     public UsuarioDao() {}
 
     public static UsuarioDao getInstance() {
@@ -23,6 +28,15 @@ public class UsuarioDao {
     }
 
     // Crear usuario vía procedimiento almacenado
+
+    /**
+     * Crea un nuevo usuario en la base de datos mediante
+     * un procedimiento almacenado.
+     *
+     * @param u Usuario a crear
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public void crear(Usuario u) throws SQLException {
         Conexion.abrirConexion();
         Connection con = conexion;
@@ -39,6 +53,15 @@ public class UsuarioDao {
     }
 
     // Buscar usuario por nombre
+
+    /**
+     * Busca un usuario por su nombre de usuario.
+     *
+     * @param nombreUsuario Nombre del usuario a buscar
+     * @return Usuario encontrado o null si no existe
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public Usuario buscarPorNombre(String nombreUsuario) throws SQLException {
         Usuario user = null;
 
@@ -66,6 +89,7 @@ public class UsuarioDao {
     }
 
     // Modificar usuario vía SP (requiere contraseña siempre)
+
     public void modificar(Usuario u) throws SQLException {
         Conexion.abrirConexion();
         Connection con = conexion;
@@ -83,6 +107,14 @@ public class UsuarioDao {
     }
 
     // Eliminar usuario
+
+    /**
+     * Elimina un usuario de la base de datos por su ID.
+     *
+     * @param idUsuario ID del usuario a eliminar
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public void eliminar(int idUsuario) throws SQLException {
         Conexion.abrirConexion();
         Connection con = conexion;
@@ -96,6 +128,18 @@ public class UsuarioDao {
     }
 
     // Login
+
+    /**
+     * Realiza el proceso de autenticación de un usuario.
+     * Comprueba usuario y contraseña y establece el motivo
+     * del error en caso de fallo.
+     *
+     * @param nombreUsuario Nombre de usuario
+     * @param contrasena Contraseña introducida
+     * @return Usuario autenticado o null si el login falla
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public Usuario login(String nombreUsuario, String contrasena) throws SQLException {
         Usuario user = null;
         ultimoErrorLogin = null;
@@ -117,9 +161,9 @@ public class UsuarioDao {
 
                     // Comprobamos si la contraseña coincide con alguna válida
                     if (contrasenaCoincideConAlguna(con, contrasena)) {
-                        ultimoErrorLogin = "usuario"; // usuario mal, contraseña válida para otro
+                        ultimoErrorLogin = "usuario";
                     } else {
-                        ultimoErrorLogin = "ambos";   // usuario mal y contraseña mal
+                        ultimoErrorLogin = "ambos";
                     }
 
                     return null;
@@ -151,6 +195,7 @@ public class UsuarioDao {
     }
 
     // Consultar TODOS los usuarios registrados
+
     public ArrayList<Usuario> consultarUsuarios() throws SQLException {
         ArrayList<Usuario> usuarios = new ArrayList<>();
 
@@ -183,6 +228,14 @@ public class UsuarioDao {
         return usuarios;
     }
 
+    /**
+     * Comprueba si existe un usuario con el nombre indicado.
+     *
+     * @param nombreUsuario Nombre de usuario
+     * @return true si existe, false en caso contrario
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public boolean existeUsuario(String nombreUsuario) throws SQLException {
         Conexion.abrirConexion();
         Connection conn = conexion;
@@ -203,6 +256,14 @@ public class UsuarioDao {
     }
 
     // MÉTODO NUEVO: Actualizar usuario (para vistaPerfilUsuario)
+
+    /**
+     * Actualiza los datos de un usuario desde la vista de perfil.
+     *
+     * @param u Usuario con los datos modificados
+     * @return true si se actualizó correctamente
+     * @author Iker Sillero
+     */
     public boolean actualizarUsuario(Usuario u) {
         boolean actualizado = false;
 
@@ -232,6 +293,14 @@ public class UsuarioDao {
         return actualizado;
     }
 
+    /**
+     * Obtiene todos los usuarios excepto el usuario actual.
+     *
+     * @param nombreActual Nombre del usuario a excluir
+     * @return Lista de usuarios
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public ArrayList<Usuario> obtenerUsuariosExcepto(String nombreActual) throws SQLException {
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
@@ -254,6 +323,14 @@ public class UsuarioDao {
         return usuarios;
     }
 
+    /**
+     * Comprueba si un correo electrónico ya existe.
+     *
+     * @param correo Correo a comprobar
+     * @return true si existe, false si no
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public boolean existeCorreo(String correo) throws SQLException {
         Conexion.abrirConexion();
         Connection conn = conexion;
@@ -273,6 +350,14 @@ public class UsuarioDao {
         return existe;
     }
 
+    /**
+     * Comprueba si un número de teléfono ya existe.
+     *
+     * @param telefono Número de teléfono
+     * @return true si existe, false si no
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     public boolean existeTelefono(String telefono) throws SQLException {
         Conexion.abrirConexion();
         Connection conn = conexion;
@@ -293,6 +378,16 @@ public class UsuarioDao {
     }
 
     // Comprueba si la contraseña coincide con la de algún usuario existente
+
+    /**
+     * Comprueba si una contraseña coincide con la de algún usuario.
+     *
+     * @param con Conexión a la base de datos
+     * @param contrasena Contraseña a comprobar
+     * @return true si coincide con alguna existente
+     * @throws SQLException si ocurre un error en la base de datos
+     * @author Iker Sillero
+     */
     private boolean contrasenaCoincideConAlguna(Connection con, String contrasena) throws SQLException {
         String sql = "SELECT 1 FROM usuario WHERE TRIM(contrasena) = TRIM(?) LIMIT 1";
 
@@ -304,6 +399,12 @@ public class UsuarioDao {
         }
     }
 
+    /**
+     * Devuelve el último error producido en el login.
+     *
+     * @return Código del último error de login
+     * @author Iker Sillero
+     */
     public String getUltimoErrorLogin() {
         return ultimoErrorLogin;
     }

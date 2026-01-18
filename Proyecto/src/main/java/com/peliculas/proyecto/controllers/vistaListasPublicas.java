@@ -14,10 +14,17 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * Controlador de la vista de listas públicas.
+ * Permite ver las listas de otros usuarios y sus películas,
+ * y regresar al panel del usuario actual.
+ *
+ * @author Iker Sillero
+ */
 public class vistaListasPublicas {
 
     @FXML private ListView<String> listaUsuarios;
-    @FXML private ListView<String> listaListas;      // 🔹 corregido: coincide con FXML
+    @FXML private ListView<String> listaListas;
     @FXML private ListView<String> listaPeliculas;
     @FXML private Button btnVolver;
 
@@ -26,12 +33,24 @@ public class vistaListasPublicas {
     private ArrayList<Lista> listasSeleccionadas;
     private ArrayList<Pelicula> peliculasSeleccionadas;
 
-    // Recibe el usuario actual desde vistaPanelUsuario
+    /**
+     * Establece el usuario actual y carga los demás usuarios.
+     *
+     * @param usuario Usuario actual
+     * @author Iker Sillero
+     */
     public void setUsuario(Usuario usuario) {
         this.usuarioActual = usuario;
         cargarUsuarios();
     }
 
+    /**
+     * Inicializa la vista.
+     * Configura los eventos de los botones y de los ListView
+     * para cargar listas y películas según la selección del usuario.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void initialize() {
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
@@ -49,7 +68,12 @@ public class vistaListasPublicas {
         });
     }
 
-    // 🔹 Cargar todos los usuarios excepto el actual
+    /**
+     * Carga todos los usuarios registrados excepto el usuario actual
+     * y los muestra en el ListView.
+     *
+     * @author Iker Sillero
+     */
     private void cargarUsuarios() {
         try {
             otrosUsuarios = UsuarioDao.getInstance().obtenerUsuariosExcepto(usuarioActual.getNombreUsuario());
@@ -62,7 +86,11 @@ public class vistaListasPublicas {
         }
     }
 
-    // 🔹 Cargar listas del usuario seleccionado
+    /**
+     * Carga las listas del usuario seleccionado en el ListView de listas.
+     *
+     * @author Iker Sillero
+     */
     private void cargarListasDeUsuario() {
         int index = listaUsuarios.getSelectionModel().getSelectedIndex();
         if (index == -1) return;
@@ -81,7 +109,12 @@ public class vistaListasPublicas {
         }
     }
 
-    // 🔹 Cargar películas de la lista seleccionada
+    /**
+     * Carga las películas de la lista seleccionada
+     * y las muestra en el ListView correspondiente.
+     *
+     * @author Iker Sillero
+     */
     private void cargarPeliculasDeLista() {
         int index = listaListas.getSelectionModel().getSelectedIndex();
         if (index == -1) return;
@@ -101,7 +134,11 @@ public class vistaListasPublicas {
         }
     }
 
-    // 🔹 Volver al panel de usuario
+    /**
+     * Vuelve al panel del usuario cargando la vista correspondiente.
+     *
+     * @author Iker Sillero
+     */
     private void volverAlPanelUsuario() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));

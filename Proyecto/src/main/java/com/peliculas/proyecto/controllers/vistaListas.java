@@ -12,6 +12,13 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * Controlador de la vista de gestión de listas del usuario.
+ * Permite crear, eliminar y acceder a listas de películas,
+ * así como volver al panel principal del usuario.
+ *
+ * @author Iker Sillero
+ */
 public class vistaListas {
 
     @FXML private ListView<String> listaListas;
@@ -22,11 +29,24 @@ public class vistaListas {
     private Usuario usuario;
     private ArrayList<Lista> listasUsuario;
 
+    /**
+     * Establece el usuario actual y carga sus listas.
+     *
+     * @param usuario Usuario autenticado
+     * @author Iker Sillero
+     */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
         cargarListas();
     }
 
+    /**
+     * Inicializa la vista de listas.
+     * Configura los eventos de los botones, la interacción con la lista
+     * y el estilo visual de las celdas.
+     *
+     * @author Iker Sillero
+     */
     @FXML
     private void initialize() {
         btnVolver.setOnAction(e -> volverAlPanelUsuario());
@@ -60,6 +80,12 @@ public class vistaListas {
         });
     }
 
+    /**
+     * Carga las listas del usuario desde la base de datos
+     * y las muestra en el ListView.
+     *
+     * @author Iker Sillero
+     */
     private void cargarListas() {
         try {
             listasUsuario = ListaDao.getInstance().obtenerPorNombreUsuario(usuario.getNombreUsuario());
@@ -72,6 +98,12 @@ public class vistaListas {
         }
     }
 
+    /**
+     * Muestra un diálogo para crear una nueva lista
+     * y la guarda en la base de datos.
+     *
+     * @author Iker Sillero
+     */
     private void crearLista() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nueva lista");
@@ -90,6 +122,12 @@ public class vistaListas {
         });
     }
 
+    /**
+     * Elimina la lista seleccionada por el usuario
+     * y actualiza la vista.
+     *
+     * @author Iker Sillero
+     */
     private void eliminarLista() {
         int index = listaListas.getSelectionModel().getSelectedIndex();
         if (index == -1) {
@@ -105,6 +143,11 @@ public class vistaListas {
         }
     }
 
+    /**
+     * Abre la vista de películas asociadas a la lista seleccionada.
+     *
+     * @author Iker Sillero
+     */
     private void abrirListaPeliculas() {
         int index = listaListas.getSelectionModel().getSelectedIndex();
         if (index == -1) return;
@@ -122,6 +165,11 @@ public class vistaListas {
         }
     }
 
+    /**
+     * Vuelve al panel principal del usuario.
+     *
+     * @author Iker Sillero
+     */
     private void volverAlPanelUsuario() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vistas/vistaPanelUsuario.fxml"));
