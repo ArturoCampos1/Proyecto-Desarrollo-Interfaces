@@ -29,7 +29,7 @@ public class PeliculasDisponiblesDao {
      *
      * @author Arturo Campos
      */
-    public static ArrayList<Pelicula> obtenerPeliculasDispos(){
+    public ArrayList<Pelicula> obtenerPeliculasDispos(){
         ArrayList<Pelicula> peliculasDisponibles = new ArrayList<>();
         Conexion.abrirConexion();
         Connection con = Conexion.conexion;
