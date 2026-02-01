@@ -412,7 +412,7 @@ public class vistaAdmin {
      * Método que organiza las películas
      * @param peliculas
      */
-    private void mostrarPeliculas(ArrayList<VBox> peliculas) {
+    void mostrarPeliculas(ArrayList<VBox> peliculas) {
         gridPeliculas.getChildren().clear();
         int row = 0;
         for (VBox p : peliculas) {
@@ -425,7 +425,7 @@ public class vistaAdmin {
      * Método que organiza las películas
      * @param peliculas
      */
-    private void mostrarPeliculasTodas(ArrayList<VBox> peliculas) {
+    void mostrarPeliculasTodas(ArrayList<VBox> peliculas) {
         gridTodasPeliculas.getChildren().clear();
         int col = 0;
         int row = 0;

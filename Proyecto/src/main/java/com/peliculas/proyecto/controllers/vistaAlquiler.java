@@ -46,6 +46,7 @@ public class vistaAlquiler {
     private AlquilerDao alquilerDao = new AlquilerDao();
     private Usuario usuarioActual;
 
+    PeliculasDisponiblesDao peliculasDisponiblesDao = new PeliculasDisponiblesDao();
     /**
      * Recibe el usuario actual desde la vista del panel de usuario
      * y carga las películas disponibles para alquiler.
@@ -76,8 +77,7 @@ public class vistaAlquiler {
      * @author Kevin Mejías
      */
     public void cargarPeliculasParaAlquiler() {
-        ArrayList<Pelicula> peliculasDisponibles = PeliculasDisponiblesDao.obtenerPeliculasDispos();
-        ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
+        ArrayList<Pelicula> peliculasDisponibles = peliculasDisponiblesDao.obtenerPeliculasDispos();        ArrayList<VBox> cards = crearTarjetasAlquiler(peliculasDisponibles);
         mostrarPeliculas(cards);
     }
 

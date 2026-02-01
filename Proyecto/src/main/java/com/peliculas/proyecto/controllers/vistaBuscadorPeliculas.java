@@ -46,10 +46,10 @@ public class vistaBuscadorPeliculas {
     private ScrollPane scrollPeliculas;
 
     @FXML
-    private GridPane gridPeliculas;
+    GridPane gridPeliculas;
 
     @FXML
-    private TextField labelText;
+    TextField labelText;
 
     @FXML
     private ImageView imgRecarga;
