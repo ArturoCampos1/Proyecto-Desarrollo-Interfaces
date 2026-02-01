@@ -460,7 +460,7 @@ public class vistaPrestamos {
      * @return Texto con el tiempo restante
      * @author Kevin Mejías
      */
-    private String tiempoRestante(Timestamp fechaDevolucion) {
+    protected String tiempoRestante(Timestamp fechaDevolucion) {
         long ahora = System.currentTimeMillis();
         long fin = fechaDevolucion.getTime();
 
