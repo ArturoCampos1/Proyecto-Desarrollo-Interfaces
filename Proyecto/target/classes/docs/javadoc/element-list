@@ -1,0 +1,7 @@
+module:com.peliculas.proyecto
+com.peliculas.proyecto
+com.peliculas.proyecto.conexion
+com.peliculas.proyecto.controllers
+com.peliculas.proyecto.dao
+com.peliculas.proyecto.dto
+com.peliculas.proyecto.service
